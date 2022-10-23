@@ -68,3 +68,29 @@ public:
         reverse(nums.begin() + k, nums.end());
     }
 };
+
+// 方法2
+class Solution {
+public:
+    vector<vector<int>> res;
+    int n;
+    vector<vector<int>> permute(vector<int>& nums) {
+        n = nums.size();
+        dfs(nums, 0);
+
+        return res;
+    }
+
+    void dfs(vector<int>& nums, int u) {
+        if (u == n) {
+            res.push_back(nums);
+            return;
+        }
+
+        for (int i = u; i < n; i++) {
+            swap(nums[i], nums[u]);
+            dfs(nums, u + 1);
+            swap(nums[i], nums[u]);
+        }
+    }
+};
