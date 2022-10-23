@@ -1,4 +1,4 @@
-# 1. Leetcode54. 螺旋矩阵
+# Leetcode54. 螺旋矩阵
 ```
 class Solution {
 public:
@@ -29,7 +29,7 @@ public:
 ```
 
 
-# 2. Leetcode 23
+# Leetcode 23
 ### 方法1
 ```
 class Solution {
@@ -183,6 +183,128 @@ public:
 
         if (c) res += '0' + c;
         reverse(res.begin(), res.end());
+
+        return res;
+    }
+};
+```
+
+# 142. 环形链表 II
+### 方法1 快慢指针
+```
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        auto f = head, s = head;
+        while (1) {
+            if (f && f->next) {
+                f = f->next->next;
+            } else {
+                return NULL;
+            }
+            s = s->next;
+            if (f == s) break;
+        }
+
+        f = head;
+        while (f != s) {
+            f = f->next;
+            s = s->next;
+        }
+
+        return f;
+    }
+};
+```
+# Leetcode300. 最长上升子序列
+### 方法1 dp
+```
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n, 1);
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (nums[j] > nums[i]) {
+                    dp[j] = max(dp[j], dp[i] + 1);
+                }
+                res = max(res, dp[i]);
+            }
+        }
+
+        return res;
+    }
+};
+```
+### 方法2 二分
+```
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        int len = 0;
+        if (n <= 1) return n;
+
+        // [4,10,4,3,8,9]
+
+        // help就是最后的上升子序列，不一定是
+        vector<int> help(n);
+        help[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            int x = nums[i];
+            int l = 0, r = len;
+            while (l < r) {
+                int mid = l + r >> 1;
+                if (help[mid] >= x) r = mid;
+                else l = mid + 1;
+            }
+            /* for debug
+            cout << "x = " << x << ", l = " << l << endl;
+            for (int j = 0; j <= len; j++) {
+                cout << help[j] << " ";
+            }
+            cout << endl;
+            */
+
+            if (help[l] >= x) {
+                help[l] = x;
+            } else {
+                help[++len] = x;
+            }
+        }
+
+        // for (int j = 0; j <= len; j++) {
+        //     cout << help[j] << " ";
+        // }
+        return len + 1;
+    }
+};
+```
+
+# Leetcode 42. 接雨水
+### 方法1 双指针，按列累加
+```
+class Solution {
+public:
+    int trap(vector<int>& h) {
+        int n = h.size();
+        vector<int> l(n), r(n);
+        for (int i = 1; i < n; i++) {
+            l[i] = max(h[i - 1], l[i - 1]);
+        }
+
+        for (int i = n - 2; i >= 0; i--) {
+            r[i] = max(h[i + 1], r[i + 1]);
+        }
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            int t = min(l[i], r[i]);
+            if (t > h[i]) res += t - h[i];
+        }
 
         return res;
     }
