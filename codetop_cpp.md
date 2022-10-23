@@ -149,3 +149,42 @@ public:
     }
 };
 ```
+# Leetcode 415. 字符串相加
+
+```
+class Solution {
+public:
+    string addStrings(string num1, string num2) {
+        reverse(num1.begin(), num1.end());
+        reverse(num2.begin(), num2.end());
+
+        int c = 0;
+        int i = 0, j = 0, l1 = num1.size(), l2 = num2.size();
+        string res;
+        while (i < l1 && j < l2) {
+            c = num1[i] - '0' + num2[j] - '0' + c;
+            res += '0' + (c % 10);
+            c /= 10;
+            i++, j++;
+        }
+        while (i < l1) {
+            c = num1[i] - '0' + c;
+            res += '0' + (c % 10);
+            c /= 10;
+            i++;
+        }
+
+        while (j < l2) {
+            c = num2[j] - '0' + c;
+            res += '0' + (c % 10);
+            c /= 10;
+            j++;
+        }
+
+        if (c) res += '0' + c;
+        reverse(res.begin(), res.end());
+
+        return res;
+    }
+};
+```
