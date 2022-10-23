@@ -32,3 +32,39 @@ public:
         }
     }
 };
+
+// 方法2 迭代写法
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> res;
+        int n = nums.size();
+        int len = 1;
+        for (int i = n; i >= 1; i--) {
+            len *= i;
+        }
+        res.push_back(nums);
+        for (int i = 1; i < len; i++) {
+            next(nums);
+            res.push_back(nums);
+        }
+
+        return res;
+    }
+
+    void next(vector<int>& nums) {
+        int n = nums.size();
+        int k = n - 1;
+        while (k >= 1 && nums[k - 1] >= nums[k]) k--;
+
+        if (k == 0) {
+            reverse(nums.begin(), nums.end());
+            return;
+        }
+
+        int j = k - 1;
+        while (j + 1 < n && nums[j + 1] > nums[k - 1]) j++;
+        swap(nums[j], nums[k - 1]);
+        reverse(nums.begin() + k, nums.end());
+    }
+};
