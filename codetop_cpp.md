@@ -310,3 +310,27 @@ public:
     }
 };
 ```
+# Leetcode 124. 二叉树中的最大路径和
+```
+class Solution {
+public:
+    int res;
+    int maxPathSum(TreeNode* root) {
+        res = INT_MIN;
+        dfs(root);
+
+        return res;
+    }
+
+    int dfs(TreeNode* root)
+    {
+        if (!root) return 0;
+        int l = max(0, dfs(root->left));
+        int r = max(0, dfs(root->right));
+
+        res = max(res, l + r + root->val);
+
+        return max(l, r) +  root->val;
+    }
+};
+```
