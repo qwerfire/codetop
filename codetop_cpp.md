@@ -547,3 +547,27 @@ public:
     }
 };
 ```
+# 19. 删除链表的倒数第 N 个结点
+```
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        auto dummy = new ListNode(-1);
+        dummy->next = head;
+        auto slow = dummy, fast = head;
+        for (int i = 1; i <= n; i++) {
+            fast = fast->next;
+        }
+        while (fast) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+
+        auto cur = slow->next;;
+        auto post = cur->next;
+        slow->next = post;
+
+        return dummy->next;
+    }
+};
+```
