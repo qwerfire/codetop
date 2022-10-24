@@ -310,6 +310,33 @@ public:
     }
 };
 ```
+
+### 方法2 单调栈
+```
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        stack<int> st;
+        int res = 0;
+
+        for (int i = 0; i < height.size(); i++) {
+            while (st.size() && height[st.top()] < height[i]) {
+                int t = st.top();
+                st.pop();
+                if (st.empty()) {
+                    break;
+                }
+                int w = min(height[i], height[st.top()]) - height[t];
+                int l = i - st.top() - 1;
+                res += w * l;
+            }
+            st.push(i);
+        }
+
+        return res;
+    }
+};
+```
 # Leetcode 124. 二叉树中的最大路径和
 ```
 class Solution {
