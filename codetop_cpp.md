@@ -1,4 +1,4 @@
-# Leetcode54. 螺旋矩阵
+# 54. 螺旋矩阵
 ```
 class Solution {
 public:
@@ -29,7 +29,7 @@ public:
 ```
 
 
-# Leetcode 23
+# 23. 合并K个升序链表
 ### 方法1
 ```
 class Solution {
@@ -149,7 +149,7 @@ public:
     }
 };
 ```
-# Leetcode 415. 字符串相加
+# 415. 字符串相加
 
 ```
 class Solution {
@@ -216,7 +216,7 @@ public:
     }
 };
 ```
-# Leetcode300. 最长上升子序列
+# 300. 最长上升子序列
 ### 方法1 dp
 ```
 class Solution {
@@ -284,7 +284,7 @@ public:
 };
 ```
 
-# Leetcode 42. 接雨水
+# 42. 接雨水
 ### 方法1 双指针，按列累加
 ```
 class Solution {
@@ -358,6 +358,192 @@ public:
         res = max(res, l + r + root->val);
 
         return max(l, r) +  root->val;
+    }
+};
+```
+# 143. 重排链表
+### 方法1
+```
+class Solution {
+public:
+    int getNo(ListNode* p) {
+        int res = 0;
+        while (p) {
+            res++;
+            p = p->next;
+        }
+
+        return res;
+    }
+    void reorderList(ListNode* head) {
+        int n = getNo(head);
+        if (n <= 2) return;
+        ListNode* pre = head, *mid = head;
+        for (int i = 0; i < n / 2; i++) {
+            pre = mid;
+            mid = mid->next;
+        }
+        pre->next = nullptr;
+        auto l = head;
+        auto r = reverse(mid);
+
+        while (l && l->next) {
+            auto tl = l->next;
+            auto tr = r->next;
+            l->next = r;
+            r->next = tl;
+            l = tl;
+            r = tr;
+        }
+        l->next = r;
+    }
+
+    ListNode* reverse(ListNode* node)
+    {
+        if (!node || !node->next) return node;
+        ListNode* a = node, *b = node->next;
+        while (b) {
+            auto c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+        node->next = nullptr;
+        return a;
+    }
+};
+```
+
+### 方法2
+```
+class Solution {
+public:
+    int getNo(ListNode* p) {
+        int res = 0;
+        while (p) {
+            res++;
+            p = p->next;
+        }
+
+        return res;
+    }
+    void reorderList(ListNode* head) {
+        int n = getNo(head);
+        if (n <= 2) return;
+        ListNode* pre = head, *mid = head;
+        for (int i = 0; i < n / 2; i++) {
+            pre = mid;
+            mid = mid->next;
+        }
+        pre->next = nullptr;
+        auto l = head;
+        auto r = reverse(mid);
+
+        // while (l && l->next) {
+        //     auto tl = l->next;
+        //     auto tr = r->next;
+        //     l->next = r;
+        //     r->next = tl;
+        //     l = tl;
+        //     r = tr;
+        // }
+        // l->next = r;
+
+        auto p = new ListNode();
+        int cnt = 0;
+        while (l && r) {
+            if (cnt == 0) {
+                p->next = l;
+                l = l->next;
+                p = p->next;
+                cnt = 1;
+            } else {
+                cnt = 0;
+                p->next = r;
+                r = r->next;
+                p = p->next;
+            }
+        }
+        p->next = r;
+    }
+
+    ListNode* reverse(ListNode* node)
+    {
+        if (!node || !node->next) return node;
+        ListNode* a = node, *b = node->next;
+        while (b) {
+            auto c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+        node->next = nullptr;
+        return a;
+    }
+};
+```
+# 94. 二叉树的中序遍历
+### 方法1 递归
+```
+class Solution {
+public:
+    vector<int> ans;
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        ans.push_back(root->val);
+        dfs(root->right);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        dfs(root);
+        return ans;
+    }
+};
+```
+
+# 199. 二叉树的右视图
+### 方法1 bfs
+```
+
+class Solution {
+public:
+    vector<int> res;
+    void dfs(TreeNode* root, int d)
+    {
+        if (!root) return;
+        if (res.size() == d) res.push_back(root->val);
+        dfs(root->right, d + 1);
+        dfs(root->left, d + 1);
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        dfs(root, 0);
+
+        return res;
+    }
+};
+```
+
+
+### 方法2 dfs
+
+```
+class Solution {
+public:
+    vector<int> res;
+    void dfs(TreeNode* root, int d)
+    {
+        if (!root) return;
+        if (res.size() == d) res.push_back(root->val);
+        dfs(root->right, d + 1);
+        dfs(root->left, d + 1);
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        dfs(root, 0);
+
+        return res;
     }
 };
 ```
