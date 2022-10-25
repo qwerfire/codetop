@@ -655,3 +655,22 @@ public:
  * bool param_4 = obj->empty();
  */
  ```
+# 144. 二叉树的前序遍历
+ ```
+class Solution {
+public:
+    vector<int> res;
+    vector<int> preorderTraversal(TreeNode* root) {
+        dfs(root);
+
+        return res;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        res.push_back(root->val);
+        dfs(root->left);
+        dfs(root->right);
+    }
+};
+```
