@@ -504,7 +504,27 @@ public:
 
 ### 方法2 迭代写法
 ```
-2022.10.24 周一
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        stack<TreeNode*> st;
+
+        vector<int> res;
+        while (st.size() || root) {
+            if (root) {
+                st.push(root);
+                root = root->left;
+            } else {
+                auto t = st.top();
+                st.pop();
+                res.push_back(t->val);
+                root = t->right;
+            }
+        }
+
+        return res;
+    }
+};
 ```
 
 # 199. 二叉树的右视图
