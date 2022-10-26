@@ -656,6 +656,7 @@ public:
  */
  ```
 # 144. 二叉树的前序遍历
+### 方法1 递归
  ```
 class Solution {
 public:
@@ -671,6 +672,57 @@ public:
         res.push_back(root->val);
         dfs(root->left);
         dfs(root->right);
+    }
+};
+```
+
+### 方法2 迭代
+```
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> st;
+        while (st.size() || root) {
+            if (root) {
+                res.push_back(root->val);
+                st.push(root);
+                root = root->left;
+            } else {
+                root = st.top()->right;
+                st.pop();
+            }
+        }
+
+        return res;
+    }
+};
+```
+# 4. 寻找两个正序数组的中位数
+```
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int cnt = nums1.size() + nums2.size();
+        if (cnt % 2) return findk(nums1, 0, nums2, 0, cnt / 2 + 1);
+
+        return (findk(nums1, 0, nums2, 0, cnt / 2) + findk(nums1, 0, nums2, 0, cnt / 2 + 1)) / 2.0;
+    }
+
+    int findk(vector<int>& nums1, int i, vector<int>& nums2, int j, int k)
+    {
+        if (nums1.size() - i > nums2.size() - j) return findk(nums2, j, nums1, i, k);
+
+        if (nums1.size() == i) return nums2[j + k - 1];// 这句必须在前面，否则下一句i可能越界
+        if (k == 1) return min(nums1[i], nums2[j]);
+
+        int si = min((int)nums1.size(), i + k / 2); 
+        int sj = j + k / 2;
+        if (nums1[si - 1] > nums2[sj - 1]) {
+            return findk(nums1, i, nums2, sj, k - (sj - j));
+        } else {
+            return findk(nums1, si, nums2, j, k - (si - i));
+        }
     }
 };
 ```
