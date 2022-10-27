@@ -808,3 +808,50 @@ public:
     }
 };
 ```
+# 2. 两数相加
+```
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        auto dummy = new ListNode();
+        auto p = dummy;
+        int c = 0;
+        while (l1 && l2) {
+            int v = l1->val + l2->val + c;
+            auto node = new ListNode(v % 10);
+            p->next = node;
+            p = p->next;
+            c = v / 10; 
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+
+        while (l1) {
+            int v = l1->val + c;
+            auto node = new ListNode(v % 10);
+            p->next = node;
+            p = p->next;
+            c = v / 10; 
+            l1 = l1->next;
+        }
+
+        while (l2) {
+            int v = l2->val + c;
+            auto node = new ListNode(v % 10);
+            p->next = node;
+            p = p->next;
+            c = v / 10; 
+            l2 = l2->next;
+        }
+
+        if (c) {
+            auto node = new ListNode(c);
+            p->next = node;
+            p = p->next;
+        }
+
+        return dummy->next;
+
+    }
+};
+```
