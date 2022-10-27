@@ -776,3 +776,35 @@ public:
     }
 };
 ```
+# 56. 合并区间
+```
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end(), [](vector<int> a, vector<int> b){
+            if (a[0] == b[0]) return a[1] < b[1];
+            return a[0] < b[0];
+        });
+
+        vector<vector<int>> res;
+        int l = intervals[0][0], r = intervals[0][1];
+        for (int i = 1; i < intervals.size(); i++) {
+            int nl = intervals[i][0], nr = intervals[i][1];
+            if (nl > r) {
+                res.push_back({l, r});
+                l = nl, r = nr;
+            } else {
+                r = max(r, nr);
+            }
+        }
+
+        res.push_back({l, r});
+
+        // for (auto d : intervals) {
+        //     cout << d[0] << " " << d[1] << endl;
+        // }
+
+        return res;
+    }
+};
+```
