@@ -855,3 +855,213 @@ public:
     }
 };
 ```
+# 148. 排序链表
+## *递归方法未实现*
+### 方法1 归并
+```
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head->next) return head;
+        ListNode* mid = split(head);
+
+        auto l = sortList(head);
+        auto r = sortList(mid);
+
+        return merge(l, r);
+    }
+
+    ListNode* split(ListNode* node)
+    {
+        int n = 0;
+        ListNode* p = node;
+        while (p) {
+            n++;
+            p = p->next;
+        }
+
+        p = node;
+        for (int i = 1; i < n / 2; i++) {
+            p = p->next;
+        }
+        auto r = p->next;
+        p->next = nullptr;
+
+        return r;
+    }
+
+    ListNode* merge(ListNode* l, ListNode* r) 
+    {
+        auto dummy = new ListNode();
+        auto p = dummy;
+        while (l && r)
+        {
+            if (l->val < r->val) {
+                p->next = l;
+                l = l->next;
+                p = p->next;
+            } else {
+                p->next = r;
+                r = r->next;
+                p = p->next;
+            }
+        }
+
+        if (l) {
+            p->next = l;
+        }
+
+        if (r) {
+            p->next = r;
+        }
+
+        return dummy->next;
+    }
+};
+```
+### 方法2 归并，找中间节点方法修改
+```
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) return head;
+
+        ListNode* head1 = head;
+        ListNode* head2 = split(head);
+
+        head1 = sortList(head1);        //一条链表分成两段分别递归排序
+        head2 = sortList(head2);
+
+        return merge(head1, head2);     //返回合并后结果
+    }
+
+    //双指针找单链表中点模板
+    ListNode* split(ListNode* head)     
+    {
+        ListNode *slow = head, *fast = head->next;
+
+        while (fast != nullptr && fast->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        ListNode* mid = slow->next;
+        slow->next = nullptr;           //断尾
+
+        return mid;
+    }
+
+    //合并两个排序链表模板
+    ListNode* merge(ListNode* head1, ListNode* head2)
+    {
+        ListNode *dummy = new ListNode(0), *p = dummy;
+
+        while (head1 != nullptr && head2 != nullptr)
+        {
+            if (head1->val < head2->val)
+            {
+                p = p->next = head1;
+                head1 = head1->next;
+            }
+            else
+            {
+                p = p->next = head2;
+                head2 = head2->next;
+            }
+        }
+
+        if (head1 != nullptr) p->next = head1;
+        if (head2 != nullptr) p->next = head2;
+
+        return dummy->next;
+    }
+};
+```
+
+### 方法3 快排 会超时
+```
+class Solution {
+public:
+    auto getTail(ListNode* p)
+    {
+        while (p->next) p = p->next;
+        
+        return p;
+    }
+    
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head->next) return head;
+        
+        auto left = new ListNode(-1), mid = new ListNode(-1), right = new ListNode(-1);
+        auto l = left, m = mid, r = right;
+        auto val = head->val;
+        for (auto p = head; p; p = p->next) {
+            if (p->val < val) l = l->next = p;
+            else if (p->val == val) m = m->next = p;
+            else r = r->next = p;
+        }
+        
+        l->next = m->next = r->next = nullptr;
+        left->next = sortList(left->next);
+        right->next = sortList(right->next);
+        getTail(left)->next = mid->next;
+        getTail(left)->next = right->next;
+        
+        return left->next;
+    }
+};
+```
+### 方法4 快排改进不超时
+```
+class Solution {
+public:
+    auto getTail(ListNode* p)
+    {
+        while (p->next) p = p->next;
+        
+        return p;
+    }
+
+    int getLen(ListNode* p) {
+        int n = 0;
+        while (p) {
+            p = p->next;
+            n++;
+        }
+
+        return n;
+    }
+
+    ListNode* getMid(ListNode* p) {
+        int n = getLen(p);
+        ListNode* node = p;
+        for (int i = 1; i < n / 2; i++) {
+            node = node->next;
+        }
+
+        return node;
+    }
+    
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head->next) return head;
+        
+        auto left = new ListNode(-1), mid = new ListNode(-1), right = new ListNode(-1);
+        auto l = left, m = mid, r = right;
+        auto val = getMid(head)->val;
+        for (auto p = head; p; p = p->next) {
+            if (p->val < val) l = l->next = p;
+            else if (p->val == val) m = m->next = p;
+            else r = r->next = p;
+        }
+        
+        l->next = m->next = r->next = nullptr;
+        left->next = sortList(left->next);
+        right->next = sortList(right->next);
+        getTail(left)->next = mid->next;
+        getTail(left)->next = right->next;
+        
+        return left->next;
+    }
+};
+```
