@@ -1065,3 +1065,34 @@ public:
     }
 };
 ```
+
+# 82. 删除排序链表中的重复元素 II
+### 方法1
+```
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head || !head->next) return head;
+
+        auto p0 = new ListNode(-1000), p1 = new ListNode(-500);
+        p0->next = p1;
+        p1->next = head;
+        auto d0 = p0, d1 = p1;
+        while (head) {
+            if (p1->val != head->val) {
+                p0 = p1;
+                p1 = head;
+                head = head->next;
+            } else {
+                while (head && p1->val == head->val)
+                    head = head->next;
+                p0->next = head;
+                p1 = head;
+                if (head) head = head->next;
+            }
+        }
+
+        return d1->next;
+    }
+};
+```
