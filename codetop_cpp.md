@@ -1118,3 +1118,121 @@ public:
     }
 };
 ```
+
+# 460. LFU
+```
+class LFUCache {
+public:
+    struct Node {
+        Node *left, *right;
+        int key, val;
+        Node(int _key, int _val) :key(_key), val(_val)
+        {
+            left = right = nullptr;
+        }
+    };
+
+    struct Block {
+        Node *head, *tail;
+        Block *left, *right;
+        int cnt;
+        Block(int _cnt)
+        {
+            cnt = _cnt;
+            left = right = nullptr;
+            head = new Node(-1, -1);
+            tail = new Node(-1, -1);
+            head->right = tail;
+            tail->left = head;
+        }
+
+        void insert(Node* p)
+        {   
+            p->right = head->right;
+            head->right->left = p;
+            p->left = head;
+            head->right = p;
+        }
+
+        void remove(Node* p)
+        {
+            p->left->right = p->right;
+            p->right->left = p->left;
+            // p->left->right = p->right;
+        }
+
+        bool empty()
+        {
+            return head->right == tail;
+        }
+    };
+
+    Block *head, *tail;
+    int n;
+    unordered_map<int, Block*> hash_block;
+    unordered_map<int, Node*> hash_node;
+
+    LFUCache(int capacity) {
+        n = capacity;
+        head = new Block(0), tail = new Block(INT_MAX);
+        head->right = tail;
+        tail->left = head;
+    }
+
+    void insert(Block* p)
+    {
+        Block* cur = new Block(p->cnt + 1);
+        cur->right = p->right;
+        p->right->left = cur;
+        cur->left = p;
+        p->right = cur;
+    }
+
+    void remove(Block* p)
+    {
+        p->left->right = p->right;
+        p->right->left = p->left;
+        delete p;
+    }
+    
+    int get(int key) {
+        if (hash_block.count(key) == 0) return -1;
+        auto block = hash_block[key];
+        auto node = hash_node[key];
+        block->remove(node);
+        if (block->right->cnt != block->cnt + 1) {
+            insert(block);
+        }
+        block->right->insert(node);
+        hash_block[key] = block->right;
+        if (block->empty()) remove(block);
+
+        return node->val;
+    }
+    
+    void put(int key, int value) {
+        if (n == 0) return;
+        if (hash_node.count(key)) {
+            hash_node[key]->val = value;
+            get(key);
+        } else {
+            if (hash_node.size() == n) {
+                auto p = head->right->tail->left;
+                head->right->remove(p);
+                if (head->right->empty()) remove(head->right);
+                hash_block.erase(p->key);
+                hash_node.erase(p->key);
+                delete p;
+            }
+
+            auto p = new Node(key, value);
+            if (head->right->cnt > 1) {
+                insert(head);
+            }
+            head->right->insert(p);
+            hash_node[key] = p;
+            hash_block[key] = head->right;
+        }
+    }
+};
+ ```
