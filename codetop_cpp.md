@@ -1096,3 +1096,25 @@ public:
     }
 };
 ```
+
+# 31. 下一个排列
+### 方法1
+```
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int n = nums.size();
+        int k = n - 1;
+        while (k > 0 && nums[k - 1] >= nums[k]) k--;
+        if (k == 0) {
+            reverse(nums.begin(), nums.end());
+            return;
+        }
+
+        int j = k - 1;
+        while (j + 1 < n && nums[j + 1] > nums[k - 1]) j++;
+        swap(nums[k - 1], nums[j]);
+        reverse(nums.begin() + k, nums.end());
+    }
+};
+```
