@@ -1258,4 +1258,30 @@ public:
         return dp[n][m];
     }
 };
- ```
+```
+# 22. 括号生成
+```
+class Solution {
+public:
+    vector<string> res;
+    int m;
+    vector<string> generateParenthesis(int n) {
+        m = n;
+        dfs("", 0, 0);
+
+        return res;
+    }
+
+    void dfs(string s, int l, int r) {
+        if (r > l || l > m || r > m) return;
+
+        if (l == r && l == m) {
+            res.push_back(s);
+            return;
+        }
+
+        dfs(s + '(', l + 1, r);
+        dfs(s + ')', l, r + 1);
+    }
+};
+```
