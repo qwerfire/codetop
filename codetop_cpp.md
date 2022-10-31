@@ -1285,3 +1285,39 @@ public:
     }
 };
 ```
+# 151. 翻转字符串里的单词
+```
+class Solution {
+public:
+    string reverseWords(string s) {
+        int i = 0;
+        while (i < s.size() && s[i] == ' ') i++;
+        s.erase(s.begin(), s.begin() + i);
+        while (s.size() && s.back()  == ' ') s.pop_back();
+        reverse(s.begin(), s.end());
+        int k = 0, j = 0;
+        for (i = 0; i < s.size(); ) 
+        {
+            if (s[i] != ' ') {
+                s[k++] = s[i++];
+            } 
+            else 
+            {
+                s[k++] = s[i++];
+                int j = i;
+                while (j < s.size() && s[j] == ' ') j++;
+                i = j;
+            }
+        }
+        s.erase(s.begin() + k, s.end());
+
+        for (int i = 0; i < s.size(); ) {
+            int j = i;
+            while (j < s.size() && s[j] != ' ') j++;
+            reverse(s.begin() + i, s.begin() + j);
+            i = j + 1;
+        }
+        return s;
+    }
+};
+```
