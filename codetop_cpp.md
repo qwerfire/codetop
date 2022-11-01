@@ -1321,3 +1321,75 @@ public:
     }
 };
 ```
+# 8. 字符串转换整数 (atoi)
+### 方法1
+```
+class Solution {
+public:
+    int myAtoi(string s) {
+        string res;
+        int f = 1, i = 0;
+
+       while (i < s.size() && s[i] == ' ') i++;
+       if (s[i] == '+') {
+           f = 1;
+           i++;
+       } else if (s[i] == '-') {
+           f = -1;
+           i++;
+       }
+       while (i < s.size()) {
+        //    if (s[i] >= '0' & s[i] <= '9') {
+           if (isdigit(s[i])) {
+               res += s[i];
+               i++;
+               if (f == 1 && stol(res) >=INT_MAX) {
+                   return INT_MAX;
+               } else if (f == -1 && stol(res) * (-1) <= INT_MIN) {
+                   return INT_MIN;
+               }
+           } else break;
+       }
+        if (res.size() == 0) return 0;
+        return stoi(res) * f;
+    }
+};
+```
+
+### 方法2
+```
+class Solution {
+public:
+    int myAtoi(string s) {
+        int res = 0;
+        int f = 1, i = 0;
+
+       while (i < s.size() && s[i] == ' ') i++;
+       if (s[i] == '+') {
+           f = 1;
+           i++;
+       } else if (s[i] == '-') {
+           f = -1;
+           i++;
+       }
+       
+       while (i < s.size()) {
+           if (s[i] >= '0' & s[i] <= '9') {
+               int x = s[i] - '0';
+               i++;
+               if (f == 1 && res > (INT_MAX - x) / 10) {
+                   return INT_MAX;
+               } else if (f == -1 && (-1 * res ) < (INT_MIN + x) / 10 ) {
+                   return INT_MIN;
+               } else if (-1 * res * 10 - x == INT_MIN) {
+                   return INT_MIN;
+               }
+               res = res * 10 + x;
+
+           } else break;
+       }
+        
+        return res * f;
+    }
+};
+```
