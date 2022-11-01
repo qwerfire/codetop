@@ -1393,3 +1393,25 @@ public:
     }
 };
 ```
+
+# 239. 滑动窗口最大值
+```
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> res;
+        deque<int> dq;
+        for (int i = 0; i < nums.size(); i++) {
+            if (dq.size() && i - dq.front() >= k) dq.pop_front();
+            while (dq.size() && nums[dq.back()] < nums[i]) dq.pop_back();
+            dq.push_back(i);
+            if (i + 1 >= k) {
+                // cout << "i: " << i << ", k: " << k << ", front: " << dq.front() << endl;
+                res.push_back(nums[dq[0]]);
+            }
+        }
+
+        return res;
+    }
+};
+```
