@@ -1433,3 +1433,77 @@ public:
     }
 };
 ```
+
+# 剑指 Offer 22. 链表中倒数第k个节点
+```
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* getKthFromEnd(ListNode* head, int k) {
+        auto fast = head, slow = head;
+        for (int i = 1; i <= k; i++) fast = fast->next;
+        while (fast) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+
+        return slow;
+    }
+};
+```
+# 93. 复原IP地址
+```
+class Solution {
+public:
+    vector<string> ans;
+    vector<string> path;
+
+    vector<string> restoreIpAddresses(string s) {
+        dfs(s, 0);
+
+        return ans;
+    }
+
+     bool isValid(string& s) {
+        int len = s.size();
+        long long ans = 0, numZero = 0, preZero = 0;
+        for (int i = 0; i < len; i++) {
+            if (s[i] < '0' || s[i] > '9') return false;
+            else {
+                ans = ans * 10 + s[i] - '0';
+                if (s[i] == '0' && i == 0) numZero++;
+            }
+        }
+
+        return (ans == 0 && s.size() == 1) || (numZero == 0 && ans > 0 && ans <= 255);
+    }
+
+    void dfs(string& s, int u)
+    {
+        if (u == s.size() && path.size() == 4) {
+            string temp;
+            for (int i = 0; i < 3; i++) 
+                temp += (path[i] + '.');
+            temp += path[3];
+            ans.push_back(temp);
+            return;
+        }
+
+        for (int i = u; i < s.size(); i++) {
+            string temp = s.substr(u, i - u + 1);
+            if (isValid(temp)) {
+                path.push_back(temp);
+                dfs(s, i + 1);
+                path.pop_back();
+            }
+        }
+    }
+};
+```
