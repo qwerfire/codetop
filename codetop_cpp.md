@@ -1507,3 +1507,28 @@ public:
     }
 };
 ```
+# 105. 从前序与中序遍历序列构造二叉树
+```
+class Solution {
+public:
+    unordered_map<int, int> hash;
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        for (int i = 0; i < inorder.size(); i++) {
+            hash[inorder[i]] = i;
+        }
+
+        return build(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
+    }
+
+    TreeNode* build(vector<int>& pre, int pl, int pr, vector<int>& in, int il, int ir)
+    {
+        if (pl > pr) return nullptr;
+        auto root = new TreeNode(pre[pl]);
+        int pos = hash[pre[pl]];
+        root->left = build(pre, pl + 1, pl + 1 + pos - 1 - il, in, il, pos - 1);
+        root->right = build(pre, pl + 1 + pos - 1 - il + 1, pr, in, pos + 1, ir);
+
+        return root;
+    }
+};
+```
