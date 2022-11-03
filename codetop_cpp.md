@@ -1640,3 +1640,53 @@ public:
     }
 };
 ```
+# 155. 最小栈
+```
+class MinStack {
+public:
+    stack<int> st, stMin;
+
+    MinStack() {
+
+    }
+    
+    void push(int val) {
+        if (st.empty()) {
+            st.push(val);
+            stMin.push(val);
+        } else {
+            if (val > stMin.top()) {
+                stMin.push(stMin.top());
+                st.push(val);
+            } else {
+                stMin.push(val);
+                st.push(val);
+            }
+        }
+    }
+    
+    void pop() {
+        if (st.size()) {
+            st.pop();
+            stMin.pop();
+        }
+    }
+    
+    int top() {
+        return st.top();
+    }
+    
+    int getMin() {
+        return stMin.top();
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(val);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
+ ```
