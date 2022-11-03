@@ -1532,3 +1532,55 @@ public:
     }
 };
 ```
+
+
+# 165. 比较版本号
+```
+class Solution {
+public:
+
+    vector<int> getVans(string version1)
+    {
+        vector<int> v1, v2;
+        int res = 0;
+        for (int i = 0; i < version1.size(); i++) {
+            if (version1[i] != '.') {
+                // cout << "res = " << res << endl;
+                res = res * 10 - '0' + version1[i]; //先减后加，防止溢出
+            } else {
+                v1.push_back(res);
+                res = 0;
+            }
+        }
+        v1.push_back(res);
+
+        return v1;
+    }
+
+    int compareVersion(string version1, string version2) {
+        vector<int> v1 = getVans(version1);
+        vector<int> v2 = getVans(version2);
+        int i = 0;
+        while (i < v1.size() && i < v2.size()) {
+            if (v1[i] > v2[i]) return 1;
+            else if (v1[i] < v2[i]) return -1;
+            else i++;
+        }
+
+        if (i == v1.size() && i == v2.size()) return 0;
+        if (i == v1.size()) {
+            while (i < v2.size() && v2[i] == 0) i++;
+            if (v2.size() == i) return 0;
+            return -1;
+        }
+
+        if (i == v2.size()) {
+            while (i < v1.size() && v1[i] == 0) i++;
+            if (v1.size() == i) return 0;
+            return 1;
+        }
+
+        return 0;  
+    }
+};
+```
