@@ -1584,3 +1584,59 @@ public:
     }
 };
 ```
+# 76. 最小覆盖子串
+```
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        unordered_map<char, int> ht, hs;
+        for (auto x : t) ht[x]++;
+        int cnt = 0;
+        string res;
+        for (int i = 0, j = 0; i < s.size(); i++) {
+            hs[s[i]]++;
+            if (hs[s[i]] <= ht[s[i]]) cnt++;
+            while (hs[s[j]] > ht[s[j]]) hs[s[j++]]--;
+            if (cnt == t.size()) {
+                if (res.size() == 0 || i - j + 1 < res.size()) {
+                    res = s.substr(j, i - j + 1);
+                }
+            }
+        }
+
+        return res;
+    }
+};
+```
+# 43. 字符串相乘
+```
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        if (num1 == "0" || num2 == "0") return "0";
+        if (num1 == "1") return num2; 
+        if (num2 == "1") return num1;
+        vector<int> a, b;
+        for (int i = num1.size() - 1; i >= 0; i--) a.push_back(num1[i] - '0'); 
+        for (int i = num2.size() - 1; i >= 0; i--) b.push_back(num2[i] - '0');
+        vector<int> c(num1.size() + num2.size());
+
+        for (int i = 0; i < num1.size(); i++)
+            for (int j = 0; j < num2.size(); j++) {
+                c[i + j] += a[i] * b[j];
+            } 
+        int t = 0;
+        for (int i = 0; i < num2.size() + num1.size(); i++) {
+            c[i] += t;
+            t = c[i] / 10;
+            c[i] = c[i] % 10;
+        }
+        int k = num1.size() +  num2.size() - 1;
+
+        while (k >= 0 && c[k] == 0) k--;
+        string res;
+        while (k >= 0) res += c[k--] + '0';
+        return res;
+    }
+};
+```
