@@ -1908,3 +1908,83 @@ public:
     }
 };
 ```
+# 32. 最长有效括号
+## 方法1 栈
+```
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        stack<int> st;
+        int res = 0, l = -1, i = 0;
+        for (auto x : s) {
+            if (x == '(') {
+                st.push(i);
+            } else {
+                if (st.empty()) {
+                    l = i;
+                } else {
+                    st.pop();
+                    if (st.empty()) {
+                        res = max(res, i - l);
+                    } else {
+                        res = max(res, i - st.top());
+                    }
+                }
+            }
+            i++;
+        }
+
+        return res;
+    }
+};
+```
+
+## 方法2 两次遍历
+```
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int l = 0, r = 0, res = 0, len = s.size();
+        for (int i = 0; i < len; i++) {
+            if (s[i] == '(') l++;
+            else r++;
+            if (l == r) res = max(res, r + r);
+            if (r > l) l = r = 0;
+        }
+
+        l = r = 0;
+        for (int i = len - 1; i >= 0; i--) {
+            if (s[i] == ')') r++;
+            else l++;
+            if (l == r) res = max(res, l + l);
+            if (l > r) l = r = 0;
+        }
+
+        return res;
+    }
+};
+```
+## 方法3 dp
+```
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n = s.size();
+        vector<int> f(n);
+        int res = 0, pre = 0;
+
+        for (int i = 1; i < n; i++) {
+            if (s[i] == ')') {
+                pre = i - f[i - 1] - 1;
+                if (pre >= 0 && s[pre] == '(') {
+                    f[i] = f[i - 1] + 2;
+                    if (pre) f[i] += f[pre - 1];
+                }
+            }
+            res = max(res, f[i]);
+        }
+
+        return res;
+    }
+};
+```
