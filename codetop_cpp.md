@@ -1690,3 +1690,26 @@ public:
  * int param_4 = obj->getMin();
  */
  ```
+# 110. 平衡二叉树
+ ```
+class Solution {
+public:
+    bool ans;
+    bool isBalanced(TreeNode* root) {
+        if (!root) return true;
+        ans = true;
+        dfs(root);
+
+        return ans;
+    }
+
+    int dfs(TreeNode* root) {
+        if (!root) return 0;
+        int l = dfs(root->left);
+        int r = dfs(root->right);
+        if (abs(l - r) > 1) ans = false;
+
+        return max(l, r) + 1;
+    }
+};
+```
