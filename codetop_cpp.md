@@ -1769,7 +1769,7 @@ public:
 };
 ```
 # 543. 二叉树的直径
-## 方法1
+### 方法1
 ```
 class Solution {
 public:
@@ -1801,7 +1801,7 @@ public:
     }
 };
 ```
-## 方法2
+### 方法2
 ```
 class Solution {
 public:
@@ -1820,5 +1820,91 @@ public:
         return 1 + max(l, r);
     }
 
+};
+```
+# 78. 子集
+### 方法1
+```
+// 2022.11.04 周五
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> res;
+
+        for (int i = 0; i < (1 << n); i++) {
+            vector<int> t;
+            for (int j = 0; j < n; j++) {
+                if ((i >> j) & 1) {
+                    t.push_back(nums[j]);
+                }
+            }
+            res.push_back(t);
+        }
+
+        return res;
+    }
+};
+```
+### 方法2
+```
+// 2022.11.04 周五
+class Solution {
+public:
+    int n;
+    vector<vector<int>> res;
+    vector<int> path;
+    vector<vector<int>> subsets(vector<int>& nums) {
+        n = nums.size();
+
+        dfs(nums, 0);
+        return res;
+    }
+
+    void dfs(vector<int>& nums, int u)
+    {
+        if (u == n) {
+            res.push_back(path);
+            // cout << "path: " << u << endl;
+            return;
+        }
+        path.push_back(nums[u]);
+
+            // cout << "i = " << i << endl;
+        dfs(nums, u + 1);
+        path.pop_back();
+            // cout << "ii = " << i << endl;
+        dfs(nums, u + 1);
+        
+    }
+};
+```
+# 129. 求根节点到叶节点数字之和
+```
+class Solution {
+public:
+    vector<int> num;
+    int sumNumbers(TreeNode* root) {
+        dfs(root, 0);
+        int res = 0;
+        for (auto x : num) {
+            // cout << "x: " << x << endl;
+            res += x;
+        }
+
+        return res;
+    }
+
+    void dfs(TreeNode* root, int t) {
+        if (root->left == nullptr && root->right == nullptr) {
+            t = t * 10 + root->val;
+            num.push_back(t);
+            return;
+        }
+
+        t = t * 10 + root->val;
+        if(root->left) dfs(root->left, t);
+        if(root->right) dfs(root->right, t);
+    }
 };
 ```
