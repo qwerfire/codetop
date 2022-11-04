@@ -1768,3 +1768,57 @@ public:
     }
 };
 ```
+# 543. 二叉树的直径
+## 方法1
+```
+class Solution {
+public:
+    int ans;
+    int diameterOfBinaryTree(TreeNode* root) {
+        if (!root) return 0;
+        ans = 0;
+        dfs(root);
+
+        return ans;
+    }
+    void dfs(TreeNode* root)
+    {
+        if (!root) return;
+        int l = maxDepth(root->left);
+        int r = maxDepth(root->right);
+        ans = max(ans, l + r);
+        dfs(root->left);
+        dfs(root->right);
+    }
+    int maxDepth(TreeNode* root) {
+        if (!root) return 0;
+
+        int l = maxDepth(root->left);
+
+        int r = maxDepth(root->right);
+
+        return max(l, r) + 1;
+    }
+};
+```
+## 方法2
+```
+class Solution {
+public:
+    int ans = 0;
+    int diameterOfBinaryTree(TreeNode* root) {
+        dfs(root);
+        return ans;
+    }
+
+    int dfs(TreeNode* root) {
+        if (!root) return 0;
+        int l = dfs(root->left);
+        int r = dfs(root->right);
+        ans = max(ans, l + r);;
+        
+        return 1 + max(l, r);
+    }
+
+};
+```
