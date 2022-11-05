@@ -2006,8 +2006,6 @@ public:
     }
 };
 ```
-
-	
 # 64. 最小路径和
 ## dp
 ```
@@ -2030,6 +2028,32 @@ public:
         }
 
         return dp[m - 1][n - 1];
+    }
+};
+```
+# 322. 零钱兑换
+### 方法1 完全背包，二维DP
+```
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        vector<vector<int>> dp(n + 1, vector<int>(amount + 1, 0x3f3f3f3f));
+
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = 0;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= amount; j++) {
+                dp[i][j] = min(dp[i][j], dp[i - 1][j]);
+                if (j >= coins[i - 1]) {
+                    dp[i][j] = min(dp[i][j], dp[i][j - coins[i - 1]] + 1);
+                }
+            }
+        }
+
+        return dp[n][amount] == 0x3f3f3f3f ? -1 : dp[n][amount];
     }
 };
 ```
