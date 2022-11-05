@@ -2057,3 +2057,28 @@ public:
     }
 };
 ```
+### 方法2 优化空间
+```
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        vector<int> dp(amount + 1, 0x3f3f3f3f);
+        dp[0] = 0; // 这句优化时不能忘记
+
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= amount; j++) {
+                // dp[i][j] = min(dp[i][j], dp[i - 1][j]);
+                dp[j] = min(dp[j], dp[j]);
+                if (j >= coins[i - 1]) {
+                    // dp[i][j] = min(dp[i][j], dp[i][j - coins[i - 1]] + 1);
+                    dp[j] = min(dp[j], dp[j - coins[i - 1]] + 1);
+                }
+            }
+        }
+
+        return dp[amount] == 0x3f3f3f3f ? -1 : dp[amount];
+    }
+};
+```
