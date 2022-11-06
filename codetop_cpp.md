@@ -2082,3 +2082,105 @@ public:
     }
 };
 ```
+# 98. 验证二叉搜索树
+### 方法1
+```
+class Solution {
+public:
+    vector<int> num;
+    bool isValidBST(TreeNode* root) {
+        dfs(root);
+
+        for (int i = 1; i < num.size(); i++) {
+            if (num[i - 1] >= num[i]) return false;
+        }
+
+        return true;
+    }
+
+    void dfs(TreeNode* root)
+    {
+        if (!root) return;
+
+        dfs(root->left);
+        num.push_back(root->val);
+        dfs(root->right);
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+
+    bool ans;
+    bool isValidBST(TreeNode* root) {
+        ans = true;
+        TreeNode* pre = nullptr;
+        dfs(root, pre);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root, TreeNode*& pre)
+    {
+        if (!root) return;
+
+        dfs(root->left, pre);
+        if (pre && pre->val >= root->val) ans = false;
+        pre = root;
+        dfs(root->right, pre);
+    }
+};
+```
+
+### 方法3
+```
+class Solution {
+public:
+    TreeNode* pre = nullptr;
+    bool isValidBST(TreeNode* root) {
+        if (!root) return true;
+
+        if (!isValidBST(root->left)) return false;
+        if (pre && root->val <= pre->val) return false;
+        pre = root;
+        if (!isValidBST(root->right)) return false;
+
+        return true;
+    }
+};
+```
+### 方法4
+```
+class Solution {
+public:
+    vector<int> num;
+    bool isValidBST(TreeNode* root) {
+        Tarverse(root);
+
+        for (int i = 1; i < num.size(); i++) {
+            if (num[i - 1] >= num[i]) return false;
+        }
+
+        return true;
+    }
+
+    void Tarverse(TreeNode* root)
+    {
+        stack<TreeNode*> st;
+
+        while (st.size() || root) {
+            if (root) {
+                st.push(root);
+                root = root->left;
+            } else {
+                auto node = st.top(); 
+                st.pop();
+                num.push_back(node->val);
+                root = node->right;
+            }
+        }
+    }
+};
+```
