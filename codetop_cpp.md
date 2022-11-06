@@ -2184,3 +2184,35 @@ public:
     }
 };
 ```
+# 113. 路径总和 II
+```
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        if (!root) return res;
+        vector<int> p;
+        dfs(root, p, 0, targetSum);
+
+        return res;
+    }
+
+    void dfs(TreeNode* root, vector<int> path, int s, int t)
+    {
+        if (root->left == nullptr && root->right == nullptr)
+        {
+            path.push_back(root->val);
+            s += root->val;
+            if (s == t) {
+                res.push_back(path);
+            }
+
+            return;
+        }
+        s += root->val;
+        path.push_back(root->val);
+        if (root->left) dfs(root->left, path, s, t);
+        if (root->right) dfs(root->right, path, s, t);
+    }
+};
+```
