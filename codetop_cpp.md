@@ -2244,3 +2244,90 @@ public:
     }
 };
 ```
+# 39. 组合总和
+### 方法1
+```
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> path;
+
+    vector<vector<int>> combinationSum(vector<int>& nums, int t) {
+        sort(nums.begin(), nums.end());
+        dfs(nums, t, 0, 0);
+
+        return res;
+    }
+
+    void dfs(vector<int>& nums, int t, int sum, int u)
+    {
+        if (sum > t) return;
+        if (sum == t) {
+            res.push_back(path);
+            return;
+        }
+        
+        for (int i = u; i < nums.size(); i++) {
+            path.push_back(nums[i]);
+            dfs(nums, t, sum + nums[i], i);
+            path.pop_back();
+        }
+
+       
+    }
+};
+```
+
+### 方法2
+```
+class Solution {
+public:
+    vector<vector<int>> res;
+
+    vector<vector<int>> combinationSum(vector<int>& nums, int t) {
+        sort(nums.begin(), nums.end());
+        vector<int> path;
+        dfs(nums, t, 0, 0, path);
+
+        return res;
+    }
+
+    void dfs(vector<int>& nums, int t, int sum, int u, vector<int> path)
+    {
+        if (sum > t) return;
+        if (sum == t) {
+            res.push_back(path);
+            return;
+        }
+        if (u == nums.size()) return;
+        
+        while (sum <= t) {
+            dfs(nums, t, sum, u + 1, path);
+            sum += nums[u];
+            path.push_back(nums[u]);
+        }
+    }
+};
+```
+# 48. 旋转图像
+```
+class Solution {
+public:
+    void rotate(vector<vector<int>>& mat) {
+        int n = mat.size(), m = mat[0].size();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < m; j++) {
+                swap(mat[i][j], mat[j][i]);
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            int l = 0, r = m - 1;
+            while (l < r) {
+                swap(mat[i][l], mat[i][r]);
+                l++, r--;
+            }
+        }
+    }
+};
+```
