@@ -2331,3 +2331,58 @@ public:
     }
 };
 ```
+
+# 112. 路径总和
+```
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) return false;
+
+        if (root->left == nullptr && root->right == nullptr)
+            return root->val == targetSum;
+        
+        return hasPathSum(root->left, targetSum - root->val) ||
+               hasPathSum(root->right, targetSum - root->val);
+    }
+};
+```
+# 169. 多数元素
+```
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int cnt = 0, res = 0;
+        for (auto x : nums) {
+            if (cnt == 0) res = x, cnt++;
+            else {
+                if (x == res) cnt++;
+                else cnt--;
+            }
+        }
+
+        return res;
+    }
+};
+```
+# 221. 最大正方形
+```
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& mat) {
+        int n = mat.size(), m = mat[0].size();
+        vector<vector<int>> f(n + 1, vector<int>(m + 1));
+        int res = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                if (mat[i - 1][j - 1] == '1') {
+                    f[i][j] = min(f[i - 1][j - 1], min(f[i][j - 1], f[i - 1][j])) + 1;
+                }
+                res = max(res, f[i][j]);  
+            }
+        }
+
+        return res * res;
+    }
+};
+```
