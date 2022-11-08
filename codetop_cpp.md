@@ -2386,3 +2386,57 @@ public:
     }
 };
 ```
+
+# 240. 搜索二维矩阵 II
+## 方法1
+```
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int n = matrix.size(), m = matrix[0].size();
+        int i = 0, j = m - 1;
+        while (i >= 0 && i < n && j >= 0 && j < m)
+        {
+            if (matrix[i][j] > target) j--;
+            else if (matrix[i][j] < target) i++;
+            else return true;
+        }
+
+        return false;
+    }
+};
+```
+## 方法2
+```
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int n = matrix.size(), m = matrix[0].size();
+        
+        for (int i = 0; i < n; i++)
+        {
+            int id = lower_bound(matrix[i].begin(), matrix[i].end(), target) - matrix[i].begin();
+            if (id < m && matrix[i][id] == target) return true;
+        }
+
+        return false;
+    }
+};
+```
+
+# 226. 翻转二叉树
+```
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (!root) return root;
+        auto l = invertTree(root->left);
+        auto r = invertTree(root->right);
+
+        root->left = r;
+        root->right = l;
+
+        return root;
+    }
+};
+```
