@@ -2466,3 +2466,138 @@ public:
     }
 };
 ```
+
+# 234. 回文链表
+### 方法1
+```
+class Solution {
+public:
+    bool isPalindrome(ListNode* h) {
+        vector<int> v;
+        while (h) {
+            v.push_back(h->val);
+            h = h->next;
+        }
+
+        for (int i = 0, j = v.size() - 1; i < j; i++, j--) {
+            if (v[i] != v[j]) return false;
+        }
+
+        return true;
+    }
+};
+```
+### 方法2 O(1)空间
+```
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        int n = 0;
+        for (auto p = head; p; p = p->next) {
+            n++;
+        }
+        if (n <= 1) return head;
+        int half = n / 2;
+        auto a = head;
+
+        for (int i = 0; i < n - half; i++) a = a->next;
+        auto b = a->next;
+        while (b) {
+            auto c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+        
+        auto p = head, q = a;
+        bool flag = true;
+        for (int i = 0; i < half; i++) {
+            if (p->val != q->val) {
+                flag = false;
+                break;
+            }
+            p = p->next;
+            q = q->next;
+        }
+
+        auto tail = a;
+        b = a->next;
+        for (int i = 0; i < half - 1; i++) {
+            auto c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+
+        tail->next = nullptr;
+        return flag;
+    }
+};
+```
+
+### 方法3
+```
+class Solution {
+public:
+    pair<ListNode*, ListNode*> getMidNode(ListNode* head, int n)
+    {
+        auto p = head;
+        for (int i = 1; i < n/2; i++) {
+            p = p->next;
+        }
+        auto res = p->next;
+        p->next = nullptr;
+        return make_pair(p, res);
+    }
+
+    ListNode* reverseList(ListNode* head)
+    {
+        if (!head || !head->next) return head;
+        ListNode *a = head, *b = head->next, *c = nullptr;
+        while (b) {
+            c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+        head->next = nullptr;
+
+        return a;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        auto p = head;
+        int n = 0;
+        while (p) {
+            n++;
+            p = p->next;
+        }
+        p = head;
+        auto midPair = getMidNode(head, n);
+        auto midNode = midPair.second;
+        auto pre= midPair.first;
+        // cout << "pre->val: " << pre->val << ", mid->val: " << midNode->val << endl;
+        // cout << "pre->next: " << pre->next <<  endl;
+        auto rMidNode = reverseList(midNode);
+
+        // for (ListNode* pt = rMidNode; pt; pt = pt->next) {
+        //     cout << "pt->val: " << pt->val << endl;
+        // }
+        // cout << "rMidNode->val: " << rMidNode->val << endl;
+        bool ans = true;
+        while (p && rMidNode) {
+            // cout << "----p->val: " << p->val << ", rmid->val: " << rMidNode->val << endl;
+            if (p->val == rMidNode->val) {
+                p = p->next, rMidNode = rMidNode->next;
+            } else {
+                ans = false;
+                break;
+            }
+        }
+        midNode = reverseList(rMidNode);
+        pre->next = midNode;
+
+        return ans;
+    }
+};
+```
