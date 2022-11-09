@@ -2601,3 +2601,94 @@ public:
     }
 };
 ```
+
+
+# 394. 字符串解码
+## 方法1：栈实现
+```
+class Solution {
+public:
+    string decodeString(string s) {
+        stack<char> st;
+        for (auto x : s) {
+            if (st.empty()) {
+                st.push(x);
+            } else {
+                if (x != ']') {
+                    st.push(x);
+                } else {
+                    stack<char> temp;
+                    while (st.size() && st.top() != '[') {
+                        temp.push(st.top());
+                        st.pop();
+                    }
+                    st.pop();
+                    string cntString;
+                    while (st.size()) {
+                        char ch = st.top();
+                        if (ch >= '0' && ch <= '9') {
+                            cntString += ch;
+                        } else {
+                            break;
+                        }
+                        st.pop();
+                    }
+                    // cout << "cntString: " << cntString << endl;
+                    reverse(cntString.begin(), cntString.end());
+                    int cnt = stoi(cntString);
+                    if (cnt) {
+                        string res;
+                        while (temp.size()) {
+                            res += temp.top();
+                            temp.pop();
+                        }
+                        for (int i = 0; i < cnt; i++) {
+                            for (int j = 0; j < res.size(); j++) {
+                                st.push(res[j]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        string ans;
+        while (st.size()) {
+            ans += st.top();
+            st.pop();
+        }
+        reverse(ans.begin(), ans.end());
+
+        return ans;
+    }
+};
+```
+### 方法2 dfs
+```
+class Solution {
+public:
+    string decodeString(string s) {
+        int u = 0;
+        return dfs(s, u);
+    }
+
+    string dfs(string& s, int& u)
+    {
+        string res;
+        while (u < s.size() && s[u] != ']') {
+            if (s[u] >= 'a' && s[u] <= 'z') res += s[u++];
+            else if (s[u] >= '0' && s[u] <= '9') {
+                int k = u;
+                while (s[k] >= '0' && s[k] <= '9') k++;
+                int cnt = stoi(s.substr(u, k - u));
+                u = k + 1;
+                string y = dfs(s, u);
+                u++;
+                while (cnt--) res += y;
+            }
+        }
+
+        return res;
+    }
+};
+```
