@@ -2768,3 +2768,56 @@ public:
     }
 };
 ```
+# 14. 最长公共前缀
+```
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        for (int i = 0; i < strs[0].size(); i++) {
+            for (int j = 1; j < strs.size(); j++) {
+                if (strs[j][i] != strs[0][i]) {
+                    return strs[0].substr(0, i);
+                }
+            }
+        }
+
+        return strs[0];
+    }
+};
+```
+# 162. 寻找峰值
+[//]: # (支持粘贴图片啦🎉🎉🎉)
+[//]: # (保存的笔记可以在 CodeTop 微信小程序中查看)
+## 方法1 O(n)
+```
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        if (nums.size() == 1) return 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (i == 0 && nums[i] > nums[i + 1]) return i;
+            else if ((i == nums.size() - 1) && nums[i] > nums[i - 1]) return i;
+            else if (i && i < nums.size() - 1 && nums[i] > nums[i - 1] && nums[i] > nums[i + 1])
+                return i;
+        }
+
+        return 0;
+    }
+};
+```
+## 方法2 二分
+```
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        int l = 0, r = nums.size() - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] > nums[mid + 1]) r = mid;
+            else l = mid + 1;
+        }
+
+        return l;
+    }
+};
+```
