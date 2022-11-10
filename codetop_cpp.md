@@ -2821,3 +2821,102 @@ public:
     }
 };
 ```
+
+
+# 128. 最长连续序列
+### 方法1 暴力
+```
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        nums.erase(unique(nums.begin(), nums.end()), nums.end());
+        if (nums.size() == 1) return 1;
+        int res = 0;
+
+        for (int i = 1; i < nums.size(); i++) {
+            int j = i;
+            while (j < nums.size() && nums[j] - nums[j - 1] == 1) {
+                j++;
+            }
+            res = max(res, j - i + 1);
+            i = j;
+        }
+
+        return res;
+    }
+};
+```
+
+### 方法2 并查集
+```
+class Solution {
+public:
+    unordered_map<int, int> p, cnt;
+
+    int find(int x) {
+        if (x != p[x]) p[x] = find(p[x]);
+
+        return p[x];
+    }
+
+    void merge(int a, int b) {
+        int x = find(a);
+        int y = find(b);
+        if (x != y) {
+            p[x] = y;
+            cnt[y] += cnt[x];
+        }
+    }
+    int longestConsecutive(vector<int>& nums) {
+        for (auto x : nums) {
+            p[x] = x;
+            cnt[x] = 1;
+        }
+
+        for (auto x : nums) {
+            if (p.count(x - 1)) {
+                merge(x, x - 1);
+            }
+        }
+
+        int res = 0;
+        // for (auto x : nums) {
+        //     res = max(res, cnt[x]);
+        // }
+
+        for (auto [k, v] : cnt) {
+            res = max(res, v);
+        }
+
+        return res;
+
+    }
+};
+```
+### 方法3 哈希表
+```
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        int res = 0;
+        unordered_set<int> us(nums.begin(), nums.end());
+        for (auto x : nums) {
+            int l = x - 1, r = x + 1;
+            while (us.count(l)) {
+                us.erase(l);
+                l--;
+            }
+
+            while (us.count(r)) {
+                us.erase(r);
+                r++;
+            }
+
+            res = max(res, r - l - 1);
+        }
+
+        return res;
+    }
+};
+```
