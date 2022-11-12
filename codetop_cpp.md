@@ -2992,3 +2992,112 @@ public:
     }
 };
 ```
+
+# 695. 岛屿的最大面积
+## dfs
+```
+class Solution {
+public:
+    int n, m;
+    vector<vector<int>> g;
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+
+    int dfs(int x, int y) {
+        g[x][y] = 0;
+        int cnt = 1;
+        for (int i = 0; i < 4; i++) {
+            int a = x + dx[i], b = y + dy[i];
+            if (a >= 0 && a < n && b >= 0 && b < m && g[a][b] == 1) {
+                cnt += dfs(a, b);
+            }
+        }
+
+        return cnt;
+    }
+
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        g = grid;
+        int res = 0;
+        n = g.size(), m = g[0].size();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (g[i][j] == 1) {
+                    // cout << "i = " << i << ", j = " << j << endl;
+                    res = max(res, dfs(i, j));
+                }
+            }
+        }
+
+        return res;
+    }
+};
+```
+
+## bfs
+```
+class Solution {
+public:
+    int n, m;
+    vector<vector<int>> g;
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+
+    int dfs(int x, int y) {
+        g[x][y] = 0;
+        int cnt = 1;
+        for (int i = 0; i < 4; i++) {
+            int a = x + dx[i], b = y + dy[i];
+            if (a >= 0 && a < n && b >= 0 && b < m && g[a][b] == 1) {
+                cnt += dfs(a, b);
+            }
+        }
+
+        return cnt;
+    }
+
+    int bfs(int x, int y) {
+        int cnt = 0;
+        queue<pair<int, int>> q;
+        q.push(make_pair(x, y));
+        g[x][y] = 0;
+        while (q.size()) {
+            int len = q.size();
+            // cout << "len = " << len << endl;
+            for (int i = 0; i < len; i++) {
+                auto t = q.front();
+                q.pop();
+                int cx = t.first, cy = t.second;
+                cnt++;
+                // cout << "cx = " << cx << ", cy = " << cy << ", cnt = " << cnt << endl;
+                
+                for (int j = 0; j < 4; j++) {
+                    int a = cx + dx[j], b = cy + dy[j];
+                    if (a >= 0 && a < n && b >= 0 && b < m && g[a][b] == 1) {
+                        q.push(make_pair(a, b));
+                        g[a][b] = 0;
+                    }
+                }
+            }
+        }
+
+        return cnt;
+    }
+
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        g = grid;
+        int res = 0;
+        n = g.size(), m = g[0].size();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (g[i][j] == 1) {
+                    res = max(res, bfs(i, j));
+                    // cout << "i = " << i << ", j = " << j << ", res = " << res << endl;
+                }
+            }
+        }
+
+        return res;
+    }
+};
+```
