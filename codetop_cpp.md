@@ -2920,3 +2920,75 @@ public:
     }
 };
 ```
+# 227. 基本计算器 II
+```
+class Solution {
+public:
+    stack<int> num;
+    stack<char> op;
+
+    int calculate(string s) {
+        int n = s.size();
+        unordered_map<char, int> mp;
+        mp['+'] = mp['-'] = 1;
+        mp['*'] = mp['/'] = 2;
+        for (int i = 0; i < n; i++) {
+            if (s[i] == ' ') continue;
+            else if (isdigit(s[i])) {
+                int j = i;
+                int x = 0;
+                while (j < n && isdigit(s[j])) {
+                    x = x * 10 - '0'  + s[j];
+                    j++;
+                }
+                num.push(x);
+                i = j - 1;
+            } else {
+                while (op.size() && mp[s[i]] <= mp[op.top()]) {
+                    cal();
+                }
+                op.push(s[i]);
+            }
+        }
+
+        while (op.size()) cal();
+
+        return num.top();
+    }
+
+    void cal()
+    {
+        char ch = op.top();
+        op.pop();
+        int a = num.top(); num.pop();
+        int b = num.top(); num.pop();
+        int c = 0;
+        switch (ch) {
+            case '+':
+                c = a + b;
+                break;
+            case '-':
+                c = b - a;
+                break;
+            case '*':
+                c = b * a;
+                break;
+            case '/':
+                c = b / a;
+                break;
+            default:
+                break;
+        }
+        // if (ch == '+') {
+        //     c = a + b;
+        // } else if (ch == '-') {
+        //     c = b - a;
+        // } else if (ch == '*') {
+        //     c = a * b;
+        // } else if (ch == '/') {
+        //     c = b / a;
+        // }
+        num.push(c);
+    }
+};
+```
