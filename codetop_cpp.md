@@ -3033,7 +3033,6 @@ public:
     }
 };
 ```
-
 ## bfs
 ```
 class Solution {
@@ -3098,6 +3097,47 @@ public:
         }
 
         return res;
+    }
+};
+```
+# 83. 删除排序链表中的重复元素
+###  方法1
+```
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        auto p = head;
+        while (p) {
+            auto c = p;
+            while (c->next && c->next->val == p->val) {
+                c = c->next;
+            }
+
+            p->next = c->next;
+            p = p->next;;
+        }
+
+        return head;
+    }
+};
+```
+###  方法2
+```
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        auto p = head;
+        while (p) {
+            auto c = p;
+            while (c && c->val == p->val) {
+                c = c->next;
+            }
+
+            p->next = c;
+            p = p->next;;
+        }
+
+        return head;
     }
 };
 ```
