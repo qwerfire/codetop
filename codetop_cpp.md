@@ -3201,3 +3201,63 @@ public:
     }
 };
 ```
+# 122. 买卖股票的最佳时机 II
+### 方法1
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int res = 0;
+        for (int i = 0, l = INT_MAX; i < prices.size(); i++) {
+            if (prices[i] > l) {
+                res += prices[i] - l;
+                l = prices[i];
+            } else {
+                l = min(l, prices[i]);
+            }
+            
+        }   
+
+        return res;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& p) {
+        int l = 0, res = 0;
+        for (int i = 1; i < p.size(); i++) {
+            if (p[i] > p[i - 1]) res += p[i] - p[i - 1];
+        }
+
+        return res;
+    }
+};
+```
+# 24. 两两交换链表中的节点
+```
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (!head || !head->next) return head;
+        auto dummy = new ListNode();
+        auto p = dummy;
+        p->next = head;
+        auto s = head, f = head->next;
+        while (s && f) {
+            auto t = f->next;
+            f->next = s;
+            s->next = t;
+            p->next = f;
+            p = s;
+            s = f = nullptr;
+            if (p && p->next) s = p->next;
+            if (s && s->next) f = s->next;
+        }
+
+        return dummy->next;
+    }
+};
+```
