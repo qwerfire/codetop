@@ -3315,3 +3315,47 @@ public:
     }
 };
 ```
+# 662. 二叉树最大宽度
+```
+// 2022.11.14 周一
+class Solution {
+public:
+    struct Node {
+        TreeNode* m_node;
+        long long m_no;
+        Node(TreeNode* _node, int _no):m_node(_node), m_no(_no)
+        {
+
+        }
+    };
+
+    int widthOfBinaryTree(TreeNode* root) {
+        if (!root) {
+            return 0;
+        }
+        queue<Node> q;
+        q.push(Node(root, 1));
+        long long res = 0;
+        while (q.size()) {
+            int len = q.size();
+            long long l = LONG_MAX, r = LONG_MIN;
+            for (int i = 0; i < len; i++) {
+                auto t = q.front(); q.pop();
+                l = min(l, t.m_no);
+                r = max(r, t.m_no);
+                res = max(res, r - l + 1);
+                t.m_no -= l;
+                if (t.m_node->left) {
+                    q.push(Node(t.m_node->left, t.m_no * 2));
+                }
+
+                if (t.m_node->right) {
+                    q.push(Node(t.m_node->right, t.m_no * 2 + 1));
+                }
+            }
+        }
+
+        return res;
+    }
+};
+```
