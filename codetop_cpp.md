@@ -3274,3 +3274,44 @@ public:
     }
 };
 ```
+# 152. 乘积最大子数组
+### 方法1
+```
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int res = INT_MIN;
+        int s = 1;
+        for (int i = 0; i < nums.size(); i++) {
+            s = s * nums[i];
+            res = max(res, s);
+            if (nums[i] == 0) s = 1;
+        }
+        s = 1;
+        for (int i = nums.size() - 1; i >= 0; i--) {
+            s = s * nums[i];
+            res = max(res, s);
+            if (nums[i] == 0) s = 1;
+        }
+
+        return res;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int f = nums[0], g = nums[0], res = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            int fa = nums[i] * f, ga = nums[i] * g;
+            f = max(fa, max(ga, nums[i]));
+            g = min(fa, min(ga, nums[i]));
+            res = max(f, res);
+        }
+
+        return res;
+    }
+};
+```
