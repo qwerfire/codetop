@@ -3380,3 +3380,68 @@ public:
     }
 };
 ```
+
+# 138. 复制带随机指针的链表
+```
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        auto dummy = new Node(0);
+        dummy->next = head;
+        auto ptr = dummy;
+        auto p = head;
+        while (p) {
+            auto t = new Node(p->val);
+            auto temp = p->next;
+            p->next = t;
+            t->next = temp;
+            p = temp;
+        }
+
+        p = head;
+        // cout << "p->val: " << p->val << endl;
+        // cout << "p->random: " << p->random << endl;
+        while (p) {
+            if (p->random) // 这个判断不能少
+                p->next->random = p->random->next;
+            p = p->next->next;
+        }
+
+        p = head;
+        while (p) {
+            ptr->next = p->next;
+            p->next = p->next->next;
+            ptr = ptr->next;
+            p = p->next;
+        }
+
+        return dummy->next;
+    }
+};
+```
+### 方法2 哈希表
+```
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        unordered_map<Node*, Node*> h;
+
+        auto p = head;
+        while (p) {
+            auto t = new Node(p->val);
+            h[p] = t;
+            p = p->next;
+        }
+
+        p = head;
+
+        while (p) {
+            h[p]->next = h[p->next];
+            h[p]->random = h[p->random];
+            p = p->next;
+        }
+
+        return h[head];
+    }
+};
+```
