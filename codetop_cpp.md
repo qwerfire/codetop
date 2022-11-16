@@ -3445,3 +3445,28 @@ public:
     }
 };
 ```
+
+# 179. 最大数
+```
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        sort(nums.begin(), nums.end(), [](int x, int y) {
+            string a = to_string(x);
+            string b = to_string(y);
+
+            return a + b > b + a;
+        });
+
+        string res;
+        for (auto x : nums) {
+            res += to_string(x);
+        }
+        int i = 0;
+        while (i < res.size() - 1 && res[i] == '0') i++;
+        res = res.substr(i);
+
+        return res;
+    }
+};
+```
