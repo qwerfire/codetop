@@ -3548,3 +3548,69 @@ public:
     }
 };
 ```
+
+# 560. 和为K的子数组
+### 前缀和 + 哈希
+```
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        unordered_map<int, int> h;
+        h[0] = 1;
+        int res = 0, s = 0;
+        for (auto &x : nums) {
+            s += x;
+            res += h[s - k];
+            h[s]++;
+        }
+
+        return res;
+    }
+};
+```
+# 498. 对角线遍历
+### 注意边界条件
+```
+// 2022.11.17 周四
+class Solution {
+public:
+    vector<int> findDiagonalOrder(vector<vector<int>>& a) {
+        vector<int> res;
+        int n = a.size(), m = a[0].size();
+        // cout << "n: " << n << ", m: " << m << endl;
+        int i = 0, j = 0, f = 1, k = 1;
+        while (k < m + n) {
+            // cout << "k: " << k << endl;
+            if (f) {
+                while (i >= 0 && j >= 0 && i < n && j < m) {
+                    // cout << f << " " << i << " " << j << endl;
+                    res.push_back(a[i][j]);
+                    i--;j++;
+                }
+                f = 0;
+                if (j == m) {
+                    i += 2;
+                    j--;
+                }
+                else {
+                    i++;
+                }
+            } else {
+                while (i >= 0 && j >= 0 && i < n && j < m) {
+                    // cout << f << " " << i << " " << j << endl;
+                    res.push_back(a[i][j]);
+                    i++;j--;
+                }
+                f = 1;
+                if (i == n) {
+                    i --;
+                    j += 2;
+                } else j++;
+            }
+            k++;
+        }
+
+        return res;
+    }
+};
+```
