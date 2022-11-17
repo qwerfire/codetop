@@ -3470,3 +3470,66 @@ public:
     }
 };
 ```
+
+# 209. 长度最小的子数组
+### 方法1 暴力超时
+```
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int res = INT_MAX;
+        for (int i = 0; i < nums.size(); i++) {
+            int j = i, s = 0;
+            for (; j < nums.size(); j++) {
+                s += nums[j];
+                if (s >= target) {
+                    res = min(res, j - i + 1);
+                    break;
+                } 
+            }
+        }
+
+        return res == INT_MAX ? 0 : res;
+    }
+};
+```
+### 方法2 双指针
+```
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int res = INT_MAX, s = 0;
+        for (int i = 0, j = 0; i < nums.size(); i++) {
+            s += nums[i];
+            while (s >= target) {
+                res = min(res, i - j + 1);
+                s -= nums[j++];
+            }
+        }
+
+        return res == INT_MAX ? 0 : res;
+    }
+};
+```
+# 39. 单词拆分
+```
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        vector<bool> dp(n + 1);
+        dp[0] = true;
+
+        for (int i = 1; i <= n; i++) {
+            for (auto &x : wordDict) {
+                int len = x.size();
+                if (i >= len && s.substr(i - len, len) == x) {
+                    dp[i] = dp[i] || dp[i - len];
+                }
+            }
+        }
+
+        return dp[n];
+    }
+};
+```
