@@ -3683,3 +3683,36 @@ public:
     }
 };
 ```
+
+# 剑指 Offer 09. 用两个栈实现队列
+```
+class CQueue {
+public:
+    stack<int> st1, st2;
+
+    CQueue() {
+
+    }
+    
+    void appendTail(int value) {
+        st1.push(value);
+    }
+    
+    int deleteHead() {
+        if (st1.empty()) return -1;
+        while (st1.size()) {
+            st2.push(st1.top());
+            st1.pop();
+        }
+
+        int res = st2.top();
+        st2.pop();
+        while (st2.size()) {
+            st1.push(st2.top());
+            st2.pop();
+        }
+
+        return res;
+    }
+};
+```
