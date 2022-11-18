@@ -3614,3 +3614,72 @@ public:
     }
 };
 ```
+# 468. 验证IP地址
+### 注意判断IP是否有效的技巧，加一个前导0的计数
+```
+class Solution {
+public:
+    string validIPAddress(string queryIP) {
+        vector<string> num;
+        int j = 0;
+        for (int i = 0; i < queryIP.size(); i++) {
+            if (queryIP[i] == '.' || queryIP[i] == ':') {
+                // if (i && (queryIP[i - 1] == '.' || queryIP[i - 1] == ':')) return "Neither";
+                num.push_back(queryIP.substr(j, i - j));
+                j = i + 1;
+            }
+        }
+        num.push_back(queryIP.substr(j));
+        // cout << num.size() << endl;
+        string res = "Neither";
+        if (num.size() == 4 && isValidIPV4(num)) {
+            res = "IPv4";
+        } else if (num.size() == 8 && isValidIPV6(num)) {
+            res = "IPv6";
+        }
+
+        return res;
+    }
+
+    bool isValidIPV4(vector<string>& num)
+    {
+        
+        for (auto &x : num) {
+            if (x.size() > 3 || x.size() == 0) return false;
+            long long t = 0, zeroNo = 0;
+            for (int i = 0; i < x.size(); i++) {
+                if (x[i] < '0' || x[i] > '9') return false;
+                int a = x[i] - '0';
+                if (a == 0 && i == 0) zeroNo++;
+                t = t * 10 + a;
+            }
+
+            if ((t == 0 && x.size() == 1) || (zeroNo == 0) && (t > 0 && t <= 255)) continue;
+            else return false;
+        }
+
+        return true;
+    }
+
+
+    bool isValidIPV6(vector<string>& num)
+    {
+        for (auto& x : num) {
+            int len = x.size();
+            if (len > 4 || len == 0) return false;
+            for (int i = 0; i < len; i++) {
+                if ((x[i] >= '0' && x[i] <= '9') || 
+                    (x[i] >= 'a' && x[i] <= 'f') || 
+                    (x[i] >= 'A' && x[i] <= 'F') ) {
+                        continue;
+                    }
+                else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+};
+```
