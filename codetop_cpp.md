@@ -3765,3 +3765,139 @@ public:
     }
 };
 ```
+
+# 297. 二叉树的序列化与反序列化
+### BFS
+```
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (!root) return "";
+
+        string res;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front(); q.pop();
+                if (!node) {
+                    res += "#,";
+                    continue;
+                }
+
+                res += to_string(node->val) + ",";
+                q.push(node->left);
+                q.push(node->right);
+            }
+        }
+
+        // cout << res << endl;
+
+        return res;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        vector<string> v = splitString(data);
+
+        // for (auto x : v) {
+        //     cout << x << " ";
+        // }
+        // cout << endl;
+
+        if (v.empty()) return NULL;
+        queue<TreeNode*> q;
+        auto root = new TreeNode(stoi(v[0]));
+        q.push(root);
+
+        for (int i = 1; i < v.size(); ) {
+            auto node = q.front();
+            if (v[i] == "#") {
+                node->left = NULL;
+            } else {
+                auto l = new TreeNode(stoi(v[i]));
+                node->left = l;
+                q.push(l);
+            }
+            i++;
+
+            if (v[i] == "#") {
+                node->right = NULL;
+            } else {
+                auto l = new TreeNode(stoi(v[i]));
+                node->right = l;
+                q.push(l);
+            }
+            i++;
+            q.pop();
+        }
+
+        return root;
+    }
+
+    vector<string> splitString(string& data)
+    {
+        vector<string> res;
+        int id = 0;
+        while (1) {
+            int k = data.find(',', id);
+            if (k == data.npos) break;
+            res.push_back(data.substr(id, k - id));
+            id = k + 1;
+        }
+
+        return res;
+    }
+};
+```
+
+### 方法2 DFS
+```
+class Codec {
+public:
+    string path;
+    void dfs_s(TreeNode* root) {
+        if (!root) {
+            path += "#,";
+        } else {
+            path += to_string(root->val) + ",";
+            dfs_s(root->left);
+            dfs_s(root->right);
+        }
+    }
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        dfs_s(root);
+
+        return path;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        // cout << "data: " << data << endl;
+        int u = 0;
+        return dfs_d(data, u);
+    }
+
+    TreeNode* dfs_d(string& data, int& u)
+    {
+        if (data[u] == '#') {
+            u += 2;
+            return NULL;
+        } 
+
+        int k = u;
+        while (u < data.size() && data[u] != ',') u++;
+        auto root = new TreeNode(stoi(data.substr(k, u - k)));
+        u++;
+        root->left = dfs_d(data, u);
+        root->right = dfs_d(data, u);
+
+        return root;
+    }
+};
+```
