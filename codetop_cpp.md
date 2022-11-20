@@ -3901,3 +3901,48 @@ public:
     }
 };
 ```
+# 402. 移掉K位数字
+### 方法1 贪心 + 单调栈
+```
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        stack<char> st;
+        for (auto x : num) {
+            while (st.size() && st.top() > x && k) st.pop(), k--;
+            st.push(x);
+        }
+
+        while (k--) st.pop();
+        string res;
+        while (st.size()) res += st.top(), st.pop();
+
+        reverse(res.begin(), res.end());
+        int i = 0;
+        while (i < res.size() && res[i] == '0') i++;
+
+        if (i == res.size()) return "0";
+        return res.substr(i);
+    }
+};
+```
+### 方法2 贪心
+```
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        string res("0");
+        for (auto x : num) {
+            while (k && res.back() > x) res.pop_back(), k--;
+            res += x;
+        }
+        while (k--) res.pop_back();
+        k = 0;
+        while (k + 1 < res.size() && res[k] == '0') k++;
+
+        res = res.substr(k);
+
+        return res;
+    }
+};
+```
