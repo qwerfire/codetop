@@ -3716,3 +3716,52 @@ public:
     }
 };
 ```
+
+# 912. 排序数组
+### 堆排序的实现
+```
+class Solution {
+public:
+    int n;
+    vector<int> h;
+
+    vector<int> sortArray(vector<int>& nums) {
+        h = nums;
+        n = nums.size();
+        vector<int> ans;
+
+		// 这里从 n / 2开始是因为最后一层不需要建树
+        for (int i = n / 2; i >= 0; i--) {
+            down(i);
+            // cout << "i: " << i << endl;
+            // for (auto x : h) cout << x << " ";
+            // cout << endl;
+        }
+
+        // cout << h[0] << endl;
+        for (int i = 0; i < nums.size(); i++) {
+            ans.push_back(h[0]);
+            h[0] = h[n - 1];
+            n--;
+            down(0);
+        }
+
+        return ans;
+    }
+
+    void down(int u)
+    {
+        int t = u;
+        // cout << "111, u = " << u << ", t = " << t << endl;
+        if (2 * u + 1 < n && h[t] > h[2 * u + 1]) t = 2 * u + 1;
+        if (2 * u + 2 < n && h[t] > h[2 * u + 2]) t = 2 * u + 2;
+        // cout << "222, u = " << u << ", t = " << t << endl;
+        if (u != t)
+        {
+            // cout << "------" << endl;
+            swap(h[u], h[t]);
+            down(t);
+        }
+    }
+};
+```
