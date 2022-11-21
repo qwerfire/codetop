@@ -3972,3 +3972,75 @@ public:
     }
 };
 ```
+# 207. 课程表
+### 拓扑排序
+```
+class Solution {
+public:
+    bool canFinish(int n, vector<vector<int>>& p) {
+        vector<int> inDegree(n);
+        vector<int> ans;
+        vector<vector<int>> g(n);
+        for (auto x : p) {
+            int a = x[0], b = x[1];
+            inDegree[a]++;
+            g[b].push_back(a);
+        }
+
+        queue<int> q;
+
+        for (int i = 0; i < n; i++) {
+            if (inDegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        while (q.size()) {
+            auto t = q.front();
+            q.pop();
+            ans.push_back(t);
+            for (auto x : g[t]) {
+                inDegree[x]--;
+                if (inDegree[x] == 0) {
+                    q.push(x);
+                }
+            }
+        }
+
+        return ans.size() == n;
+    }
+};
+```
+# 剑指 Offer 36. 二叉搜索树与双向链表
+```
+class Solution {
+public:
+    Node* pre;
+    Node* treeToDoublyList(Node* root) {
+        if (!root) return nullptr;
+        pre = nullptr;
+        dfs(root);
+        auto l = root, r = root;
+        while (l && l->left) {
+            l = l->left;
+        }
+
+        while (r && r->right) {
+            r = r->right;
+        }
+        l->left = r;
+        r->right = l;
+
+        return l;
+    }
+
+    void dfs(Node* root) {
+        if (!root) return;
+        dfs(root->left);
+        if (pre) pre->right = root;
+        root->left = pre;
+        pre = root;
+        dfs(root->right);
+    }
+};
+```
