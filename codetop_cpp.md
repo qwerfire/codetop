@@ -3946,3 +3946,29 @@ public:
     }
 };
 ```
+# 739. 每日温度
+### 单调栈
+```
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        int n = temperatures.size();
+        vector<int> res(n, 0);
+        stack<int> st;
+        for (int i = 0; i < n; i++) {
+            if (st.empty()) {
+                st.push(i);
+            } else {
+                while (st.size() && temperatures[st.top()] < temperatures[i]) {
+                    int x = st.top();
+                    st.pop();
+                    res[x] = i - x;
+                }
+                st.push(i);
+            }
+        }
+
+        return res;
+    }
+};
+```
