@@ -4101,3 +4101,114 @@ public:
     }
 };
 ```
+
+
+# 剑指 Offer 54. 二叉搜索树的第k大节点
+### 方法1 中序遍历
+```
+class Solution {
+public:
+    vector<int> res;
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->right);
+        res.push_back(root->val);
+        dfs(root->left);
+    }
+    int kthLargest(TreeNode* root, int k) {
+        dfs(root);
+
+        return res[k - 1];
+    }
+};
+```
+
+### 方法2 中序遍历
+```
+class Solution {
+public:
+    int res;
+    void dfs(TreeNode* root, int& k) {
+        if (!root) return;
+        dfs(root->right, k);
+        k--;
+        if (k == 0) {
+            res = root->val;
+            return;
+        }
+        dfs(root->left, k);
+    }
+
+    int kthLargest(TreeNode* root, int k) {
+        dfs(root, k);
+
+        return res;
+    }
+};
+```
+
+# 79. 单词搜索
+```
+class Solution {
+public:
+    vector<vector<char>> g;
+    vector<vector<bool>> st;
+    int n, m;
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+    string s;
+    bool exist(vector<vector<char>>& board, string word) {
+        g = board;
+        s = word;
+        n = g.size(), m = g[0].size();
+        st = vector<vector<bool>>(n, vector<bool>(m, false));
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (g[i][j] == word[0]) {
+                    if (dfs(i, j, 0)) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool dfs(int x, int y, int u) {
+        if (u == s.size() - 1) {
+            return true;
+        }
+
+        st[x][y] = true;
+
+        for (int i = 0; i < 4; i++) {
+            int a = x + dx[i], b = y + dy[i];
+            if (a >= 0 && a < n && b >= 0 && b < m && !st[a][b] && g[a][b] == s[u + 1]) {
+                st[a][b] = true;
+                if (dfs(a, b, u + 1)) return true;
+                st[a][b] = false;
+            }
+        }
+
+        st[x][y] = false;
+        return false;
+    }
+};
+```
+# 11. 盛最多水的容器
+### 双指针
+```
+class Solution {
+public:
+    int maxArea(vector<int>& h) {
+        int l = 0, r = h.size() - 1, res = 0;
+        while (l < r) {
+            res = max(res, min(h[l], h[r]) * (r - l));
+            if (h[l] < h[r]) l++;
+            else r--;
+        }
+
+        return res;
+    }
+};
+```
