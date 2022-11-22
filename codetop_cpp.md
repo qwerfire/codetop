@@ -4044,3 +4044,60 @@ public:
     }
 };
 ```
+# 958. 二叉树的完全性检验
+### 层序遍历
+```
+class Solution {
+public:
+    bool isCompleteTree(TreeNode* root) {
+        if (!root) return true;
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                if (node == nullptr) {
+                    while (q.size()) {
+                        auto t = q.front();
+                        q.pop();
+                        if (t) return false;
+                    }
+
+                    return true;
+                }
+                q.push(node->left);
+                q.push(node->right);
+                if (!node->left && node->right) return false;
+            }
+        }
+
+        return true;
+    }
+};
+```
+### 方法2 dfs
+```
+class Solution {
+public:
+    int n, p;
+
+    bool isCompleteTree(TreeNode* root) {
+        n = 0, p = 0;
+        if (!dfs(root, 1)) return false;
+
+        return n == p;
+    }
+
+    bool dfs(TreeNode* root, int k)
+    {
+        if (!root) return true;
+        if (k > 100) return false;
+        p = max(p, k);
+        n++;
+        return dfs(root->left, 2 * k) && dfs(root->right, 2 * k + 1);
+    }
+};
+```
