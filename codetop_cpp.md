@@ -4212,3 +4212,43 @@ public:
     }
 };
 ```
+# 224. 基本计算器
+```
+class Solution {
+public:
+    int calculate(string s) {
+        int n = s.size();
+        int res = 0, sign = 1;
+        stack<int> st;
+        for (int i = 0; i < n; i++) {
+            if (s[i] >= '0' && s[i] <= '9') {
+                int j = i;
+                int num = 0;
+                while (j < n && s[j] >= '0' && s[j] <= '9') {
+                    num = num * 10 - '0' + s[j];
+                    j++;
+                }
+
+                res += num * sign;
+                i = j - 1;
+            } else if (s[i] == '+') {
+                sign = 1;
+            } else if (s[i] == '-') {
+                sign = -1;
+            } else if (s[i] == '(') {
+                st.push(res);
+                st.push(sign);
+                res = 0;
+                sign = 1;
+            } else if (s[i] == ')') {
+                res = res * st.top();
+                st.pop();
+                res += st.top();
+                st.pop();
+            }
+        }
+
+        return res;
+    }
+};
+```
