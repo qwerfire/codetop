@@ -4327,3 +4327,42 @@ public:
     }
 };
 ```
+# 45. 跳跃游戏 II
+## 还有遍历做法未实现
+### codetop 方法1：dp 自己想出来的
+```
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n, 0x3f3f3f3f);
+        dp[0] = 0;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[j] + j >= i)
+                    dp[i] = min(dp[i], dp[j]);
+            }
+            dp[i] += 1;
+        }
+
+        return dp[n - 1];
+    }
+};
+```
+
+### codetop 方法2：dp 
+```
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n);
+        for (int i = 1, j = 0; i < n; i++) {
+            while (j + nums[j] < i) j++;
+            dp[i] = dp[j] + 1;
+        }
+
+        return dp[n - 1];
+    }
+};
+```
