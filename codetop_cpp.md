@@ -4291,3 +4291,39 @@ public:
     }
 };
 ```
+# 55. 跳跃游戏
+### 方法1：贪心
+```
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int n = nums.size();
+        int r = nums[0];
+        for (int i = 1; i < n; i++) {
+            if (r >= i) {
+                r = max(r, i + nums[i]);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+```
+### 方法2：dp
+```
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n);
+        dp[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            if (dp[i - 1] < i) return false;
+            dp[i] = max(dp[i - 1], i + nums[i]);
+        }
+
+        return dp[n - 1] >= n - 1;
+    }
+};
+```
