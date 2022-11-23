@@ -4252,3 +4252,42 @@ public:
     }
 };
 ```
+# 50. Pow(x, n)
+```
+class Solution {
+public: 
+    typedef long long LL;
+    double myPow(double x, int n) {
+        if (x == 0) return 0;
+        if (n == 1) return x;
+        if (x == 1 || n == 0) return 1;
+        LL N = n;
+        if (n < 0) x = 1 / x, N = - N;
+        if (N % 2) return x * myPow(x * x, (N - 1) / 2);
+
+        return myPow(x * x, N / 2);
+    }
+};
+```
+# 剑指 Offer 10- II. 青蛙跳台阶问题
+```
+const int N = 1E9 + 7;
+
+class Solution {
+public:
+    int numWays(int n) {
+        if (n == 0) return 1;
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        int f0 = 1, f1 = 2;
+        int res;
+        for (int i = 3; i <= n; i++) {
+            res = (f0 + f1) % N;
+            f0 = f1;
+            f1 = res;
+        }
+
+        return res;
+    }
+};
+```
