@@ -4366,3 +4366,31 @@ public:
     }
 };
 ```
+# 59. 螺旋矩阵 II
+```
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        int dx[4] = {-1, 0, 1, 0};
+        int dy[4] = {0, 1, 0, -1};
+        int d = 1;
+        vector<vector<bool>> st(n, vector<bool>(n));
+        vector<vector<int>> res(n, vector<int>(n));
+        int x = 0, y = 0;
+        for (int i = 0; i < n * n; i++) {
+            res[x][y] = i + 1;
+            int a = x + dx[d], b = y + dy[d];
+            st[x][y] = true;
+            if (a >= 0 && a < n && b >= 0 && b < n && !st[a][b]) {
+                x = a, y = b;
+            } else {
+                d = (d + 1) % 4;
+                x = x + dx[d];
+                y = y + dy[d];
+            }
+        }
+
+        return res;
+    }
+};
+```
