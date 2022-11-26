@@ -4412,3 +4412,57 @@ public:
     }
 };
 ```
+
+# 26. 删除排序数组中的重复项
+```
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        int k = 0;
+        nums[k] = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] == nums[k]) continue;
+            else nums[++k] = nums[i];
+        }
+
+        return k + 1;
+    }
+};
+```
+# 剑指 Offer 21. 调整数组顺序使奇数位于偶数前面
+### 方法1
+```
+class Solution {
+public:
+    vector<int> exchange(vector<int>& nums) {
+        int n = nums.size();
+        int l = 0, r = n - 1;
+        vector<int> res(n);
+        for (int i = 0; i < n; i++) {
+            if (nums[i] % 2) res[l++] = nums[i];
+            else res[r--] = nums[i];
+        }
+
+        return res;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    vector<int> exchange(vector<int>& nums) {
+        int n = nums.size();
+        int l = 0, r = n - 1;
+        // vector<int> res(n);
+        while (l < r) {
+            while (l < n && nums[l] % 2) l++;
+            while (r >= 0 && nums[r] % 2 == 0) r--;
+            if (l < r) swap(nums[l], nums[r]);
+        }
+
+        return nums;
+    }
+};
+```
