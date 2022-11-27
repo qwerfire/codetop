@@ -4466,3 +4466,48 @@ public:
     }
 };
 ```
+
+# 7. 整数反转
+### 方法1
+```
+class Solution {
+public:
+    int reverse(int x) {
+        int n = 0;
+        while (x > 0) {
+            int t = x % 10; 
+            x /= 10;
+            if (n > (INT_MAX - t) / 10) return 0;
+            n = n * 10 + t;
+        }
+
+        while (x < 0) {
+            int t = x % 10;
+            x /= 10;
+            cout << t << " " << x << endl;
+            if (n < (INT_MIN - t) / 10) return 0;
+            n = n * 10 + t;
+        }
+
+        return n;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    int reverse(int x) {
+        typedef long long LL;
+        int f = 1;
+        LL xx = x;
+        if (xx < 0) xx = -xx, f = -1;
+        string s = to_string(xx);
+        std::reverse(s.begin(), s.end());
+        LL n = stol(s);
+        if (n >= INT_MAX || n < INT_MIN) return 0;
+
+        return n * f;
+    }
+};
+```
