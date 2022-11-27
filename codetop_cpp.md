@@ -4604,3 +4604,76 @@ public:
     }
 };
 ```
+
+# 518. 零钱兑换 II
+### 方法1：朴素背包
+```
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        sort(coins.begin(), coins.end());
+        vector<vector<int>> dp(n + 1, vector<int>(amount + 1));
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = 1;
+            for (int j = 1; j <= amount; j++) {
+                // dp[i][j] += dp[i - 1][j];
+                for (int k = 0; k * coins[i - 1] <= j; k++) {
+                    dp[i][j] += dp[i - 1][j - k * coins[i - 1]];
+                }
+            }
+        }
+
+        return dp[n][amount];
+    }
+};
+```
+### 方法2：背包优化
+```
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        sort(coins.begin(), coins.end());
+        vector<vector<int>> dp(n + 1, vector<int>(amount + 1));
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = 1;
+            for (int j = 1; j <= amount; j++) {
+                dp[i][j] += dp[i - 1][j];
+                if (j >= coins[i - 1]) {
+                    dp[i][j] += dp[i][j - coins[i - 1]];
+                }
+            }
+        }
+
+        return dp[n][amount];
+    }
+};
+```
+### 方法3：优化成一维
+```
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        sort(coins.begin(), coins.end());
+        // vector<vector<int>> dp(n + 1, vector<int>(amount + 1));
+        vector<int> dp(amount + 1);
+        // dp[0][0] = 1;
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= amount; j++) {
+                // dp[i][j] += dp[i - 1][j];
+                if (j >= coins[i - 1]) {
+                    dp[j] += dp[j - coins[i - 1]];
+                    // dp[i][j] += dp[i][j - coins[i - 1]];
+                }
+            }
+        }
+
+        return dp[amount];
+    }
+};
+```
