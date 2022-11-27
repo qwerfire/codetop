@@ -4511,3 +4511,96 @@ public:
     }
 };
 ```
+# 剑指 Offer 40. 最小的k个数
+### 方法1
+```
+class Solution {
+public:
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        sort(arr.begin(), arr.end());
+        vector<int> ans;
+
+        for (int i = 0; i < k; i++) {
+            ans.push_back(arr[i]);
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        priority_queue<int, vector<int>, greater<int>> h;
+        vector<int> ans;
+
+        for (int i = 0; i < arr.size(); i++) {
+            h.push(arr[i]);
+            if (h.size() > arr.size() - k) {
+                ans.push_back(h.top());
+                h.pop();
+            }
+        }
+
+        return ans;
+    }
+};
+```
+
+# 剑指 Offer 10- I. 斐波那契数列
+```
+class Solution {
+public:
+    int fib(int n) {
+        if (n <= 1) return n;
+        int f0 = 0, f1 = 1;
+        int f = 0;
+        for (int i = 2; i <= n; i++) {
+            f = (f0 + f1) % 1000000007;
+            f0 = f1;
+            f1 = f;
+        }
+
+        return f;
+    }
+};
+```
+
+# 剑指 Offer 42. 连续子数组的最大和
+### 方法1：dp
+```
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int n = nums.size();
+        int res = nums[0];
+        vector<int> dp(n, -1e9);
+        dp[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+           dp[i] = max(dp[i - 1] + nums[i], nums[i]);
+           res = max(res, dp[i]);
+        }
+
+        return res;
+    }
+};
+```
+### 方法2：单次循环
+```
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int n = nums.size();
+        int res = INT_MIN;
+
+        for (int i = 0, last = 0; i < n; i++) {
+           last = max(last + nums[i], nums[i]);
+           res = max(res, last);
+        }
+
+        return res;
+    }
+};
+```
