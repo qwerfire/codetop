@@ -4754,3 +4754,43 @@ public:
     }
 };
 ```
+# 40. 组合总和 II
+### dfs去重是重点
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<bool> st;
+    int n;
+    vector<vector<int>> combinationSum2(vector<int>& num, int target) {
+        sort(num.begin(), num.end());
+        n = num.size();
+        st = vector<bool>(n, false);
+        vector<int> path;
+        dfs(num, target, path, 0, 0);
+
+        return ans;
+    }
+
+    void dfs(vector<int>& num, int target, vector<int> path, int id, int s)
+    {
+        // if (id >= n) return;
+        if (s > target) return;
+        if (s == target) {
+            ans.push_back(path);
+            return;
+        }
+        
+        for (int i = id; i < n; i++) {
+            if (!st[i]) {
+                if (i != id && num[i] == num[i - 1]) continue;
+                st[i] = true;
+                path.push_back(num[i]);
+                dfs(num, target, path, i + 1, s + num[i]);
+                st[i] = false;
+                path.pop_back();
+            }
+        }
+    }
+};
+```
