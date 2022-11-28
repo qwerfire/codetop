@@ -4677,3 +4677,80 @@ public:
     }
 };
 ```
+# 145. 二叉树的后序遍历
+### 方法1：递归
+```
+class Solution {
+public:
+    vector<int> ans;
+    
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        dfs(root->right);
+        ans.push_back(root->val);
+    }
+
+    vector<int> postorderTraversal(TreeNode* root) {
+        dfs(root);
+
+        return ans;
+    }
+};
+```
+### 方法2：迭代算法，前序遍历的变形
+```
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        stack<TreeNode*> st;
+
+        while (st.size() || root) {
+            if (root) {
+                ans.push_back(root->val);
+                st.push(root);
+                root = root->right;
+            } else {
+                root = st.top()->left;
+                st.pop();
+            }
+        }
+
+        reverse(ans.begin(), ans.end());
+
+        return ans;
+    }
+};
+```
+### 方法3：迭代算法后序遍历
+```
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        TreeNode* pre = nullptr;
+        stack<TreeNode*> st;
+        while (st.size() || root) {
+            while (root) {
+                st.push(root);
+                root = root->left;
+            }
+
+            root = st.top();
+            st.pop();
+
+            if (root->right == nullptr || root->right == pre) {
+                ans.push_back(root->val);
+                pre = root;
+                root = nullptr;
+            } else {
+                st.push(root);
+                root = root->right;
+            }
+        }
+
+        return ans;
+    }
+};
+```
