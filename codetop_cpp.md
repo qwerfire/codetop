@@ -4827,3 +4827,113 @@ public:
     }
 };
 ```
+
+# 补充题1. 排序奇升偶降链表
+### 链表拆分 + 反转链表
+```牛客上有
+/**
+ * struct ListNode {
+ *	int val;
+ *	struct ListNode *next;
+ *	ListNode(int x) : val(x), next(nullptr) {}
+ * };
+ */
+class Solution {
+public:
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     *
+     * 
+     * @param head ListNode类 
+     * @return ListNode类
+     */
+    ListNode* sortLinkedList(ListNode* head) {
+        auto p0 = new ListNode(-1);
+        auto p1 = new ListNode(-2);
+        auto n0 = p0, n1 = p1;
+        int i = 1;
+        while (head) {
+            if (i % 2) {
+                n0->next = head;
+                n0 = n0->next;
+            } else {
+                n1->next = head;
+                n1 = n1->next;
+            }
+
+            head = head->next;
+            i++;
+        }
+
+        cout << head << " " << i << endl;
+        n0->next = nullptr;
+        n1->next = nullptr;
+        n0 = p0->next, n1 = p1->next;
+        p1->next = nullptr;
+        while (n1) {
+            auto t = n1->next;
+            n1->next = p1->next;
+            p1->next = n1;
+            n1 = t;
+        }
+        n1 = p1->next;
+        auto dummy = new ListNode(0);
+        auto p = dummy;
+
+        while (n0 && n1) {
+            if (n0->val < n1->val) {
+                p->next = n0;
+                p = p->next;
+                n0 = n0->next;
+            } else {
+                p->next = n1;
+                p = p->next;
+                n1 = n1->next;
+            }
+        }
+
+        if (n0) p->next = n0;
+        if (n1) p->next = n1;
+
+        return dummy->next;
+    }
+};
+```
+
+# 补充题23. 检测循环依赖
+### 拓扑排序
+```
+class Solution {
+public:
+    bool canFinish(int n, vector<vector<int>>& p) {
+        vector<int> ans;
+        vector<int> ind(n, 0);
+        vector<vector<int>> g(n);
+        for (auto x : p) {
+            int a = x[0], b = x[1];
+            g[b].push_back(a);
+            ind[a]++;
+        }
+
+        queue<int> q;
+
+        for (int i = 0; i < n; i++) {
+            if (ind[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        while (q.size()) {
+            int val = q.front();
+            q.pop();
+            ans.push_back(val);
+            for (auto x : g[val]) {
+                ind[x]--;
+                if (ind[x] == 0) q.push(x);
+            }
+        }
+
+        return ans.size() == n;
+    }
+};
+```
