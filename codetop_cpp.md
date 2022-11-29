@@ -4937,3 +4937,43 @@ public:
     }
 };
 ```
+# 剑指 Offer 51. 数组中的逆序对
+```
+class Solution {
+public:
+    typedef long long LL;
+    int n;
+    vector<int> a, help;
+    int reversePairs(vector<int>& nums) {
+        n = nums.size();
+        a = nums;
+        help = nums;
+        return mergeSort(0, nums.size() - 1);
+    }
+
+    LL mergeSort(int l, int r) {
+        if (l >= r) return 0;
+
+        LL mid = (l + r) >> 1;
+        LL res = mergeSort(l, mid) + mergeSort(mid + 1, r);
+
+        int i = l, j = mid + 1, k = 0;
+        while (i <= mid && j <= r) {
+            if (a[i] <= a[j]) {
+                help[k++] = a[i++];
+            } else {
+                help[k++] = a[j++];
+                res += (mid - i + 1);
+            }
+        }
+
+        while (i <= mid) help[k++] = a[i++];
+        while (j <= r) help[k++] = a[j++];
+        for (int i = l, j = 0; i <= r; i++, j++) {
+            a[i] = help[j];
+        }
+
+        return res;
+    }
+
+};
