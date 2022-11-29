@@ -4794,3 +4794,36 @@ public:
     }
 };
 ```
+# 补充题5. 手撕归并排序
+### 归并排序
+```
+class Solution {
+public:
+    vector<int> help;
+    void mergeSort(vector<int>& nums, int l, int r) {
+        if (l >= r) return; // 注意必须写等于号
+        int mid = (l + r) >> 1;
+        mergeSort(nums, l, mid);
+        mergeSort(nums, mid + 1, r);
+        int k = 0, i = l, j = mid + 1;
+        while (i <= mid && j <= r) {
+            if (nums[i] <= nums[j]) help[k++] = nums[i++];
+            else help[k++] = nums[j++];
+        }
+
+        while (i <= mid) help[k++] = nums[i++];
+        while (j <= r) help[k++] = nums[j++];
+        for (int i = l, j = 0; i <= r; i++, j++) {
+            nums[i] = help[j];
+        }
+    }
+
+
+    vector<int> sortArray(vector<int>& nums) {
+        help = nums;
+        mergeSort(nums, 0, nums.size() - 1);
+
+        return nums;
+    }
+};
+```
