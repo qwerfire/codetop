@@ -4977,3 +4977,40 @@ public:
     }
 
 };
+```
+
+# 61. 旋转链表
+```
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (!head) return head;
+        int n = 0;
+        auto p = head;
+        while (p) {
+            p = p->next;
+            n++;
+        }
+
+        k = k % n;
+        if (k == 0) return head;
+        k = n - k;
+        p = head;
+        while (p->next) {
+            p = p->next;
+        }
+        p->next = head;
+        ListNode* pre = nullptr;
+        p = head;
+        for (int i = 0; i < k; i++) {
+            pre = p;
+            p = p->next;
+        }
+
+        pre->next = nullptr;
+
+        return p;
+
+    }
+};
+```
