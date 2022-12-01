@@ -5113,3 +5113,39 @@ public:
     }
 };
 ```
+# 235. 二叉搜索树的最近公共祖先
+```
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+
+        while (1) {
+            if (root->val < p->val && root->val < q->val) {
+                root = root->right;
+            } else if (root->val > p->val && root->val > q->val) {
+                root = root->left;
+            } else return root;
+        }
+
+        return nullptr;
+    }
+};
+```
+### 方法2：递归
+```
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (!root || root == p || root == q) return root;
+
+        auto l = lowestCommonAncestor(root->left, p, q);
+        auto r = lowestCommonAncestor(root->right, p, q);
+
+        if (l && r) return root;
+        else if (!l && r) return r;
+        else if (l && !r) return l;
+
+        return NULL;
+    }
+};
+```
