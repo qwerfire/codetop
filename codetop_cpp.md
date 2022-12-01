@@ -5079,3 +5079,37 @@ public:
     }
 };
 ```
+# 123. 买卖股票的最佳时机 III
+### 两次遍历
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        if (n <= 1) return 0;
+        vector<int> f(n), g(n);
+        for (int i = 1, last = prices[0], s = 0; i < n; i++) {
+            s = max(s, prices[i] - last);
+            f[i] = s;
+            last = min(last, prices[i]);
+            // cout << i << " " << f[i] << endl;
+        }
+        // cout << "------" << endl;
+        for (int i = n - 2, last = prices[n - 1], s = 0; i >= 0; i--) {
+            s = max(s, last - prices[i]);
+            g[i] = s;
+            last = max(last, prices[i]);
+            // cout << i << " " << g[i] << endl;
+        }
+
+        int res = max(0, f[n - 1]);
+
+        for (int i = 0; i < n - 1; i++) {
+            res = max(f[i] + g[i + 1], res);
+            // cout << "i: " << i << ", res : " << res << endl;
+        }
+
+        return res;
+    }
+};
+```
