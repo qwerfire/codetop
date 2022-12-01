@@ -5149,3 +5149,134 @@ public:
     }
 };
 ```
+
+
+### 方法3
+```
+class Solution {
+public:
+    TreeNode* ans = nullptr;
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        dfs(root, p, q);
+
+        return ans;
+    }
+
+    int dfs(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (!root) return 0;
+        // if (root == p) return 1;
+        // else if (root == q) return 2;
+        int state = dfs(root->left, p, q);
+        if (root == p) state |= 1;
+        else if (root == q) state |= 2;
+        state |= dfs(root->right, p, q);
+        if (state == 3 && ans == nullptr) {
+            ans = root;
+            return 0;
+        }
+
+        return state;
+    }
+};
+```
+
+# 230. 二叉搜索树中第K小的元素
+### 方法1
+```
+class Solution {
+public:
+    vector<int> v;
+    int kthSmallest(TreeNode* root, int k) {
+        dfs(root);
+
+        return v[k - 1];
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        v.push_back(root->val);
+        dfs(root->right);
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    int ans;
+    int kthSmallest(TreeNode* root, int k) {
+        dfs(root, k);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root, int &k) {
+        if (!root) return;
+        dfs(root->left, k);
+        k--;
+        if (k == 0) {
+            ans = root->val;
+            return;
+        }
+        dfs(root->right, k);
+    }
+};
+```
+# 75. 颜色分类
+### 方法1：两次遍历
+```
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> count(3, 0);
+        for (int i = 0; i < n; i++)
+            count[nums[i]]++;
+
+        for (int i = 0, id = 0; i < 3; i++) {
+            for (int j = 0;  j < count[i]; j++) {
+                nums[id++] = i;
+            }
+        }
+    }
+};
+```
+### 方法2：单次遍历，双指针
+```
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int n = nums.size();
+        int l = 0, r = n - 1;
+        for (int i = 0; i <= r ; ) {
+            if (nums[i] == 0) swap(nums[l++], nums[i++]);
+            else if (nums[i] == 2) swap(nums[r--], nums[i]);
+            else i++;
+        }
+    }
+};
+```
+### 方法3：快排的partion
+```
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        partion(nums, 1);
+    }
+
+    void partion(vector<int>& nums, int p) {
+        int l = -1, r = nums.size(), id = 0;
+        while (id < r) {
+            if (nums[id] > p) {
+                swap(nums[--r], nums[id]);
+            } else if (nums[id] < p) {
+                swap(nums[++l], nums[id++]);
+            } else {
+                id++;
+            }
+        }
+    }
+};
+```
