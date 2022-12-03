@@ -5280,3 +5280,57 @@ public:
     }
 };
 ```
+
+# 135. 分发糖果
+```
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int n = ratings.size();
+        vector<int> a(n, 1);
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                a[i] = a[i - 1] + 1;
+            }
+        }
+
+        for (int i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                a[i] = max(a[i], a[i + 1] + 1);
+            }
+        }
+
+        int res = 0;
+
+        for (auto x : a) res += x;
+
+        return res;
+    }
+};
+```
+# 剑指 Offer 62. 圆圈中最后剩下的数字
+### 方法1：递归
+```
+class Solution {
+public:
+    int lastRemaining(int n, int m) {
+        if (n == 1) return 0;
+
+        return (lastRemaining(n - 1, m) + m) % n;
+    }
+};
+```
+### 方法2：迭代
+```
+class Solution {
+public:
+    int lastRemaining(int n, int m) {
+        if (n == 1) return 0;
+        int f = 0;
+        for (int i = 2; i <= n; i++) 
+            f = (f + m) % i;
+        return f;
+    }
+};
+
+```
