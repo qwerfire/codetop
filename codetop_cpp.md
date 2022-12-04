@@ -5357,3 +5357,54 @@ public:
     }
 };
 ```
+
+# 225. 用队列实现栈
+```
+class MyStack {
+public:
+    queue<int> q0, q1;
+
+    MyStack() {
+
+    }
+    
+    void push(int x) {
+        q0.push(x);
+    }
+    
+    int pop() {
+        while (q0.size() > 1) {
+            q1.push(q0.front());
+            q0.pop();
+        }
+
+        int res = q0.front();
+        q0.pop();
+        while (q1.size()) {
+            q0.push(q1.front());
+            q1.pop();
+        }
+        return res;
+    }
+    
+    int top() {
+        while (q0.size() > 1) {
+            q1.push(q0.front());
+            q0.pop();
+        }
+
+        int res = q0.front();
+        q1.push(res);
+        q0.pop();
+        while (q1.size()) {
+            q0.push(q1.front());
+            q1.pop();
+        }
+        return res;
+    }
+    
+    bool empty() {
+        return q0.empty();
+    }
+};
+```
