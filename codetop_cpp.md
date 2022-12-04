@@ -5332,5 +5332,28 @@ public:
         return f;
     }
 };
+```
 
+# 补充题2. 圆环回原点问题
+### 动态规划
+```
+// https://www.nowcoder.com/questionTerminal/16409dd00ab24a408ddd0c46e49ddcf8
+class Solution {
+public:
+    int circle(int n) {
+        // write code here
+        const int N = 1e9 + 7;
+        const int NO = 10;
+        vector<vector<int>> dp(n + 1, vector<int>(NO + 1));
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < NO; j++) {
+                dp[i][j] = (dp[i - 1][(j - 1 + NO) % NO] % N  + dp[i - 1][(j + 1 + NO) % NO] % N) % N;
+                //cout << i << " " << j << " " << dp[i][j] << endl;
+            }
+        }
+        
+        return dp[n][0];
+    }
+};
 ```
