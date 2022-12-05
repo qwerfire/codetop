@@ -5426,3 +5426,78 @@ public:
     }
 };
 ```
+# 440. 字典序的第K小数字
+### 方法1
+```
+class Solution {
+public:
+    typedef long long LL;
+    int findKthNumber(int n, int k) {
+        int prefix = 1;
+        while (k > 1) {
+            int cnt = getNum(prefix, n);
+            if (k > cnt) {
+                k -= cnt;
+                prefix++;
+            } else {
+                k--;
+                prefix *= 10;
+            }
+        }
+
+        return prefix;
+    }
+
+    int getNum(int prefix, int n) {
+        int ans = 0;
+        LL t = prefix, k = 1;
+        while (t * 10 <= n) {
+            ans += k;
+            k *= 10;
+            t *= 10;
+        }
+
+        if (n - t < k) ans += n - t + 1;
+        else ans += k;
+
+        return ans;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    typedef long long LL;
+    int findKthNumber(int n, int k) {
+        int prefix = 1;
+        while (k > 1) {
+            int cnt = getNum(prefix, n);
+            if (k > cnt) {
+                k -= cnt;
+                prefix++;
+            } else {
+                k--;
+                prefix *= 10;
+            }
+        }
+
+        return prefix;
+    }
+
+    int getNum(int prefix, int n) {
+        long long p = 1;
+        auto A = to_string(n), B = to_string(prefix);
+        int dt = A.size() - B.size();
+        int res = 0;
+        for (int i = 0; i < dt; i ++ ) {
+            res += p;
+            p *= 10;
+        }
+        A = A.substr(0, B.size());
+        if (A == B) res += n - prefix * p + 1;
+        else if (A > B) res += p;
+        return res;
+    }
+};
+```
