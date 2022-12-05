@@ -5501,3 +5501,31 @@ public:
     }
 };
 ```
+# 328. 奇偶链表
+```
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        auto p0 = new ListNode(), p1 = new ListNode();
+        auto node0 = p0, node1 = p1;
+        int n = 1;
+        auto p = head;
+        while (p) {
+            if (n % 2) {
+                p0->next = p;
+                p0 = p0->next;
+                p = p->next;
+            } else {
+                p1->next = p;
+                p1 = p1->next;
+                p = p->next;
+            }
+            n++;
+        }
+        p1->next = nullptr;
+        p0->next = node1->next;
+
+        return node0->next;
+    }
+};
+```
