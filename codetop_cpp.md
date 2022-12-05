@@ -5555,3 +5555,37 @@ public:
     }
 };
 ```
+
+# 572. 另一棵树的子树
+```
+class Solution {
+public:
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        return dfs(root, subRoot);
+    }
+
+    bool isSame(TreeNode* root, TreeNode* subRoot) {
+        if (!root && !subRoot) return true;
+        if (!root && subRoot) return false;
+        if (root && !subRoot) return false;
+        if (root->val != subRoot->val) return false;
+
+        auto l = isSame(root->left, subRoot->left);
+        auto r = isSame(root->right, subRoot->right);
+
+        if (l && r) return true;
+
+        return false;
+    }
+
+    bool dfs(TreeNode* root, TreeNode* subRoot) {
+        if (isSame(root, subRoot)) return true;
+
+        if (root && dfs(root->left, subRoot)) return true;
+        if (root && dfs(root->right, subRoot)) return true;
+
+        return false;
+
+    }
+};
+```
