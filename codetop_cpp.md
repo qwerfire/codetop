@@ -5652,3 +5652,81 @@ public:
     }
 };
 ```
+# 189. 轮转数组
+### 两次反转
+```
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = k % n;
+        reverse(nums.begin(), nums.begin() + n - k);
+        reverse(nums.begin() + n - k, nums.end());
+        reverse(nums.begin(), nums.end());
+    }
+};
+```
+# 125. 验证回文串
+### 双指针
+```
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        string str;
+        for (auto x : s) {
+            if (isalpha(x)) {
+                str += tolower(x);
+            } else if (isdigit(x)) {
+                str += x;
+            }
+        }
+        // cout << "str: " << str << endl;
+        int l = 0, r = str.size() - 1;
+        while (l < r) {
+            if (str[l] != str[r]) return false;
+            l++;
+            r--;
+        }
+
+        return true;
+    }
+};
+```
+# 9. 回文数
+### 方法1：转换为字符串
+```
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        string s = to_string(x);
+        int i = 0, j = s.size() - 1;
+        while (i < j) {
+            if (s[i] != s[j]) return false;
+            else i++, j--;
+        }
+
+        return true;
+    }
+};
+```
+### 方法2：数学
+```
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0) return false;
+        typedef long long LL;
+        LL num = 0;
+        int n = x;
+        while (n) {
+            int t = n % 10;
+            n /= 10;
+            num = num * 10 + t;
+        }
+
+        if (num == x) return true;
+
+        return false;
+    }
+};
+```
