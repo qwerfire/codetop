@@ -5730,3 +5730,121 @@ public:
     }
 };
 ```
+# 445. 两数相加 II
+### 方法1：反转链表后再处理
+```
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        l2 = reverseList(l2);
+        l1 = reverseList(l1);
+        int c = 0;
+        auto dummy = new ListNode();
+        auto p = dummy;
+        while (l1 && l2) {
+            int t = l1->val + l2->val + c;
+            c = t / 10;
+            t %= 10;
+            auto node = new ListNode(t);
+            p->next = node;
+            p = node;
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+
+        while (l1) {
+            int t = l1->val + c;
+            c = t / 10;
+            t %= 10;
+            auto node = new ListNode(t);
+            p->next = node;
+            p = node;
+            l1 = l1->next;
+        }
+
+        while (l2) {
+            int t = l2->val + c;
+            c = t / 10;
+            t %= 10;
+            auto node = new ListNode(t);
+            p->next = node;
+            p = node;
+            l2 = l2->next;
+        }
+
+        if (c) {
+            auto node = new ListNode(c);
+            p->next = node;
+            p = node;
+        }
+
+        return reverseList(dummy->next);
+    }
+
+    ListNode* reverseList(ListNode* p) {
+        if (p == nullptr || p->next == nullptr) return p;
+        auto a = p, b = p->next;
+        while (b) {
+            auto c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+        p->next = nullptr;
+        return a;
+    }
+};
+```
+### 方法2：栈
+```
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        stack<int> st1, st2, st;
+        while (l1) {
+            st1.push(l1->val);
+            l1 = l1->next;
+        }
+
+        while (l2) {
+            st2.push(l2->val);
+            l2 = l2->next;
+        }
+
+        int c = 0;
+        while (st1.size() && st2.size()) {
+            int t = st1.top() + st2.top() + c;
+            c = t / 10;
+            st.push(t % 10);
+            st1.pop();
+            st2.pop();
+        }
+
+        while (st1.size()) {
+            int t = st1.top() + c;
+            c = t / 10;
+            st.push(t % 10);
+            st1.pop();
+        }
+
+        while (st2.size()) {
+            int t = st2.top() + c;
+            c = t / 10;
+            st.push(t % 10);
+            st2.pop();
+        }
+
+        if (c) st.push(c);
+        auto dummy = new ListNode();
+        auto p = dummy;
+        while (st.size()) {
+            auto node = new ListNode(st.top());
+            st.pop();
+            p->next = node;
+            p = node;
+        }
+
+        return dummy->next;
+    }
+};
+```
