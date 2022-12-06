@@ -5589,3 +5589,43 @@ public:
     }
 };
 ```
+# 329. 矩阵中的最长递增路径
+### 记忆化搜索
+```
+class Solution {
+public:
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+    vector<vector<int>> f, w;
+    int n, m;
+    
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        w = matrix;
+        n = matrix.size(), m = matrix[0].size();
+        f = vector<vector<int>>(n, vector<int>(m, -1));
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                res = max(res, dp(i, j));
+                // cout << i << " " << j << " " << dp(i, j) << endl;
+            }
+        }
+
+        return res;
+    }
+
+    int dp(int a, int b) {
+        if (f[a][b] != -1) return f[a][b];
+        f[a][b] = 1;
+
+        for (int i = 0; i < 4; i++) {
+            int x = a + dx[i], y = b + dy[i];
+            if (x >= 0 && x < n && y >= 0 && y < m && w[x][y] > w[a][b]) {
+                f[a][b] = max(f[a][b], dp(x, y) + 1);
+            }
+        }
+
+        return f[a][b];
+    }
+};
+```
