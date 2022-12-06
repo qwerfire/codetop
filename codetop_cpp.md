@@ -5629,3 +5629,26 @@ public:
     }
 };
 ```
+# 384. 打乱数组
+### 洗牌算法
+```
+class Solution {
+public:
+    vector<int> oldArr, newArr;
+    Solution(vector<int>& nums) {
+        oldArr = newArr = nums;
+    }
+    
+    vector<int> reset() {
+        return oldArr;
+    }
+    
+    vector<int> shuffle() {
+        for (int i = 0; i < oldArr.size(); i++) {
+            swap(newArr[i], newArr[i + rand() % (oldArr.size() - i)]);
+        }
+
+        return newArr;
+    }
+};
+```
