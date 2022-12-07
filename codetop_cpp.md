@@ -5914,3 +5914,46 @@ public:
 };
 ```
 
+# 287. 寻找重复数
+### 二分数据范围
+```
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int l = 1, r = nums.size() - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            int cnt = 0;
+            for (auto x : nums) {
+                if (x >= l && x <= mid) cnt++;
+            }
+
+            if (cnt > mid - l + 1) r = mid;
+            else l = mid + 1;
+        }
+
+        return l;
+    }
+};
+```
+### 方法2：快慢指针
+```
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int s = 0, f = 0;
+        do {
+            s = nums[s];
+            f = nums[nums[f]];
+        } while (s != f);
+
+        f = 0;
+        do {
+            s = nums[s];
+            f = nums[f];
+        } while (s != f);
+
+        return s;
+    }
+};
+```
