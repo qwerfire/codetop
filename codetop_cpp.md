@@ -5848,3 +5848,69 @@ public:
     }
 };
 ```
+
+# 剑指 Offer 27. 二叉树的镜像
+### 方法1：dfs
+```
+class Solution {
+public:
+    TreeNode* mirrorTree(TreeNode* root) {
+        if (!root) return NULL;
+        TreeNode* l = mirrorTree(root->left);
+        TreeNode* r = mirrorTree(root->right);
+        root->left = r;
+        root->right = l;
+
+        return root;
+    }
+};
+```
+### 方法2：dfs
+```
+class Solution {
+public:
+    TreeNode* mirrorTree(TreeNode* root) {
+        dfs(root);
+
+        return root;
+    }
+
+    void dfs(TreeNode* root)
+    {
+        if (!root) return;
+        if (root->left == NULL && root->right == NULL) return;
+        auto t = root->left;
+        root->left = root->right;
+        root->right = t;
+        dfs(root->left);
+        dfs(root->right);
+    }
+};
+```
+### 方法3：bfs
+```
+class Solution {
+public:
+    TreeNode* mirrorTree(TreeNode* root) {
+        if (!root) return root;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                auto left = node->left;
+                auto right = node->right;
+                node->left = right;
+                node->right = left;
+                if (left) q.push(left);
+                if (right) q.push(right);
+            }
+        }
+
+        return root;
+    }
+};
+```
+
