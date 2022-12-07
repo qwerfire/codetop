@@ -5957,3 +5957,103 @@ public:
     }
 };
 ```
+# 208. 实现 Trie (前缀树)
+### 方法1
+```
+const int N = 3E5 + 10;
+class Trie {
+public:
+    int son[N][26], cnt[N], idx;
+    Trie() {
+        memset(son, 0, sizeof son);
+        memset(cnt, 0, sizeof cnt);
+        idx = 0;
+    }
+    
+    void insert(string word) {
+        int p = 0;
+        for (auto& x: word) {
+            int u = x - 'a';
+            if (!son[p][u]) son[p][u] = ++idx;
+            p = son[p][u];
+        }
+        cnt[p]++;
+    }
+    
+    bool search(string word) {
+        int p = 0;
+
+        for (auto& x: word) {
+            int u = x - 'a';
+            if (!son[p][u]) return false;
+            p = son[p][u];
+        }
+
+        return cnt[p];
+    }
+    
+    bool startsWith(string prefix) {
+        int p = 0;
+
+        for (auto& x: prefix) {
+            int u = x - 'a';
+            if (!son[p][u]) return false;
+            p = son[p][u];
+        }
+
+        return true;
+    }
+};
+```
+### 方法2
+```
+class Trie {
+public:
+    struct Node {
+        Node* son[26];
+        bool isEnd;
+        Node() : isEnd(false) {
+            // memset(son, 0, sizeof son);
+            for (int i = 0; i < 26; i++) son[i] = nullptr;
+        }
+    };
+
+    Node* root;
+
+    Trie() {
+        root = new Node();
+    }
+    
+    void insert(string word) {
+        auto p = root;
+        for (auto x : word) {
+            int t = x - 'a';
+            if (!p->son[t]) p->son[t] = new Node();
+            p = p->son[t];
+        }
+        p->isEnd = true;
+    }
+    
+    bool search(string word) {
+        auto p = root;
+        for (auto x : word) {
+            int t = x - 'a';
+            if (!p->son[t]) return false;
+            p = p->son[t];
+        }
+
+        return p->isEnd;
+    }
+    
+    bool startsWith(string prefix) {
+        auto p = root;
+        for (auto x : prefix) {
+            int t = x - 'a';
+            if (!p->son[t]) return false;
+            p = p->son[t];
+        }
+
+        return true;
+    }
+};
+```
