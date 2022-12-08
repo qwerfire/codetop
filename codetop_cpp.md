@@ -6057,3 +6057,95 @@ public:
     }
 };
 ```
+
+# 295. 数据流的中位数
+### 方法1：两次while 保证下面比上面多
+```
+class MedianFinder {
+public:
+    priority_queue<int> down; // 大根堆
+    priority_queue<int, vector<int>, greater<int>> up; //小根堆
+
+    MedianFinder() {
+
+    }
+    
+    void addNum(int num) {
+        if (down.empty())
+            down.push(num);
+        else {
+            if (num > down.top()) {
+                up.push(num);
+            } else {
+                down.push(num);
+            }
+        }
+
+        while (up.size() >= down.size()) {
+            down.push(up.top());
+            up.pop();
+        }
+
+        while (down.size() > up.size() + 1) {
+            up.push(down.top());
+            down.pop();
+        }
+    }
+    
+    double findMedian() {
+        if (up.size() == down.size()) {
+            int a = up.top(), b = down.top();
+
+            return (a + b) / 2.0;
+        } 
+
+        return down.top();
+    }
+};
+```
+### 方法2：每次都插入下面，保证下面的堆比上面的多
+```
+class MedianFinder {
+public:
+    priority_queue<int> down; // 大根堆
+    priority_queue<int, vector<int>, greater<int>> up; //小根堆
+
+    MedianFinder() {
+
+    }
+    
+    void addNum(int num) {
+        if (up.empty())
+            down.push(num);
+        else {
+            if (num > down.top()) {
+                up.push(num);
+                down.push(up.top());
+                up.pop();
+            } else {
+                down.push(num);
+            }
+        }
+
+        // while (up.size() >= down.size()) {
+        //     down.push(up.top());
+        //     up.pop();
+        // }
+
+        if (down.size() > up.size() + 1) {
+            up.push(down.top());
+            down.pop();
+        }
+    }
+    
+    double findMedian() {
+        if (up.size() == down.size()) {
+            int a = up.top(), b = down.top();
+
+            return (a + b) / 2.0;
+        } 
+
+        return down.top();
+    }
+};
+```
