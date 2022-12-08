@@ -6149,3 +6149,46 @@ public:
     }
 };
 ```
+
+# 114. 二叉树展开为链表
+### 方法1：暴力
+```
+class Solution {
+public:
+    vector<TreeNode*> ans;
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        ans.push_back(root);
+        dfs(root->left);
+        dfs(root->right);
+    }
+    void flatten(TreeNode* root) {
+        dfs(root);
+        auto p = root;
+        for (int i = 1; i < ans.size(); i++) {
+            p->left = nullptr;
+            p->right = ans[i];
+            p = p->right;
+        }
+    }
+};
+```
+### 方法2：前序遍历的特点
+```
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        while (root) {
+            auto p = root->left;
+            if (p) { 
+                while (p->right) p = p->right;
+                p->right = root->right;
+                root->right = root->left;
+                root->left = nullptr;
+            }
+            root = root->right;
+        }
+    }
+};
+```
