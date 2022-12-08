@@ -6192,3 +6192,27 @@ public:
     }
 };
 ```
+# 剑指 Offer 26. 树的子结构
+### 方法1：注意和572题比较
+```
+class Solution {
+public:
+    bool isSubStructure(TreeNode* a, TreeNode* b) {
+        bool r = false;
+        if (!a || !b) return false;
+
+        if (dfs(a, b)) return true;
+
+        return isSubStructure(a->left, b) || isSubStructure(a->right, b);
+    }
+
+    bool dfs(TreeNode* a, TreeNode* b) {
+        if (b == NULL) return true;
+        if (a == NULL) return false;
+
+        if (a->val != b->val) return false;
+
+        return dfs(a->left, b->left) && dfs(a->right, b->right);
+    }
+};
+```
