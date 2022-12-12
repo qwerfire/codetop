@@ -6261,3 +6261,96 @@ public:
     }
 };
 ```
+# 剑指 Offer 29. 顺时针打印矩阵
+### 方法1
+```
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.empty()) return {};
+        int d = 1;
+        int dx[4] = {-1, 0, 1, 0};
+        int dy[4] = {0, 1, 0, -1};
+        vector<int> ans;
+        int n = matrix.size(), m = matrix[0].size();
+        vector<vector<bool>> st(n, vector<bool>(m));
+        int x = 0, y = 0, a = 0, b = 0;
+        for (int i = 0; i < n * m; i++) {
+            if (x >= 0 && x < n && y >= 0 && y < m && !st[x][y]) {
+                ans.push_back(matrix[x][y]);
+                st[x][y] = true;
+                a = x, b = y;
+                x = x + dx[d];
+                y = y + dy[d];
+            } else {
+                d = (d + 1) % 4;
+                x = a + dx[d];
+                y = b + dy[d];
+                st[x][y] = true;
+                a = x, b = y;
+                ans.push_back(matrix[x][y]);
+                x += dx[d], y += dy[d];
+            }
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.empty()) return {};
+        int dx[4] = {-1, 0, 1, 0};
+        int dy[4] = {0, 1, 0, -1};
+        int row = matrix.size(), col = matrix[0].size();
+        vector<vector<bool>> st(row, vector<bool>(col));
+        vector<int> res;
+        int d = 1, x = 0, y = 0;
+        for (int i = 0; i < row * col; i++) {
+            res.push_back(matrix[x][y]);
+            st[x][y] = true;
+            int a = x + dx[d], b = y + dy[d];
+            if (a < 0 || a >= row || b < 0 || b >= col || st[a][b]) {
+                d = (d + 1) % 4;
+                a = x + dx[d];
+                b = y + dy[d];
+            }
+            x = a, y = b;
+        }
+
+        return res;
+    }
+};
+```
+### 方法3
+```
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        int dx[4] = {-1, 0, 1, 0};
+        int dy[4] = {0, 1, 0, -1};
+        int d = 1;
+        int m = matrix.size(), n = matrix[0].size();
+        vector<vector<bool>> st(m, vector<bool>(n));
+        vector<int> res;
+        int x = 0, y = 0;
+        for (int i = 0; i < m * n; i++) {
+            res.push_back(matrix[x][y]);
+            st[x][y] = true;
+            int a = x + dx[d], b = y + dy[d];
+            if (a >= 0 && a < m && b >= 0 && b < n && !st[a][b]) {
+                x = a, y = b;
+            } else {
+                d = (d + 1) % 4;
+                x = x + dx[d];
+                y = y + dy[d];
+            }
+        }
+
+        return res;
+    }
+};
+```
