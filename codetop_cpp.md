@@ -6354,3 +6354,61 @@ public:
     }
 };
 ```
+# 213. 打家劫舍 II
+### 方法1：对头部元素分类讨论，两次遍历
+```
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        if (n == 1) return nums[0];
+
+        vector<int> dp(n), f(n);
+        dp[0] = 0;
+        dp[1] = nums[1];
+
+        for (int i = 2; i < n; i++) {
+            dp[i] = max(dp[i - 2] + nums[i], dp[i - 1]);
+        }
+
+        f[0] = nums[0];
+        f[1] = nums[0];
+
+        for (int i = 2; i < n - 1; i++) {
+            f[i] = max(f[i - 2] + nums[i], f[i - 1]);
+        }
+        // cout << dp[n - 1] << " " << f[n - 2] << endl;
+        return max(dp[n - 1], f[n - 2]);   
+        // return f[n - 2];   
+        // return dp[n - 1];   
+    }
+};
+```
+# 10. 正则表达式匹配
+### dp
+```
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int n = s.size(), m = p.size();
+        s = " " + s;
+        p = " " + p;
+        vector<vector<bool>> dp(n + 1, vector<bool>(m + 1));
+        dp[0][0] = true;
+        int i, j;
+        for (i = 0; i <= n; i++) {
+            for (j = 1; j <= m; j++) {
+                if (p[j] == '*') {
+                    dp[i][j] = dp[i][j - 1] || dp[i][j - 2] || (i && dp[i - 1][j - 1] && (p[j - 1] == '.' || p[j - 1] == s[i]));
+                } else {
+                    dp[i][j] = i && dp[i - 1][j - 1] &&  (((s[i] == p[j]) || p[j] == '.'));
+                }
+                // cout << i << " " << j << " " << dp[i][j] << endl;
+            }
+            
+        }
+
+        return dp[n][m];
+    }
+};
+```
