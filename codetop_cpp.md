@@ -6412,3 +6412,48 @@ public:
     }
 };
 ```
+# 349. 两个数组的交集
+### 方法1 set
+```
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> ans;
+        unordered_set<int> s1(nums1.begin(), nums1.end());
+        unordered_set<int> s2(nums2.begin(), nums2.end());
+        for (auto x : s1) {
+            if (s2.count(x)) {
+                ans.push_back(x);
+            }
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2：排序 + 双指针
+```
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        int l = 0, r = 0;
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+        vector<int> ans;
+        while (l < nums1.size() && r < nums2.size()) {
+            if (nums1[l] == nums2[r]) {
+                if (ans.empty() || ans.back() != nums2[r]) {
+                    ans.push_back(nums2[r]);
+                }
+                l++, r++;
+            } else if (nums1[l] > nums2[r]) {
+                r++;
+            } else {
+                l++;
+            }
+        }
+
+        return ans;
+    }
+};
+```
