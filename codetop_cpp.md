@@ -6487,3 +6487,74 @@ public:
     }
 };
 ```
+# 400. 第N个数字
+##数位计算
+```
+class Solution {
+public:
+    int findNthDigit(int n) {
+        typedef long long LL;
+        LL k = 1, s = 1, t = 9;
+        while (n > k * t) {
+            n -= k * t;
+            k++;
+            s *= 10;
+            t *= 10;
+        }
+
+        s += (n + k - 1) / k - 1;
+        n = n % k ? n % k : k;
+
+        return to_string(s)[n - 1] - '0';
+    }
+};
+```
+# 面试题61. 扑克牌中的顺子
+### 方法1
+```
+class Solution {
+public:
+    bool isStraight(vector<int>& nums) {
+        int z = 0;
+        for (auto x : nums) {
+            if (x == 0) z++;
+        }
+
+        sort(nums.begin(), nums.end());
+        for (int i = z + 1; i < nums.size(); i++) {
+            if (nums[i] - nums[i - 1] == 0) return false;
+            else if (nums[i] - nums[i - 1] == 1) continue;
+            else {
+                if (nums[i] - nums[i - 1] - 1 <= z) {
+                    z -= (nums[i] - nums[i - 1] - 1);
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    bool isStraight(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] && nums[i] == nums[i - 1]) return false;
+        }
+
+        for (auto x : nums) {
+            if (x) {
+                return nums.back() - x <= 4;
+            }
+        }
+
+        return true;
+    }
+};
+```
