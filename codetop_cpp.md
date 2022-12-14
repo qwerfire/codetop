@@ -6457,3 +6457,33 @@ public:
     }
 };
 ```
+# 106. 从中序与后序遍历序列构造二叉树
+### 方法1
+```
+class Solution {
+public:
+    unordered_map<int, int> h;
+    vector<int> in, post;
+    int n;
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        for (int i = 0; i < inorder.size(); i++) {
+            h[inorder[i]] = i;
+        }
+        in = inorder, post = postorder;
+        n = inorder.size() - 1;
+        int l = 0, r = inorder.size() - 1;
+        return build(0, n, 0, n);
+    }
+    TreeNode* build(int il, int ir, int pl, int pr)
+    {
+        if (il > ir) return nullptr;
+        int val = post[pr];
+        auto root = new TreeNode(val);
+        int id = h[val];
+        root->left = build(il, id - 1, pl, pl + id - 1 - il);
+        root->right = build(id + 1, ir, pl + id - 1 - il + 1, pr - 1);
+
+        return root;
+    }
+};
+```
