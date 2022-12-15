@@ -6558,3 +6558,26 @@ public:
     }
 };
 ```
+# 678. 有效的括号字符串
+### codetop方法1：括号判断的条件
+```
+class Solution {
+public:
+    bool checkValidString(string s) {
+        int l = 0, r = 0;
+        for (auto x : s) {
+            if (x == '(') {
+                l++, r++;
+            } else if (x == ')') {
+                l--, r--;
+            } else if (x == '*') {
+                l--, r++;
+            }
+            l = max(0, l);
+            if (l > r) return false;
+        }
+
+        return l == 0;
+    }
+};
+```
