@@ -6581,3 +6581,34 @@ public:
     }
 };
 ```
+# 347. 前 K 个高频元素
+### 哈希表 + 计数
+```
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> h;
+        int n = 0;
+        for (auto x : nums) h[x]++, n = max(n, h[x]);
+        
+        vector<vector<int>> g(n + 1);
+
+        for (auto [k, v]: h) {
+            // cout << k << " " << v << endl;
+            g[v].push_back(k);
+        }
+        int t = 0;
+        vector<int> ans;
+
+        for (int i = n; i >= 1; i--) {
+            for (auto x : g[i]) {
+                ans.push_back(x);
+                t++;
+                if (t >= k) return ans;
+            }
+        }
+
+        return ans;
+    }
+};
+```
