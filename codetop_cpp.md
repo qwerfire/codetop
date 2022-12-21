@@ -6748,3 +6748,45 @@ public:
     }
 };
 ```
+
+# 面试题 02.05. 链表求和
+```
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        auto dummy = new ListNode();
+        auto p = dummy;
+        int c = 0;
+        while (l1 || l2 || c) {
+            int t = 0;
+            if (l1) t += l1->val, l1 = l1->next;
+            if (l2) t += l2->val, l2 = l2->next;
+            t += c;
+            auto node = new ListNode(t % 10);
+            p->next = node;
+            p = p->next;
+            c = t / 10;
+        }
+
+        return dummy->next;
+    }
+};
+```
+# 887. 鸡蛋掉落
+### dp
+```
+int f[10010][105];
+class Solution {
+public:
+    int superEggDrop(int k, int n) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= k; j++) {
+                f[i][j] = f[i - 1][j - 1] + f[i - 1][j] + 1;
+            }
+            if (f[i][k] >= n) return i;
+        }
+
+        return 0;
+    }
+};
+```
