@@ -188,6 +188,29 @@ public:
     }
 };
 ```
+### 方法2：更简洁的写法
+```
+class Solution {
+public:
+    string addStrings(string num1, string num2)
+    {
+        int carry = 0;
+        int i = num1.size() - 1, j = num2.size() - 1;
+        string res;
+        while (i >= 0 || j >= 0 || carry)
+        {
+            int x = i >= 0 ? num1[i] - '0' : 0;
+            int y = j >= 0 ? num2[j] - '0' : 0;
+            int temp = x + y + carry;
+            res += '0' + temp % 10;
+            carry = temp / 10;
+            i--, j--;
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+```
 
 # 142. 环形链表 II
 ### 方法1 快慢指针
@@ -6662,5 +6685,66 @@ public:
     }
 
 
+};
+```
+# 补充题9. 36进制加法
+```
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+char getChar(int n)
+{
+    if (n <= 9)
+        return n + '0';
+    else
+        return n - 10 + 'a';
+}
+int getInt(char ch)
+{
+    if ('0' <= ch && ch <= '9')
+        return ch - '0';
+    else
+        return ch - 'a' + 10;
+}
+string add36Strings(string num1, string num2)
+{
+    int carry = 0;
+    int i = num1.size() - 1, j = num2.size() - 1;
+    int x, y;
+    string res;
+    while (i >= 0 || j >= 0 || carry)
+    {
+        x = i >= 0 ? getInt(num1[i]) : 0;
+        y = j >= 0 ? getInt(num2[j]) : 0;
+        int temp = x + y + carry;
+        res += getChar(temp % 36);
+        carry = temp / 36;
+        i--, j--;
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
+
+int main()
+{
+    string a = "1b", b = "2x", c;
+    c = add36Strings(a, b);
+    cout << c << endl;
+}
+```
+# 剑指 Offer 52. 两个链表的第一个公共节点
+```
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *a, ListNode *b) {
+        auto p1 = a, p2 = b;
+        while (p1 != p2) {
+            p1 = (p1 == NULL ? b : p1->next);
+            p2 = (p2 == NULL ? a : p2->next);
+        }
+
+        return p1;
+    }
 };
 ```
