@@ -6612,3 +6612,55 @@ public:
     }
 };
 ```
+
+# 611. 有效三角形的个数
+### 方法1：二分 
+```
+class Solution {
+public:
+    int triangleNumber(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        int cnt = 0, n = nums.size();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int l = j + 1, r = n - 1, k = j;
+                int v = nums[i] + nums[j];
+                while (l < r) {
+                    int mid = (l + r) >> 1;
+                    if (v > nums[mid]) l = mid + 1, k = mid;
+                    else r = mid;
+                }
+                if (v > nums[r])
+                    cnt += max(r - j, 0);
+                else 
+                    cnt += max(r - j - 1, 0);
+                // cout << i << " " << j << " " << r << endl;
+            }  
+        }
+
+        return cnt;
+    }
+};
+```
+### 方法2 双指针
+```
+class Solution {
+public:
+    int triangleNumber(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        int cnt = 0, n = nums.size();
+        for (int i = 0; i < n; i++) {
+            int k = i;
+            for (int j = i + 1; j < n; j++) {
+                while (k + 1 < n && nums[i] + nums[j] > nums[k + 1]) k++;
+                // cout << k << " "
+                cnt += max(k - j, 0);
+            }  
+        }
+
+        return cnt;
+    }
+
+
+};
+```
