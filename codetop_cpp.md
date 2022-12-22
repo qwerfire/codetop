@@ -6790,3 +6790,45 @@ public:
     }
 };
 ```
+# 剑指 Offer 39. 数组中出现次数超过一半的数字
+### 投票算法
+```
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int ans = nums[0], cnt = 1;
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] == ans) {
+                cnt++;
+            } else {
+                cnt--;
+                if (!cnt) {
+                    ans = nums[i];
+                    cnt++;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+# 168. Excel表列名称
+```
+class Solution {
+public:
+    string convertToTitle(int n) {
+        string s;
+        do {
+            n--;
+            int v = n % 26;
+            s += ('A' + v);
+            n /= 26;
+        } while (n);
+
+        reverse(s.begin(), s.end());
+
+        return s;
+    }
+};
+```
