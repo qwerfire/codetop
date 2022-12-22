@@ -6832,3 +6832,84 @@ public:
     }
 };
 ```
+# 673. 最长递增子序列的个数
+```
+//2022.12.22 周四
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n, 1), cnt(n, 1);
+        int ans = 1;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    // dp[i] = max(dp[j] + 1, dp[i]);
+                    if (dp[j] + 1 > dp[i]) {
+                        cnt[i] = cnt[j];
+                        dp[i] = dp[j] + 1;
+                    } else if (dp[j] + 1 == dp[i]) {
+                        cnt[i] += cnt[j];
+                    }
+                }
+            }
+            ans = max(ans, dp[i]);
+        }
+        // cout << "ans: " << ans << endl;
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            if (dp[i] == ans) {
+                res += cnt[i];
+            }
+        }
+
+
+        return res;
+    }
+};
+```
+
+# 674. 最长连续递增序列
+```
+//2022.12.22 周四
+class Solution {
+public:
+    int findLengthOfLCIS(vector<int>& nums) {
+        int n = nums.size(), ans = 1, i = 0;
+        while (i < n) {
+            int j = i + 1;
+            while (j < n && nums[j] > nums[j - 1]) j++;
+            ans = max(ans, j - i);
+            i = j;
+        }
+
+        return ans;
+    }
+};
+```
+
+# 1047. 删除字符串中的所有相邻重复项
+### 栈的妙用
+```
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        stack<char> st;
+        for (auto x : s) {
+            if (st.empty() || st.top() != x) {
+                st.push(x);
+            } else {
+                st.pop();
+            }
+        }
+        string res;
+        while (st.size()) {
+            res += st.top();
+            st.pop();
+        }
+        reverse(res.begin(), res.end());
+
+        return res;
+    }
+};
+```
