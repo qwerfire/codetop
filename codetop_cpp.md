@@ -6970,3 +6970,41 @@ public:
     }
 };
 ```
+# 442. 数组中重复的数据
+### 方法1：哈希表
+```
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        vector<int> res;
+        unordered_map<int, int> h;
+        for (auto x : nums) h[x]++;
+        for (auto [k, v] : h) {
+            if (v == 2) res.push_back(k);
+        }
+
+        return res;
+    }
+};
+```
+
+### 方法2：原地修改数组
+```
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        vector<int> ans;
+        for (auto x : nums) {
+            x = abs(x);
+            if (nums[x - 1] > 0) {
+                nums[x - 1] = nums[x - 1] * -1;
+            } else {
+                ans.push_back(x);
+            }
+        }
+ 
+
+        return ans;
+    }
+};
+```
