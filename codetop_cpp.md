@@ -6913,3 +6913,60 @@ public:
     }
 };
 ```
+# 	
+111. 二叉树的最小深度
+### bfs
+```
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (!root) return 0;
+        queue<TreeNode*> q;
+        int ans = 1;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                if (node->left == nullptr && node->right == nullptr) {
+                    return ans;
+                }
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            ans++;
+        }
+
+        return ans;
+    }
+};
+```
+### DFS
+```
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (!root) return 0;
+        int l = minDepth(root->left);
+        int r = minDepth(root->right);
+        if (l && r) return min(l, r) + 1;
+        if (l && !r) return l + 1;
+        if (!l && r) return r + 1;
+        return 1;
+    }
+};
+```
+### DFS
+```
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (!root) return 0;
+        if (!root->left) return minDepth(root->right) + 1;
+        if (!root->right) return minDepth(root->left) + 1;
+
+        return min(minDepth(root->left), minDepth(root->right)) + 1;
+    }
+};
+```
