@@ -7008,3 +7008,45 @@ public:
     }
 };
 ```
+
+# 448. 找到所有数组中消失的数字
+### 方法1
+```
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        int n = nums.size();
+        vector<bool> flag(n + 1, false);
+        for (auto& x: nums) {
+            flag[x] = true;
+        }
+        vector<int> res;
+        for (int i = 1; i <= n; i++) {
+            if (flag[i] == false) {
+                res.push_back(i);
+            }
+        }
+
+        return res;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        for (auto x : nums) {
+            x = abs(x);
+            if (nums[x - 1] > 0) nums[x - 1] *= -1;
+        }
+
+        vector<int> ans;
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > 0) ans.push_back(i + 1);
+        }
+
+        return ans;
+    }
+};
+```
