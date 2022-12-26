@@ -7078,3 +7078,54 @@ public:
     }
 };
 ```
+# 134. 加油站
+### 方法1
+```
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        vector<int> sum;
+        for (int i = 0; i < 2 * n; i++) {
+            sum.push_back(gas[i % n] - cost[i % n]);
+        }
+
+        int start = 0, end = 0, tot = 0;
+        while (start < n && end < 2 * n) {
+            tot += sum[end];
+            while (tot < 0) {
+                tot -= sum[start];
+                start++;
+            }
+
+            if (end - start + 1 == n)
+                return start;
+            end++;
+        }
+
+        return -1;
+    }
+};
+```
+
+### 方法2
+```
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        for (int i = 0, j; i < n; ) {  // 枚举起点
+            int left = 0;
+            for (j = 0; j < n; j ++ ) {
+                int k = (i + j) % n;
+                left += (gas[k] - cost[k]);
+                if (left < 0) break;
+            }
+            if (j == n) return i;
+            i = i + j + 1;
+        }
+
+        return -1;
+    }
+};
+```
