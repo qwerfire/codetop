@@ -7129,3 +7129,30 @@ public:
     }
 };
 ```
+# 86. 分隔链表
+### 双指针
+```
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        auto p0 = new ListNode(), p1 = new ListNode();
+        auto h0 = p0, h1 = p1;
+        while (head) {
+            if (head->val < x) {
+                h0->next = head;
+                h0 = h0->next;
+            } else {
+                h1->next = head;
+                h1 = h1->next;
+            }
+            head = head->next;
+        }
+
+        h0->next = p1->next;
+        h1->next = nullptr;
+
+        return p0->next;
+    }
+};
+```
+
