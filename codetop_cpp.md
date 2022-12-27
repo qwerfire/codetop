@@ -7155,4 +7155,124 @@ public:
     }
 };
 ```
+# 1004. 最大连续1的个数 III
+### 双指针
+```
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int res = 0, cnt = 0;
+        for (int i = 0, j = 0; i < nums.size(); i++) {
+            if (nums[i] == 0) cnt++;
+            while (cnt > k) {
+                if (nums[j] == 0) cnt--;
+                j++;
+            }
 
+            res = max(res, i - j + 1);
+        }
+
+        return res;
+    }
+};
+```
+# 剑指 Offer 34. 二叉树中和为某一值的路径
+### dfs
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> path;
+
+    void dfs(TreeNode* root, int target, int s)
+    {
+        if (!root) return;
+        if (root->left == nullptr && root->right == nullptr && s + root->val == target) {
+            path.push_back(root->val);
+            ans.push_back(path);
+            path.pop_back();
+            return;
+        }
+        path.push_back(root->val);
+        dfs(root->left, target, s + root->val);
+        dfs(root->right, target, s + root->val);
+        path.pop_back();
+    }
+    vector<vector<int>> pathSum(TreeNode* root, int target) {
+        dfs(root, target, 0);
+
+        return ans;
+    }
+};
+```
+# 剑指 Offer 53 - I. 在排序数组中查找数字 I
+### 方法1：哈希表
+```
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        unordered_map<int, int> h;
+        for (auto x : nums) h[x]++;
+
+        return h[target];
+    }
+};
+```
+### 方法2：库函数
+```
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int a = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+        int b = upper_bound(nums.begin(), nums.end(), target) - nums.begin();
+        return b - a;
+    }
+};
+```
+### 方法3：二分
+```
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        if (nums.size() == 0) return 0;
+        int a = 0, b = 0;
+        int l = 0, r = nums.size() - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        a = l;
+
+        l = 0, r = nums.size() - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] > target) r = mid;
+            else l = mid + 1;
+        }
+        if (nums[l] == target) b = l + 1;
+        else b = l;
+
+        return b - a;
+    }
+};
+```
+# 279. 完全平方数
+### dp
+```
+// 2022.12.27 周二
+class Solution {
+public:
+    int numSquares(int n) {
+        vector<int> dp(n + 1, INT_MAX);
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i / j; j++) {
+                dp[i] = min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+
+        return dp[n];
+    }
+};
+```
