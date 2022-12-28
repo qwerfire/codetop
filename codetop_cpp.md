@@ -7332,3 +7332,92 @@ public:
     }
 };
 ```
+# 679. 24 点游戏
+### dfs
+```
+// 2022.12.28 周三
+class Solution {
+public:
+    bool judgePoint24(vector<int>& cards) {
+        vector<double> a(cards.begin(), cards.end());
+        return dfs(a);
+    }
+
+    bool dfs(vector<double> nums)
+    {
+        if (nums.size() == 1) {
+            return fabs(nums[0] - 24) < 1e-8;
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = 0; j < nums.size(); j++) {
+                if (i != j) {
+                    double a = nums[i], b = nums[j];
+                    if (dfs(get(nums, i, j, a + b))) return true;
+                    if (dfs(get(nums, i, j, a - b))) return true;
+                    if (dfs(get(nums, i, j, a * b))) return true;
+                    if (b && dfs(get(nums, i, j, a / b))) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    vector<double> get(vector<double> &nums, int i, int j, double x) {
+        vector<double> res;
+        for (int k = 0; k < nums.size(); k++) {
+            if (k != i && k != j) res.push_back(nums[k]);
+        }
+
+        res.push_back(x);
+
+        return res;
+    }
+};
+```
+# 37. 解数独
+### dfs
+```
+class Solution {
+public:
+    bool row[9][10], col[9][10], cell[3][3][10];
+    void solveSudoku(vector<vector<char>>& board) {
+        memset(row, 0, sizeof row);
+        memset(col, 0, sizeof col);
+        memset(cell, 0, sizeof cell);
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') {
+                    int u = board[i][j] - '0';
+                    row[i][u] = col[j][u] = cell[i / 3][j / 3][u] = true;
+                }
+            }
+        }
+        dfs(board, 0, 0);
+    }
+
+    bool dfs(vector<vector<char>>& g, int x, int y) {
+        if (y == 9) {
+            y = 0;
+            x++;
+            if (x == 9) return true;
+        }
+
+        if (g[x][y] != '.') return dfs(g, x, y + 1);
+
+        for (int i = 1; i <= 9; i++) {
+            if (!row[x][i] && !col[y][i] && !cell[x / 3][y / 3][i]) {
+                row[x][i] = col[y][i] = cell[x / 3][y / 3][i] = true;
+                g[x][y] = '0' + i;
+                if (dfs(g, x, y + 1)) return true;
+                g[x][y] = '.';
+                row[x][i] = col[y][i] = cell[x / 3][y / 3][i] = false;
+            }
+        }
+
+        return false;
+    }
+};
+```
