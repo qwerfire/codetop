@@ -7421,3 +7421,24 @@ public:
     }
 };
 ```
+# 556. 下一个更大元素 III
+```
+class Solution {
+public:
+int nextGreaterElement(int n) {
+        string s = to_string(n);
+        int len = s.size();
+        int k = len - 1;
+        while (k && s[k - 1] >= s[k]) k--;
+        if (k == 0) return -1;
+        int j = k - 1;
+        while (j + 1 < len && s[j + 1] > s[k - 1]) j++;
+        swap(s[k - 1], s[j]);
+        reverse(s.begin() + k, s.end());
+        long long num = stol(s);
+        if (num > INT_MAX) return -1;
+
+        return num;
+    }
+};
+```
