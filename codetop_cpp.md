@@ -7442,3 +7442,47 @@ int nextGreaterElement(int n) {
     }
 };
 ```
+# 459. 重复的子字符串
+### 方法1
+```
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        int n = s.size();
+        string t;
+        for (int i = 0; i < n; i++) {
+            if (t.size() && t[0] == s[i]) {
+                int len = t.size();
+                if (n % len == 0) {
+                    int m = n / len;
+                    string temp;
+                    for (int i = 0; i < m; i++) {
+                        temp += t;
+                    }
+                    if (temp == s) return true;
+                }
+            }
+            t += s[i];
+        }
+
+        return false;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        string t = s;
+         s += s;
+         int n = s.size();
+         s = s.substr(1, n - 2);
+        //  cout << s << endl;
+        auto x = s.find(t);
+        if (x != s.npos) return true;
+
+        return false;
+    }
+};
+```
