@@ -7486,3 +7486,22 @@ public:
     }
 };
 ```
+
+# 27. 移除元素
+### 方法1
+```
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int l = 0, r = 0;
+        while (l < nums.size()) {
+            if (nums[l] != val) {
+                nums[r++] = nums[l];
+            }
+            l++;
+        }
+
+        return r;
+    }
+};
+```
