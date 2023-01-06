@@ -7603,3 +7603,87 @@ public:
     }
 };
 ```
+# 904. 水果成篮
+### 滑动窗口 + 哈希
+```
+class Solution {
+public:
+    int totalFruit(vector<int>& s) {
+        int n = s.size();
+        int ans = 0;
+        unordered_map<int, int> h;
+        for (int i = 0, j = 0; i < n; i++) {
+            if (h.size() == 0) {
+                h[s[i]]++;
+                ans = max(ans, i - j + 1);
+                // cout << "/:" << i << " " << j << " " << ans << endl;
+            } else if (h.size() == 1) {
+                if (h.count(s[i]) == 0) {
+                    h[s[i]]++;
+                } else {
+                    h[s[i]]++;
+                }
+                ans = max(ans, i - j + 1);
+                // cout << "//:" << i << " " << j << " " << ans << endl;
+            } else if (h.size() == 2) {
+                if (h.count(s[i])) {
+                    h[s[i]]++;
+                    ans = max(ans, i - j + 1);
+                    // cout << "///0:" << i << " " << j << " " << ans << endl;
+                    // cout << "///0: h[s[i]] = " << h[s[i]] << endl;
+                } else {
+                    while (h[s[j]] > 0) {
+                        h[s[j]]--;
+                        // cout << "*** i:" << i << ", j:" << j << ", h[s[j]] = " << h[s[j]] << endl;
+                        if (h[s[j]]) j++;
+                        else {
+                            h.erase(s[j++]);
+                            break;
+                        }
+                    }
+                    
+                    h[s[i]]++;
+                    ans = max(ans, i - j + 1);
+                    // cout << "///1:" << i << " " << j << " " << ans << endl;
+                }  
+            }
+        }
+
+        return ans;
+    }
+};
+```
+### 对上述代码的优化
+```
+class Solution {
+public:
+    int totalFruit(vector<int>& s) {
+        int n = s.size();
+        int ans = 0;
+        unordered_map<int, int> h;
+        for (int i = 0, j = 0; i < n; i++) {
+            if (h.size() == 0 || h.size() == 1) {
+                h[s[i]]++;
+                ans = max(ans, i - j + 1);
+            } else if (h.size() == 2) {
+                if (h.count(s[i])) {
+                    h[s[i]]++;
+                    ans = max(ans, i - j + 1);
+                } else {
+                    while (h[s[j]] > 0) {
+                        h[s[j]]--;
+                        if (h[s[j]]) j++;
+                        else {
+                            h.erase(s[j++]);
+                            break;
+                        }
+                    }
+                    h[s[i]]++;
+                    ans = max(ans, i - j + 1);
+                }  
+            }
+        }
+        return ans;
+    }
+};
+```
