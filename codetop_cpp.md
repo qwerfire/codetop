@@ -7505,3 +7505,63 @@ public:
     }
 };
 ```
+# 844. 比较含退格的字符串
+### codetop方法1
+```
+class Solution {
+public:
+    bool backspaceCompare(string s, string t) {
+        stack<char> st;
+        string s2, t2;
+        for (auto x : s) {
+            if (st.empty()) {
+                if (x != '#')
+                    st.push(x);
+            } else if (x == '#') st.pop();
+            else st.push(x);
+        }
+        while (st.size()) {
+            s2 += st.top();
+            st.pop();
+        }
+
+        for (auto x : t) {
+            if (st.empty()) {
+                if (x != '#')
+                    st.push(x);
+            } else if (x == '#') st.pop();
+            else st.push(x);
+        }
+        while (st.size()) {
+            t2 += st.top();
+            st.pop();
+        }
+        // cout << s2 << " " << t2 << endl;
+        return s2 == t2;
+    }
+};
+```
+### codetop 方法2
+```
+class Solution {
+public:
+    bool backspaceCompare(string s, string t) {
+        string s2, t2;
+        for (auto x : s) {
+            if (x != '#') s2 += x;
+            else {
+                if (s2.size()) s2.pop_back();
+            }
+        }
+
+        for (auto x : t) {
+            if (x != '#') t2 += x;
+            else {
+                if (t2.size()) t2.pop_back();
+            }
+        }
+
+        return s2 == t2;
+    }
+};
+```
