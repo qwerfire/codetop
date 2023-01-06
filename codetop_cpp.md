@@ -7565,3 +7565,41 @@ public:
     }
 };
 ```
+# 977. 有序数组的平方
+### 方法1：暴力算法
+```
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        vector<int> ans;
+        for (auto x : nums) {
+            ans.push_back(x * x);
+        }
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
+```
+### 方法2 注意最大的数只可能在两端，所以可以使用双指针
+```
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(n);
+        int k = n - 1;
+        int l = 0, r = n - 1;
+        while (l <= r) {
+            if (nums[l] * nums[l] >= nums[r] * nums[r]) {
+                ans[k--] = nums[l] * nums[l];
+                l++;
+            } else {
+                ans[k--] = nums[r] * nums[r];
+                r--;
+            }
+        }
+
+        return ans;
+    }
+};
+```
