@@ -7729,3 +7729,39 @@ public:
     }
 };
 ```
+# 242. 有效的字母异位词
+### 方法1：排序
+```
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
+
+        return s == t;
+    }
+};
+```
+### 方法2：哈希表
+```
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if (s.size() != t.size()) return false;
+        unordered_map<char, int> hs, ht;
+        for (auto x : s) {
+            hs[x]++;
+        }
+
+        for (auto x : t) {
+            ht[x]++;
+        }
+
+        for (auto[k, v] : hs) {
+            if (ht[k] != v) return false;
+        }
+
+        return true;
+    }
+};
+```
