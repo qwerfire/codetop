@@ -7857,3 +7857,54 @@ public:
     }
 };
 ```
+# 350. 两个数组的交集 II
+### 方法1：哈希表
+```
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> ans;
+        unordered_map<int, int> h1, h2;
+        for (auto x : nums1) h1[x]++;
+        for (auto x : nums2) h2[x]++;
+        for (auto [k, v] : h1) {
+            // cout << "k: " << k << endl;
+            if (h2.count(k)) {
+                int v2 = h2[k];
+                int t = min(v, v2);
+                for (int i = 0; i < t; i++) {
+                    ans.push_back(k);
+                }
+            } 
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2：双指针
+```
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        int l = 0, r = 0;
+        vector<int> ans;
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+
+        while (l < nums1.size() && r < nums2.size()) {
+            if (nums1[l] == nums2[r]) {
+                ans.push_back(nums1[l]);     
+                l++;
+                r++;
+            } else if (nums1[l] > nums2[r]) {
+                r++;
+            } else {
+                l++;
+            }
+        }
+
+        return ans;
+    }
+};
+```
