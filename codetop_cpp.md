@@ -7687,3 +7687,45 @@ public:
     }
 };
 ```
+### 方法2
+```
+class Solution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        unordered_map<int, int> h;
+        int ans = 0;
+        for (int i = 0, j = 0, s = 0; i < fruits.size(); i++) {
+            if (++h[fruits[i]] == 1) s++;
+
+            while (s > 2) {
+                if (--h[fruits[j]] == 0) s--;
+                j++;
+            }
+            ans = max(ans ,i - j + 1);
+        }
+
+        return ans;
+    }
+};
+```
+# 203. 移除链表元素
+### 方法1
+```
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        auto dummy = new ListNode();
+        auto p = dummy;
+        while (head) {
+            if (head->val != val) {
+                p->next = head;
+                p = p->next;
+            }
+
+            head = head->next;
+        }
+        p->next = nullptr;
+        return dummy->next;
+    }
+};
+```
