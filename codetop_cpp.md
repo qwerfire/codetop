@@ -7765,3 +7765,95 @@ public:
     }
 };
 ```
+# 383. 赎金信
+### 方法1：哈希表
+```
+2022.1.8 周日
+class Solution {
+public:
+    bool canConstruct(string s, string t) {
+        unordered_map<char, int> hs, ht;
+        for (auto x : s) hs[x]++;
+        for (auto x : t) ht[x]++;
+        for (auto [k, v]: hs) {
+            if (v <= ht[k]) continue;
+            else return false;
+        }
+
+        return true;
+    }
+};
+```
+# 49.字母异位词分组
+###  方法1
+```
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> ans;
+        unordered_map<string, vector<string>> h;
+        for (auto x : strs) {
+            string t = x;
+            sort(t.begin(), t.end());
+            h[t].push_back(x);
+        }
+
+        for (auto [k, v]: h) {
+            ans.push_back(v);
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, int> hash;
+        int id = 0;
+        for (auto x: strs) {
+            sort(x.begin(), x.end());
+            if (hash.count(x) == 0) {
+                hash[x] = id++;
+            }
+        }
+        vector<vector<string>> res(id, vector<string>());
+        for (auto x: strs) {
+            auto t = x;
+            sort(t.begin(), t.end());
+            int idx = hash[t];
+            res[idx].push_back(x);
+        }
+
+        return res;
+    }
+};
+```
+# 438.找到字符串中所有字母异位词
+### 哈希表 + 滑动窗口
+```
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> ans;
+        int ns = s.size(), np = p.size();
+        unordered_map<char, int> hp;
+        int cnt = 0;
+        
+        for (auto x : p) hp[x]++;
+        int n = hp.size();
+        for (int i = 0, j = 0; i < ns; i++) {
+            if (--hp[s[i]] == 0) cnt++;
+            if (i - j + 1 > np) {
+                if (hp[s[j]] == 0) cnt--;
+                hp[s[j++]]++;
+            }
+            if (cnt == n) ans.push_back(j);
+        }
+
+        return ans;
+    }
+};
+```
