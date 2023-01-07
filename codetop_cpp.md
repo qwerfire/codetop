@@ -7908,3 +7908,61 @@ public:
     }
 };
 ```
+# 202. 快乐数
+# 方法1
+```
+class Solution {
+public:
+    bool isHappy(int n) {
+        if (n == 1) return true;
+        unordered_set<int> h;
+        h.insert(n);
+
+        while (n != 1) {
+            int t = 0;
+            string s = to_string(n);
+            for (auto x : s) {
+                int v = x - '0';
+                t += v * v;
+            }
+            if (t == 1) return true;
+
+            if (h.count(t)) {
+                return false;
+            } else {
+                h.insert(t);
+            }
+            n = t;
+        }
+
+        return false;
+    }
+};
+```
+
+### 方法2：快慢指针
+```
+class Solution {
+public:
+    int get(int n) {
+        string s = to_string(n);
+        int t = 0;
+        for (auto x : s) {
+            int v = x - '0';
+            t += v * v;
+        }
+
+        return t;
+    }
+
+
+    bool isHappy(int n) {
+        int f = get(get(n)), s = get(n);
+        while (f != s) {
+            f = get(get(f)), s = get(s);
+        }
+
+        return f == 1;
+    }
+};
+```
