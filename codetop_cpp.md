@@ -8254,3 +8254,111 @@ public:
     }
 };
 ```
+
+# 剑指 Offer 05. 替换空格
+### 方法1 for循环
+```
+class Solution {
+public:
+    string replaceSpace(string s) {
+        string res;
+        for (auto x : s) {
+            if (x == ' ') res += "%20";
+            else res += x;
+        }
+
+        return res;
+    }
+};
+```
+### 方法2 双指针
+```
+class Solution {
+public:
+    string replaceSpace(string s) {
+        int cntSpace = 0;
+        for (auto x : s) {
+            if (x == ' ') cntSpace++;
+        }
+        int n = s.size();
+        int len = s.size() + cntSpace * 2;
+        s.resize(len);
+        for (int i = len - 1, j = n - 1; j >= 0; j--) {
+            if (s[j] == ' ') {
+                s[i--] = '0';
+                s[i--] = '2';
+                s[i--] = '%';
+            } else {
+                s[i--] = s[j];
+            }
+        }
+
+        return s;
+    }
+};
+```
+# 剑指 Offer 58 - II. 左旋转字符串
+### 方法1：库函数做法
+```
+class Solution {
+public:
+    string reverseLeftWords(string s, int n) {
+        while (n--) {
+            auto x = s[0];
+            s.erase(s.begin(), s.begin() + 1);
+            s += x;
+        }
+
+        return s;
+    }
+};
+```
+### 方法2 分段处理
+```
+class Solution {
+public:
+    string reverseLeftWords(string s, int k) {
+        int n = s.size();
+        k %= n;
+        string s1 = s.substr(0, k);
+        string s2 = s.substr(k);
+        string res = s2 + s1;
+
+        return res;
+    }
+};
+```
+### 方法3 deque
+```
+class Solution {
+public:
+    string reverseLeftWords(string str, int n) {
+        deque<char> dq;
+        for (auto x : str)
+            dq.push_back(x);
+        for (int i = 0; i < n; ++i) {
+            auto t = dq.front();
+            dq.pop_front();
+            dq.push_back(t);
+        }
+        string s;
+        for (int i = 0; i < dq.size(); ++i) {
+            s += dq[i];
+        }
+        return s;
+    }
+};
+```
+### 方法4 原地反转
+```
+class Solution {
+public:
+    string reverseLeftWords(string s, int n) {
+        reverse(s.begin(), s.begin() + n);
+        reverse(s.begin() + n, s.end());
+        reverse(s.begin(), s.end());
+
+        return s;
+    }
+};
+```
