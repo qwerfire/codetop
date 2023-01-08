@@ -8362,3 +8362,28 @@ public:
     }
 };
 ```
+# 28. 找出字符串中第一个匹配项的下标
+### 双指针做法 KMP暂未实现
+```
+class Solution {
+public:
+    int strStr(string s, string t) {
+        int ls = s.size(), lt = t.size();
+        int i = 0;
+        while (i < ls) {
+            if (s[i] == t[0]) {
+                int j = 0, k = i;
+                while (k < ls && s[k] == t[j]) {
+                    k++;
+                    j++;
+                }
+
+                if (j == lt) return i;
+            }
+            i++;
+        }
+
+        return -1;
+    }
+};
+```
