@@ -8081,3 +8081,176 @@ public:
     }
 };
 ```
+
+# 18. 四数之和
+### 方法1：双指针
+```
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        int len = nums.size();
+        vector<vector<int>> ans;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < len - 3; i++) {
+            for (int j = i + 1; j < len - 2; j++) {
+                long long sum = nums[i] + nums[j];
+                int l = j + 1, r = len - 1;
+                while (l < r) {
+                    vector<int> temp;
+                    if ((sum + nums[l] + nums[r]) == target) {
+                        temp.push_back(nums[i]);
+                        temp.push_back(nums[j]);
+                        temp.push_back(nums[l]);
+                        temp.push_back(nums[r]);
+                        ans.push_back(temp);
+                        l++;
+                        r--;
+                    } else if (sum + nums[l] + nums[r] > target) {
+                        r--;
+                    } else {
+                        l++;
+                    }
+                }
+            }
+        }
+        sort(ans.begin(), ans.end());
+        ans.erase(unique(ans.begin(), ans.end()), ans.end());
+        return ans;
+    }
+};
+```
+### 方法2：双指针
+```
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> ans;
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < n; i++) {
+            if (i && nums[i] == nums[i - 1]) continue;
+            for (int j = i + 1; j < n; j++) {
+                if (j != i + 1 && nums[j] == nums[j - 1]) continue;
+                int l = j + 1, r = n - 1;
+                while (l < r) {
+                    long long v = (long long)nums[i] + nums[j] + nums[l] + nums[r];
+                    // printf("i = %d, j = %d, l = %d, r = %d, v = %d\n", i, j, l, r, v);
+                    if (v == target) {
+                        vector<int> temp({nums[i], nums[j], nums[l], nums[r]});
+                        ans.push_back(temp);
+                        while (l + 1 < r && nums[l + 1] == nums[l]) l++;
+                        while (r - 1 > l && nums[r - 1] == nums[r]) r--;
+                        l++, r--;
+                    } else if (v > target) r--;
+                    else l++;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+# 454. 四数相加 II
+### 方法1：哈希表
+```
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        int n = nums1.size();
+        unordered_map<int, int> h;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int v = nums1[i] + nums2[j];
+                h[v]++;
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int v = nums3[i] + nums4[j];
+                int s = 0 - v;
+                if (h.count(s)) {
+                    ans += h[s];
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+# 344. 反转字符串
+### 双指针
+```
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int l = 0, r = s.size() - 1;
+        while (l < r) {
+            swap(s[l], s[r]);
+            l++;
+            r--;
+        }
+    }
+};
+```
+# 541. 反转字符串 II
+### 方法1
+```
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        int n = s.size(), i = 0;
+        string ans;
+        for (int i = 0; i < n; ) {
+            if (i + 2 * k < n) {
+                for (int j = i + k; j > i;) {
+                    ans += s[--j];
+                } 
+
+                for (int j = i + k; j < i + 2 * k; j++) {
+                    ans += s[j];
+                }
+                i += 2 * k;
+            } else if (i + k <= n) {
+                for (int j = i + k; j > i;) {
+                    ans += s[--j];
+                } 
+
+                i += k;
+                for (int j = i; j < n; j++) {
+                    ans += s[j];
+                }
+
+                i = n;
+            } else {
+                for (int j = n - 1; j >= i; j--) {
+                    ans += s[j];
+                }
+
+                i = n;
+            }
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        for (int i = 0; i < s.size(); i += 2 * k) {
+            if (i + k <= s.size()) {
+                reverse(s.begin() + i, s.begin() + i + k);
+            } else {
+                reverse(s.begin() + i, s.end());
+            }
+        }
+
+        return s;
+    }
+};
+```
