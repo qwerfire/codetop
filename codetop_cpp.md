@@ -7966,3 +7966,118 @@ public:
     }
 };
 ```
+# 707. 设计链表
+### 方法1：注意设计一个函数，都在某个节点之前插入，还有设置虚拟头尾节点
+```
+class MyLinkedList {
+public:
+    struct DoubleList {
+        int val;
+        DoubleList* next;
+        DoubleList* prev;
+        int index;
+        DoubleList(int _val, int _index): val(_val), index(_index), 
+                                          prev(nullptr), next(nullptr) 
+        {
+
+        } 
+    };
+    DoubleList *head, *tail;
+    void printDebug() {
+        auto t = head->next;
+        while (t != tail) {
+            printf("val:%d, index:%d\n", t->val, t->index);
+            t = t->next;
+        }
+    }
+    MyLinkedList() {
+        head = new DoubleList(0, -1);
+        tail = new DoubleList(0, 10000);
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    // 在curNode之前添加节点
+    void addNode(DoubleList* curNode, int val, int index) {
+        DoubleList* node = new DoubleList(val, index);
+        auto t = curNode->prev;
+        node->next = curNode;
+        curNode->prev = node;
+        node->prev = t;
+        t->next = node;
+        auto p = node;
+        int id = index;
+        while (p != tail) {
+            p->index = id++;
+            p = p->next;
+        }
+    }
+    
+    int get(int index) {
+        int len = tail->prev->index;
+        if (index > len) return -1;
+
+        auto p = head->next;
+        while (p != tail) {
+            if (p->index != index) {
+                p = p->next;
+            } else {
+                return p->val;
+            }
+        }
+
+        return -1;
+    }
+    
+    void addAtHead(int val) {
+        addNode(head->next, val, 0);
+        // printf("addAtHead\n");
+        // printDebug();
+    }
+    
+    void addAtTail(int val) {
+        addNode(tail, val, tail->prev->index + 1);
+        // printf("addAtTail\n");
+        // printDebug();
+    }
+    
+    void addAtIndex(int index, int val) {
+        int len = tail->prev->index + 1;
+        if (len == index) {
+            addNode(tail, val, tail->prev->index + 1);
+        } else {
+            auto ph = head->next, pt = tail;
+            while (ph != tail) {
+                if (ph->index != index) {
+                    ph = ph->next;
+                } else {
+                    addNode(ph, val, index);
+                }
+            }
+        }
+
+        // printf("addAtIndex\n");
+        // printDebug();
+    }
+    
+    void deleteAtIndex(int index) {
+        int len = tail->prev->index;
+        if (index > len) return;
+        auto p = head->next;
+        while (p->index != index) {
+            p = p->next;
+        }
+        auto t = p->prev;
+        p->prev->next = p->next;
+        p->next->prev = p->prev;
+        int id = t->index;
+        while (t != tail) {
+            t->index = id++;
+            t = t->next;
+        }
+
+        // printf("deleteAtIndex\n");
+        // printDebug();
+    }
+};
+```
