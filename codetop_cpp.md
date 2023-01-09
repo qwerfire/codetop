@@ -8448,3 +8448,33 @@ public:
     }
 };
 ```
+# 107. 二叉树的层次遍历 II
+```
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> ans, res;
+        if (!root) return ans;
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (q.size()) {
+            int len = q.size();
+            vector<int> t;
+            for (int i = 0; i < len; i++) {
+                auto h = q.front();
+                q.pop();
+                t.push_back(h->val);
+                if (h->left) q.push(h->left);
+                if (h->right) q.push(h->right);
+            }
+            ans.push_back(t);
+        }
+
+        for (int i = ans.size() - 1; i >= 0; i--)
+            res.push_back(ans[i]);
+
+        return res;
+    }
+};
+```
