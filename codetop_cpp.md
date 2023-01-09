@@ -8387,3 +8387,36 @@ public:
     }
 };
 ```
+
+
+# 150. 逆波兰表达式求值
+```
+class Solution {
+public:
+    stack<int> num;
+    stack<char> op;
+    vector<string> v{"+", "-", "*", "/"};
+
+    int evalRPN(vector<string>& tokens) {
+        for (auto x : tokens) {
+            if (find(v.begin(), v.end(), x) != v.end()) {
+                int a = num.top(); num.pop();
+                int b = num.top(); num.pop();
+                if (x == "+") {
+                    num.push(a + b);
+                } else if (x == "-") {
+                    num.push(b - a);
+                } else if (x == "*") {
+                    num.push(a * b);
+                } else if (x == "/") {
+                    num.push(b / a);
+                }
+            } else {
+                num.push(stoi(x));
+            }
+        }
+
+        return num.top();
+    }
+};
+```
