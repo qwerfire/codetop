@@ -8478,3 +8478,86 @@ public:
     }
 };
 ```
+
+# 429. N叉树的层序遍历
+### BFS
+```
+class Solution {
+public:
+    vector<vector<int>> levelOrder(Node* root) {
+        vector<vector<int>> ans;
+        if (!root) return ans;
+        queue<Node*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            vector<int> temp;
+            for (int i = 0; i < len; i++) {
+                auto nd = q.front();
+                q.pop();
+                temp.push_back(nd->val);
+                for (auto x : nd->children) {
+                    if (x) q.push(x);
+                }
+            }
+            ans.push_back(temp);
+        }
+
+        return ans;
+    }
+};
+```
+# 515. 在每个树行中找最大值
+### BFS
+```
+class Solution {
+public:
+    vector<int> largestValues(TreeNode* root) {
+        vector<int> ans;
+        if (!root) return ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (q.size()) {
+            int t =INT_MIN;
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                t = max(t, node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            ans.push_back(t);
+        }
+
+        return ans;
+    }
+};
+```
+# 637. 二叉树的层平均值
+### BFS
+```
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> ans;
+        if (!root) return ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            double s = 0;
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                s += node->val;
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            ans.push_back(s / len);
+        }
+
+        return ans;
+    }
+};
+```
