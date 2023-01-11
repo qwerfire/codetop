@@ -8736,3 +8736,43 @@ public:
     }
 };
 ```
+
+# 100. 相同的树
+### 方法1 DFS
+```
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if (!p && !q) return true;
+        if (!p && q) return false;
+        if (p && !q) return false;
+        if (p->val != q->val) return false;
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    }
+};
+```
+### 方法2：BFS变形
+```
+class Solution {
+public:
+    bool isSameTree(TreeNode* root0, TreeNode* root1) {
+        queue<TreeNode*> q;
+        q.push(root0);
+        q.push(root1);
+        while (q.size()) {
+            auto n0 = q.front(); q.pop();
+            auto n1 = q.front(); q.pop();
+
+            if (!n0 && !n1) continue;
+            if (!(n0 && n1)) return false;
+            if (n0->val != n1->val) return false;
+            q.push(n0->left);
+            q.push(n1->left);
+            q.push(n0->right);
+            q.push(n1->right);
+        } 
+
+        return true;
+    }
+};
+```
