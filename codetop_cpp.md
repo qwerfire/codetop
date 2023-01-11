@@ -8884,3 +8884,29 @@ public:
     }
 };
 ```
+# 257. 二叉树的所有路径
+### 方法1：DFS
+```
+class Solution {
+public:
+    vector<string> ans;
+
+    void dfs(TreeNode* root, string s) {
+        if (!root->left && !root->right) {
+            s.pop_back();
+            s.pop_back();
+            ans.push_back(s);
+            return;
+        }
+        if (root->left)
+            dfs(root->left, s + to_string(root->left->val) + "->");
+        if (root->right)
+            dfs(root->right, s + to_string(root->right->val) + "->");
+    }
+    vector<string> binaryTreePaths(TreeNode* root) {
+        if (!root) return ans;
+        dfs(root, to_string(root->val) + "->");
+        return ans;
+    }
+};
+```
