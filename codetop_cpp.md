@@ -8776,3 +8776,111 @@ public:
     }
 };
 ```
+# 559. N叉树的最大深度
+### 方法1：bfs
+```
+class Solution {
+public:
+    int maxDepth(Node* root) {
+        queue<Node*> q;
+        if (!root) return 0;
+        int d = 0;
+        q.push(root);
+        while (q.size()) {
+            d++;
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto nd = q.front();
+                q.pop();
+                for (auto x : nd->children) {
+                    if (x) q.push(x);
+                }
+            }
+        }
+        return d;
+    }
+};
+```
+### 方法2：DFS
+```
+
+class Solution {
+public:
+    int maxDepth(Node* root) {
+        if (!root) return 0;
+        int r = 0;
+        for (auto x : root->children) {
+            r = max(r, maxDepth(x));
+        }
+
+        return r + 1;
+    }
+};
+```
+
+# 222. 完全二叉树的节点个数
+### 方法1：BFS
+```
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (!root) return 0;
+        queue<TreeNode*> q;
+        q.push(root);
+
+        int cnt = 0;
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto t = q.front(); q.pop();
+                cnt++;
+                if (t->left) q.push(t->left);
+                if (t->right) q.push(t->right);
+            }
+        }
+
+        return cnt;
+
+    }
+};
+```
+# 方法2：DFS 普通二叉树，未利用完全二叉树的性质
+```
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (!root) return 0;
+        int l = countNodes(root->left);
+        int r = countNodes(root->right);
+
+        return l + r + 1;
+    }
+};
+```
+
+### 方法3：DFS 利用完全二叉树的性质
+```
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (!root) return 0;
+        int dl = 1, dr = 1;
+        auto p = root->left;
+        while (p) {
+            dl++;
+            p = p->left;
+        }
+
+        p = root->right;
+        while (p) {
+            dr++;
+            p = p->right;
+        }
+        if (dr == dl) {
+            return (1 << dr) - 1;
+        }
+
+        return countNodes(root->left) + countNodes(root->right) + 1;
+    }
+};
+```
