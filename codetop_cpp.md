@@ -8561,3 +8561,178 @@ public:
     }
 };
 ```
+# 116. 填充每个节点的下一个右侧节点指针
+### 方法1 BFS
+```
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return root;
+        root->next = NULL;
+        queue<Node*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            vector<Node*> v;
+            for (int i = 0; i < len; i++) {
+                auto t = q.front();
+                q.pop();
+                if (t->left) q.push(t->left);
+                if (t->right) q.push(t->right);
+                v.push_back(t);
+            }
+
+            for (int i = 0; i < len; i++) {
+                if (i + 1 < len) {
+                    v[i]->next = v[i + 1];
+                } else {
+                    v[i]->next = NULL;
+                }
+            }
+        }
+
+        return root;
+    }
+};
+```
+
+### 方法2 BFS
+```
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return root;
+        queue<Node*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto t = q.front();
+                q.pop();
+                if (i != len - 1) {
+                    auto tt = q.front();
+                    t->next = tt;
+                } else {
+                    t->next = NULL;
+                }
+                if (t->left) q.push(t->left);
+                if (t->right) q.push(t->right);
+            }
+        }
+
+        return root;
+    }
+};
+```
+
+### 方法3 BFS O(1) 只适用于完全二叉树
+```
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return NULL;
+        auto ans = root;
+        while (root->left) {
+            auto p = root;
+            for (; p; p = p->next) {
+                p->left->next = p->right;
+                if (p->next) {
+                    p->right->next = p->next->left;
+                }
+            }
+
+            root = root->left;
+        }
+
+        return ans;
+    }
+};
+```
+### 方法4 BFS O(1) 适用于任意二叉树
+```
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return root;
+        auto cur = root;
+
+        while (cur) {
+            auto h = new Node();
+            auto t = h;
+            for (auto p = cur; p; p = p->next) {
+                if (p->left) {
+                    t->next = p->left;
+                    t = t->next;
+                }
+
+                if (p->right) {
+                    t->next = p->right;
+                    t = t->next;
+                }
+            }
+            cur = h->next;
+        }
+
+        return root;
+    }
+};
+```
+# 117. 填充每个节点的下一个右侧节点指针 II
+### 方法1：BFS
+```
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return root;
+        queue<Node*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto t = q.front();
+                q.pop();
+                if (i != len - 1) {
+                    auto tt = q.front();
+                    t->next = tt;
+                } else {
+                    t->next = NULL;
+                }
+                if (t->left) q.push(t->left);
+                if (t->right) q.push(t->right);
+            }
+        }
+
+        return root;
+    }
+};
+```
+
+### 方法2：BFS O(1)空间
+```
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return root;
+        auto cur = root;
+
+        while (cur) {
+            auto h = new Node();
+            auto t = h;
+            for (auto p = cur; p; p = p->next) {
+                if (p->left) {
+                    t->next = p->left;
+                    t = t->next;
+                }
+
+                if (p->right) {
+                    t->next = p->right;
+                    t = t->next;
+                }
+            }
+            cur = h->next;
+        }
+
+        return root;
+    }
+};
+```
