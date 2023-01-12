@@ -8985,3 +8985,75 @@ public:
     }
 };
 ```
+# 513. 找树左下角的值
+### 方法1：BFS
+```
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        queue<TreeNode*> q;
+        q.push(root);
+        int ans;
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+                if (i == 0) ans = node->val;
+            }
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2：DFS
+```
+class Solution {
+public:
+    int ans;
+    vector<bool> st;
+    int findBottomLeftValue(TreeNode* root) {
+        st = vector<bool>(1100);
+        dfs(root, 0);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root, int d) {
+        if (!root) return;
+        if (!st[d]) {
+            ans = root->val;
+            st[d] = true;
+        }
+        dfs(root->left, d + 1);
+        dfs(root->right, d + 1);
+    }
+};
+```
+### 方法3：DFS
+```
+class Solution {
+public:
+    int ans, maxd = 0;
+    int findBottomLeftValue(TreeNode* root) {
+        dfs(root, 1);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root, int d) {
+        if (!root) return;
+
+        if (d > maxd) {
+            maxd = d;
+            ans = root->val;
+        }
+
+        dfs(root->left, d + 1);
+        dfs(root->right, d + 1);
+    }
+};
+```
