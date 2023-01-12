@@ -8910,3 +8910,78 @@ public:
     }
 };
 ```
+# 404. 左叶子之和
+### 方法1:BFS
+```
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        int ans = 0;
+        if (!root) return 0;
+        // if (root->left == nullptr && root->right == nullptr) return 0;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto node = q.front();
+                q.pop();
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+
+                auto p = node;
+                if (p && p->left) {
+                    p = p->left;
+                    if (p->left == nullptr && p->right == nullptr) {
+                        ans += p->val;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2:DFS
+```
+class Solution {
+public:
+    int ans;
+    int sumOfLeftLeaves(TreeNode* root) {
+        ans = 0;
+        dfs(root);
+    
+        return ans;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        if (root && root->left) {
+            auto p = root->left;
+            if (!p->left && !p->right) ans += p->val;
+        }
+        dfs(root->right);
+    }
+};
+```
+### 方法3:DFS
+```
+class Solution {
+public:
+    int ans = 0;
+    int sumOfLeftLeaves(TreeNode* root) {
+        dfs(root, false);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root, bool isLeft) {
+        if (!root) return;
+        if (isLeft && root->left == nullptr && root->right == nullptr) ans += root->val;
+        if (root->left) dfs(root->left, true);
+        if (root->right) dfs(root->right, false);
+    }
+};
+```
