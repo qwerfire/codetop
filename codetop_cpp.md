@@ -9342,3 +9342,149 @@ public:
     }
 };
 ```
+
+# 501. 二叉搜索树中的众数
+### 方法1：两次DFS
+```
+class Solution {
+public:
+    vector<int> ans;
+    int cnt, maxCnt;
+    TreeNode* pre;
+    vector<int> findMode(TreeNode* root) {
+        cnt = 1, maxCnt = 1;
+        pre = nullptr;
+        dfs0(root);
+        pre = nullptr;
+        dfs(root);
+        return ans;
+    }
+    
+    void dfs0(TreeNode* root) {
+        if (!root) return;
+        dfs0(root->left);
+        if (pre) {
+            if (pre->val == root->val) {
+                cnt++;
+            } else {
+                cnt = 1;     
+            }
+        } else {
+            cnt = 1;
+        }
+
+        if (cnt > maxCnt) {
+            maxCnt = cnt;
+        }
+        pre = root;
+        dfs0(root->right);
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        if (pre) {
+            if (pre->val == root->val) {
+                cnt++;
+            } else {
+                cnt = 1;     
+            }
+        } else {
+            cnt = 1;
+        }
+
+        if (cnt == maxCnt) {
+            ans.push_back(root->val);
+        }
+        pre = root;
+        dfs(root->right);
+    }
+};
+```
+### 方法2：一次DFS
+```
+class Solution {
+public:
+    vector<int> ans;
+    int cnt, maxCnt;
+    TreeNode* pre;
+    vector<int> findMode(TreeNode* root) {
+        cnt = 1, maxCnt = 1;
+        pre = nullptr;
+        dfs(root);
+        return ans;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        if (pre) {
+            if (pre->val == root->val) {
+                cnt++;
+            } else {
+                cnt = 1;     
+            }
+        } else {
+            cnt = 1;
+        }
+
+        if (cnt == maxCnt) {
+            ans.push_back(root->val);
+        }
+        if (cnt > maxCnt) {
+            maxCnt = cnt;
+            ans.clear();
+            ans.push_back(root->val);
+        }
+        pre = root;
+        dfs(root->right);
+    }
+};
+```
+### 方法3：迭代的中序遍历实现
+```
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        vector<int> ans;
+        int cnt = 1, maxCnt = 1;
+        TreeNode* pre = nullptr;
+        stack<TreeNode*> st;
+        while (root || st.size()) {
+            if (root) {
+                st.push(root);
+                root = root->left;
+            } else {
+                auto node = st.top();
+                st.pop();
+
+                if (pre) {
+                    if (pre->val == node->val) {
+                        cnt++;
+                    } else {
+                        cnt = 1;
+                    }
+                } else {
+                    cnt = 1;
+                }
+
+                if (cnt == maxCnt) {
+                    ans.push_back(node->val);
+                }
+
+                if (cnt > maxCnt) {
+                    // cout << "cnt = " << cnt << ", maxCnt = " << maxCnt << endl;
+                    maxCnt = cnt;
+                    ans.clear();
+                    ans.push_back(node->val);
+                }
+
+                pre = node;
+                root = node->right;
+            }
+        }
+
+        return ans;
+    }
+};
+```
