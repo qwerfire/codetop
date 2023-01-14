@@ -9090,3 +9090,49 @@ public:
     }
 };
 ```
+
+# 617. 合并二叉树
+### 方法1：DFS 自己的写法
+```
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        TreeNode* r = nullptr;
+        if (!root1 && !root2) return nullptr;
+        if (!root1 && root2) {
+            r = new TreeNode(root2->val);
+            r->left = mergeTrees(nullptr, root2->left);
+            r->right = mergeTrees(nullptr, root2->right);
+        }
+        if (root1 && !root2) {
+            r = new TreeNode(root1->val);
+            r->left = mergeTrees(root1->left, nullptr);
+            r->right = mergeTrees(root1->right, nullptr);
+        }
+        if (root1 && root2) {
+            r = new TreeNode(root1->val + root2->val);
+            r->left = mergeTrees(root1->left, root2->left);
+            r->right = mergeTrees(root1->right, root2->right);
+        }
+
+        return r;
+    }
+};
+```
+### 方法2：DFS 简洁的写法
+```
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        auto root = new TreeNode();
+        if (!root1) return root2;
+        if (!root2) return root1;
+
+        root->val = root1->val + root2->val;
+        root->left = mergeTrees(root1->left, root2->left);
+        root->right = mergeTrees(root1->right, root2->right);
+
+        return root;
+    }
+};
+```
