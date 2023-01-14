@@ -9136,3 +9136,52 @@ public:
     }
 };
 ```
+
+# 700. 二叉搜索树中的搜索
+### 方法1：BST 迭代
+```
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        while (root) {
+            if (root->val == val) return root;
+            else if (root->val > val) {
+                root = root->left;
+            } else {
+                root = root->right;
+            }
+        }
+
+        return root;
+    }
+};
+```
+### 方法2：BST递归
+```
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if (!root || root->val == val) return root;
+
+        if (root->val < val) return searchBST(root->right, val);
+        if (root->val > val) return searchBST(root->left, val);
+
+        return root;
+    }
+};
+```
+### 方法3：常规DFS
+```
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if (!root) return root;
+        if (root->val == val) return root;
+        auto l = searchBST(root->left, val);
+        auto r = searchBST(root->right, val);
+
+        if (!l) return r;
+        return l;
+    }
+};
+```
