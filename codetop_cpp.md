@@ -9185,3 +9185,160 @@ public:
     }
 };
 ```
+# 530. 二叉搜索树的最小绝对差
+### 方法1：中序遍历先存储结果再判断
+```
+class Solution {
+public:
+    vector<int> vec;
+    int getMinimumDifference(TreeNode* root) {
+        dfs(root);
+
+        int r = INT_MAX;
+        for (int i = 1; i < vec.size(); i++) {
+            r = min(r, abs(vec[i] - vec[i - 1]));
+        }
+
+        return r;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        vec.push_back(root->val);
+        dfs(root->right);
+
+    }
+};
+```
+### 方法2：中序遍历DFS记录前一个节点然后判断
+```
+class Solution {
+public:
+    TreeNode* pre;
+    int ans;
+    int getMinimumDifference(TreeNode* root) {
+        pre = nullptr;
+        ans = INT_MAX;
+        dfs(root);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        if (pre) {
+            ans = min(ans, root->val - pre->val);
+        }
+
+        pre = root;
+        dfs(root->right);
+    }
+};
+```
+### 方法3：中序遍历迭代记录前一个节点然后判断
+```
+class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        stack<TreeNode*> st;
+        TreeNode* pre = nullptr;
+        int ans = INT_MAX;
+        while (st.size() || root) {
+            if (root) {
+                st.push(root);
+                root = root->left;
+            } else {
+                auto node = st.top();
+                st.pop();
+                if (pre) {
+                    ans = min(ans, node->val - pre->val);
+                }
+                pre = node;
+                root = node->right;
+            }
+        }
+        return ans;
+    }
+};
+```
+
+# 783. 二叉搜索树节点最小距离
+### 方法1：中序遍历先存储结果再判断
+```
+class Solution {
+public:
+    vector<int> vec;
+    int minDiffInBST(TreeNode* root) {
+        dfs(root);
+
+        int r = INT_MAX;
+        for (int i = 1; i < vec.size(); i++) {
+            r = min(r, abs(vec[i] - vec[i - 1]));
+        }
+
+        return r;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        vec.push_back(root->val);
+        dfs(root->right);
+
+    }
+};
+```
+### 方法2：中序遍历DFS记录前一个节点然后判断
+```
+class Solution {
+public:
+    TreeNode* pre;
+    int ans;
+    int minDiffInBST(TreeNode* root) {
+        pre = nullptr;
+        ans = INT_MAX;
+        dfs(root);
+
+        return ans;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->left);
+        if (pre) {
+            ans = min(ans, root->val - pre->val);
+        }
+
+        pre = root;
+        dfs(root->right);
+    }
+};
+```
+### 方法3：中序遍历迭代记录前一个节点然后判断
+```
+class Solution {
+public:
+    int minDiffInBST(TreeNode* root) {
+        stack<TreeNode*> st;
+        TreeNode* pre = nullptr;
+        int ans = INT_MAX;
+        while (st.size() || root) {
+            if (root) {
+                st.push(root);
+                root = root->left;
+            } else {
+                auto node = st.top();
+                st.pop();
+                if (pre) {
+                    ans = min(ans, node->val - pre->val);
+                }
+                pre = node;
+                root = node->right;
+            }
+        }
+        return ans;
+    }
+};
+```
