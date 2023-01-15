@@ -9488,3 +9488,58 @@ public:
     }
 };
 ```
+# 701. 二叉搜索树中的插入操作
+### 方法1：dfs
+```
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if (!root) {
+            TreeNode* node = new TreeNode(val);
+
+            return node;
+        }
+
+        if (root->val > val) root->left = insertIntoBST(root->left, val);
+        if (root->val < val) root->right = insertIntoBST(root->right, val);
+
+        return root;
+    }
+};
+```
+### 方法2：迭代
+```
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if (!root) {
+            TreeNode* node = new TreeNode(val);
+            return node;
+        }
+        TreeNode* ans = root;
+        TreeNode* pre = root;
+
+        while (root) {
+            if (root->val > val) {
+                pre = root;
+                root = root->left;
+                if (!root) {
+                    TreeNode* node = new TreeNode(val);
+                    pre->left = node;
+                    break;
+                }
+            } else if (root->val < val) {
+                pre = root;
+                root = root->right;
+                if (!root) {
+                    TreeNode* node = new TreeNode(val);
+                    pre->right = node;
+                    break;
+                }
+            }
+        }
+        
+        return ans;
+    }
+};
+```
