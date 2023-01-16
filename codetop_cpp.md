@@ -9543,3 +9543,56 @@ public:
     }
 };
 ```
+# 669. 修剪二叉搜索树
+### 方法1：dfs
+```
+class Solution {
+public:
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        if (!root) return nullptr;
+        if (root->val < low) {
+            return trimBST(root->right, low, high);
+        } else if (root->val > high) {
+            return trimBST(root->left, low, high);
+        } 
+
+        root->left = trimBST(root->left, low, high);
+        root->right = trimBST(root->right, low, high);
+
+        return root;
+    }
+};
+```
+
+### 方法2：迭代写法
+```
+class Solution {
+public:
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        if (!root) return root;
+
+        while (root && (root->val < low || root->val > high)) {
+            if (root->val < low) root = root->right;
+            else root = root->left;
+        }
+
+        auto p = root;
+        while (p) {
+            while (p->left && p->left->val < low) {
+                p->left = p->left->right;
+            }
+            p = p->left;
+        }
+
+        p = root;
+
+        while (p) {
+            while (p->right && p->right->val > high) {
+                p->right = p->right->left;
+            }
+            p = p->right;
+        }
+        return root;
+    }
+};
+```
