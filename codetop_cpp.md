@@ -9596,3 +9596,123 @@ public:
     }
 };
 ```
+# 108. 将有序数组转换为二叉搜索树
+### 方法1：二叉搜索树DFS，一定要想到二分
+```
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return dfs(nums, 0, nums.size() - 1);
+    }
+
+    TreeNode* dfs(vector<int>& nums, int l, int r) {
+        if (l > r) return nullptr;
+        int mid = l + r >> 1;
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = dfs(nums, l, mid - 1);
+        root->right = dfs(nums, mid + 1, r);
+
+        return root;
+    }
+};
+```
+# 538. 把二叉搜索树转换为累加树
+### 方法1：dfs
+```
+class Solution {
+public:
+    TreeNode* pre;
+    TreeNode* convertBST(TreeNode* root) {
+        pre = nullptr;
+    
+        dfs(root);
+        return root;
+    }
+
+    void dfs(TreeNode* root) {
+        if (!root) return;
+        dfs(root->right);
+        if (pre) {
+            root->val += pre->val;
+        }
+        pre = root;
+        dfs(root->left);
+    }
+};
+```
+### 方法2：迭代中序遍历
+```
+class Solution {
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        TreeNode* pre = nullptr;
+        stack<TreeNode*> st;
+        auto ans = root;
+        while (root || st.size()) {
+            if (root) {
+                st.push(root);
+                root = root->right;
+            } else {
+                auto node = st.top();
+                st.pop();
+                if (pre) {
+                    node->val += pre->val;
+                }
+
+                pre = node;
+                root = node->left;
+            }
+        }
+
+        return ans;
+    }
+};
+```
+# 1038. 从二叉搜索树到更大和树
+### 方法1：DFS
+```
+class Solution {
+public:
+    TreeNode* pre = nullptr;
+    TreeNode* bstToGst(TreeNode* root) {
+        if (!root) return root;
+        bstToGst(root->right);
+        if (pre) {
+            root->val += pre->val;
+        }
+        pre = root;
+        bstToGst(root->left);
+
+        return root;
+    }
+};
+```
+
+### 方法2：迭代
+```
+class Solution {
+public:
+    TreeNode* bstToGst(TreeNode* root) {
+        TreeNode* pre = nullptr;
+        stack<TreeNode*> st;
+        auto ans = root;
+        while (root || st.size()) {
+            if (root) {
+                st.push(root);
+                root = root->right;
+            } else {
+                auto node = st.top();
+                st.pop();
+                if (pre) {
+                    node->val += pre->val;
+                }
+
+                pre = node;
+                root = node->left;
+            }
+        }
+
+        return ans;
+    }
+};
+```
