@@ -9716,3 +9716,58 @@ public:
     }
 };
 ```
+# 77. 组合
+### 方法1：dfs
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> path;
+
+    vector<vector<int>> combine(int n, int k) {
+        dfs(n, 1, k);
+
+        return ans;
+    }
+
+    void dfs(int n, int start, int k) {
+        if (path.size() == k) {
+            ans.push_back(path);
+            return;
+        }
+
+        for (int i = start; i <= n; i++) {
+            path.push_back(i);
+            dfs(n, i + 1, k);
+            path.pop_back();
+        }
+    }
+};
+```
+### 方法2：dfs剪枝
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> path;
+
+    vector<vector<int>> combine(int n, int k) {
+        dfs(n, 1, k);
+
+        return ans;
+    }
+
+    void dfs(int n, int start, int k) {
+        if (path.size() == k) {
+            ans.push_back(path);
+            return;
+        }
+
+        for (int i = start; k - path.size() <= n - i + 1; i++) {
+            path.push_back(i);
+            dfs(n, i + 1, k);
+            path.pop_back();
+        }
+    }
+};
+```
