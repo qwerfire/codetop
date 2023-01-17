@@ -9771,3 +9771,96 @@ public:
     }
 };
 ```
+# 216. 组合总和 III
+### 方法1：DFS
+```
+class Solution {
+public:
+    vector<int> path;
+    vector<vector<int>> ans;
+    vector<vector<int>> combinationSum3(int k, int n) {
+        dfs(k, n, 1, 0);
+
+        return ans;
+    }
+
+    void dfs(int k, int n, int u, int s) {
+        if (path.size() > k) return;
+        if (s > n) return;
+        if (s == n) {
+            if (path.size() < k) return;
+            if (path.size() == k) {
+                ans.push_back(path);
+                return;
+            }
+        }
+
+        for (int i = u; i <= 9; i++) {
+            path.push_back(i);
+            dfs(k, n, i + 1, s + i);
+            path.pop_back();
+        }
+    }
+};
+```
+### 方法2：DFS剪枝
+```
+class Solution {
+public:
+    vector<int> path;
+    vector<vector<int>> ans;
+    vector<vector<int>> combinationSum3(int k, int n) {
+        dfs(k, n, 1, 0);
+
+        return ans;
+    }
+
+    void dfs(int k, int n, int u, int s) {
+        if (path.size() > k) return;
+        if (s > n) return;
+        if (s == n) {
+            if (path.size() < k) return;
+            if (path.size() == k) {
+                ans.push_back(path);
+                return;
+            }
+        }
+
+        for (int i = u; i <= 9 && s + i <= n; i++) {
+            path.push_back(i);
+            dfs(k, n, i + 1, s + i);
+            path.pop_back();
+        }
+    }
+};
+```
+
+# 17. 电话号码的字母组合
+```
+class Solution {
+public:
+    string gMap[10] = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    vector<string> ans;
+    vector<string> letterCombinations(string digits) {
+        if (digits.size() == 0) return ans;
+        dfs(digits, 0, "");
+
+        return ans;
+    }
+
+    void dfs(string& digits, int u, string s) {
+        if (u == digits.size()) {
+            ans.push_back(s);
+            return;
+        }
+
+        int id = digits[u] - '0';
+        string t = gMap[id];
+        for (int i = 0; i < t.size(); i++) {
+            dfs(digits, u + 1, s + t[i]);
+        }
+    }
+};
+```
+
+
