@@ -9863,4 +9863,89 @@ public:
 };
 ```
 
+# 131. 分割回文串
+### 方法1：DFS
+```
+class Solution {
+public:
+    vector<vector<string>> ans;
+    vector<string> path;
+    vector<vector<string>> partition(string s) {
+        dfs(s, 0);
+
+        return ans;
+    }
+
+    void dfs(string& s, int start) {
+        if (start == s.size()) {
+            ans.push_back(path);
+            return;
+        }
+        for (int i = start; i < s.size(); i++) {
+            string temp = s.substr(start, i - start + 1);
+            if (isValid(temp)) {
+                path.push_back(temp);
+                dfs(s, i + 1);
+                path.pop_back();
+            }
+        }
+    }
+
+    bool isValid(string &s) {
+        int l = 0, r = s.size() - 1;
+        while (l < r) {
+            if (s[l] == s[r]) {
+                l++;
+                r--;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+```
+
+### 方法2：DFS + DP优化
+```
+class Solution {
+public:
+    vector<string> path;
+    vector<vector<string>> ans;
+    vector<vector<bool>> f;
+    vector<vector<string>> partition(string s) {
+        int n = s.size();
+        f = vector<vector<bool>>(n, vector<bool>(n));
+        for (int j = 0; j < n; j++) {
+            for (int i = 0; i <= j; i++) {
+                if (i == j) f[i][j] = true;
+                else if (s[i] == s[j]) {
+                    if (j - i == 1) f[i][j] = true;
+                    else if (f[i + 1][j - 1]) f[i][j] = true;
+                }
+            }
+        }
+
+        dfs(s, 0);
+
+        return ans;
+    }
+
+    void dfs(string& s, int u) {
+        if (u == s.size()) {
+            ans.push_back(path);
+        } else {
+            for (int i = u; i < s.size(); i++) {
+                if (f[u][i]) {
+                    path.push_back(s.substr(u, i - u + 1));
+                    dfs(s, i + 1);
+                    path.pop_back();
+                }
+            }
+        }
+    }
+};
+```
+
 
