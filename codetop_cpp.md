@@ -9947,5 +9947,69 @@ public:
     }
 };
 ```
+# 90. 子集 II
+### 方法1：DFS，去重
+```
+class Solution {
+public:
+    vector<int> path;
+    vector<vector<int>> ans;
+    vector<bool> st;
 
+    void dfs(vector<int>& nums, int u) {
+        ans.push_back(path);
+
+        for (int i = u; i < nums.size(); i++) {
+            if (i && nums[i - 1] == nums[i] && !st[i - 1]) {
+                continue;
+            }
+
+            path.push_back(nums[i]);
+            st[i] = true;
+            dfs(nums, i + 1);
+            st[i] = false;
+            path.pop_back();
+        }
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        st = vector<bool>(nums.size());
+        dfs(nums, 0);
+
+        return ans;
+    }
+};
+```
+
+### 方法2：DFS，另一种去重方法
+```
+class Solution {
+public:
+    vector<int> path;
+    vector<vector<int>> ans;
+    vector<bool> st;
+
+    void dfs(vector<int>& nums, int u) {
+        ans.push_back(path);
+
+        for (int i = u; i < nums.size(); i++) {
+            if (i > u && nums[i - 1] == nums[i]) {
+                continue;
+            }
+
+            path.push_back(nums[i]);
+            dfs(nums, i + 1);
+            path.pop_back();
+        }
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        dfs(nums, 0);
+
+        return ans;
+    }
+};
+```
 
