@@ -10012,4 +10012,106 @@ public:
     }
 };
 ```
+# 491. 递增子序列
+### 方法1：DFS + 库函数去重
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> path;
 
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        dfs(nums, 0);
+        sort(ans.begin(), ans.end());
+        ans.erase(unique(ans.begin(), ans.end()), ans.end());
+        return ans;
+    }
+
+    void dfs(vector<int>& nums, int u) {
+        if (path.size() >= 2) {
+            ans.push_back(path);
+            // return;
+        }
+
+        if (u == nums.size()) return;
+
+        for (int i = u; i < nums.size(); i++) {
+            if (path.empty() || nums[i] >= path.back()) {
+                path.push_back(nums[i]);
+                dfs(nums, i + 1);
+                path.pop_back();
+            }
+        }
+    }
+};
+```
+
+### 方法2：DFS + set去重
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> path;
+
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        dfs(nums, 0);
+        // sort(ans.begin(), ans.end());
+        // ans.erase(unique(ans.begin(), ans.end()), ans.end());
+        return ans;
+    }
+
+    void dfs(vector<int>& nums, int u) {
+        if (path.size() >= 2) {
+            ans.push_back(path);
+        }
+
+        if (u == nums.size()) return;
+        unordered_set<int> uset;
+        for (int i = u; i < nums.size(); i++) {
+            if (uset.find(nums[i]) != uset.end()) continue;
+            if (path.empty() || nums[i] >= path.back()) {
+                path.push_back(nums[i]);
+                uset.insert(nums[i]);
+                dfs(nums, i + 1);
+                path.pop_back();
+            }
+        }
+    }
+};
+```
+
+
+### 方法3：DFS + 数组去重
+```
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> path;
+
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        dfs(nums, 0);
+        // sort(ans.begin(), ans.end());
+        // ans.erase(unique(ans.begin(), ans.end()), ans.end());
+        return ans;
+    }
+
+    void dfs(vector<int>& nums, int u) {
+        if (path.size() >= 2) {
+            ans.push_back(path);
+        }
+
+        if (u == nums.size()) return;
+
+        int h[300] = {0};
+        for (int i = u; i < nums.size(); i++) {
+            if (h[nums[i] + 100] == 1) continue;
+            if (path.empty() || nums[i] >= path.back()) {
+                path.push_back(nums[i]);
+                h[nums[i] + 100] = 1;
+                dfs(nums, i + 1);
+                path.pop_back();
+            }
+        }
+    }
+};
+```
