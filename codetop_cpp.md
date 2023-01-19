@@ -10115,3 +10115,70 @@ public:
     }
 };
 ```
+
+# 332. 重新安排行程
+### 方法1：欧拉回路
+```
+class Solution {
+public:
+    unordered_map<string, multiset<string>> g;
+    vector<string> ans;
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        for (auto e : tickets) {
+            g[e[0]].insert(e[1]);
+        }
+
+        dfs("JFK");
+        reverse(ans.begin(), ans.end());
+
+        return ans;
+    }
+
+    
+    void dfs(string s) {
+        while (g[s].size()) {
+            auto x = *g[s].begin();
+            g[s].erase(g[s].begin());
+            dfs(x);
+        }
+
+        ans.push_back(s);
+    }
+};
+```
+### 方法2：回溯，更好理解
+class Solution {
+public:
+    vector<string> result;
+    unordered_map<string, map<string, int>> g;
+    int n;
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        n = tickets.size();
+        for (auto x : tickets) {
+            g[x[0]][x[1]]++;
+        }
+
+        result.push_back("JFK");
+        dfs();
+        return result;
+    }
+
+    bool dfs() {
+        if (result.size() == n + 1) {
+            return true;
+        }
+        auto x = result.back();
+        for (auto &t : g[x]) {
+            if (t.second > 0) {
+                result.push_back(t.first);
+                t.second--;
+                if (dfs()) return true;
+                result.pop_back();
+                t.second++;
+            }
+        }
+
+        return false;
+    }
+};
+```
