@@ -10182,3 +10182,46 @@ public:
     }
 };
 ```
+
+# 51. N 皇后
+### 方法1：DFS 按行枚举
+```
+class Solution {
+public:
+    vector<vector<string>> ans;
+    vector<bool> row, col, up, down;
+    vector<string> g;
+    int n;
+    vector<vector<string>> solveNQueens(int _n) {
+        n = _n;
+        string str(n, '.');
+        // cout << "str = " << str << endl;
+        g = vector<string>(n, str);
+        row = vector<bool>(n);
+        col = vector<bool>(n);
+        up = vector<bool>(2 * n);
+        down = vector<bool>(2 * n);
+        dfs(0);
+
+        return ans;
+    }
+
+    // u是行数
+    void dfs(int u) {
+        if (u == n) {
+            ans.push_back(g);
+            return;
+        }
+        // i是列数
+        for (int i = 0; i < n; i++) {
+            if (!row[u] && !col[i] && !up[u + i] && !down[u - i + n]) {
+                row[u] = col[i] = up[u + i]= down[u - i + n] = true;
+                g[u][i] = 'Q';
+                dfs(u + 1);
+                g[u][i] = '.';
+                row[u] = col[i] = up[u + i]= down[u - i + n] = false;
+            }
+        }
+    }
+};
+```
