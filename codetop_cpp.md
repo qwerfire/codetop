@@ -10353,3 +10353,54 @@ public:
     }
 };
 ```
+# 860. 柠檬水找零
+### 方法1：贪心
+```
+class Solution {
+public:
+    bool lemonadeChange(vector<int>& bills) {
+        int five = 0, ten = 0, twenty = 0;
+        for (auto x : bills) {
+            if (x == 5) {
+                five++;
+            } else if (x == 10) {
+                ten++;
+                if (five > 0) five--;
+                else return false;
+            } else if (x == 20) {
+                if (ten > 0 && five > 0) {
+                    ten--;
+                    five--;
+                } else if (five >= 3) {
+                    five -= 3;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+};
+```
+# 406. 根据身高重建队列
+### 方法1：贪心 + 排序
+```
+class Solution {
+public:
+    static bool comp(vector<int> a, vector<int> b) {
+        if (a[0] == b[0]) return a[1] < b[1];
+        return a[0] > b[0];
+    }
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        sort(people.begin(), people.end(), comp);
+
+        vector<vector<int>> ans;
+        for (auto x : people) {
+            ans.insert(ans.begin() + x[1], x);
+        }
+
+        return ans;
+    }
+};
+```
