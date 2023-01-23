@@ -10147,6 +10147,7 @@ public:
 };
 ```
 ### 方法2：回溯，更好理解
+```
 class Solution {
 public:
     vector<string> result;
@@ -10295,7 +10296,6 @@ public:
             }
             // pre = cur;
         } 
-
         return res;
     }
 };
