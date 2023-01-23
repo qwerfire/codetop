@@ -10300,3 +10300,56 @@ public:
     }
 };
 ```
+
+# 1005. K 次取反后最大化的数组和
+### 方法1：贪心自己的实现
+```
+class Solution {
+public:
+    int largestSumAfterKNegations(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        while (k--) {
+            if (nums[0] < 0) {
+                nums[0] = -nums[0];
+                sort(nums.begin(), nums.end());
+            } else if (nums[0] == 0) {
+                break;
+            } else if (nums[0] > 0) {
+                nums[0] = -nums[0];
+                sort(nums.begin(), nums.end());
+            }
+        }
+
+        // for (auto x : nums) {
+        //     cout << x << " ";
+        // }
+        // cout << endl;
+
+        int ans = accumulate(nums.begin(), nums.end(), 0);
+
+        return ans;
+    }
+};
+```
+
+### 方法2：贪心
+```
+class Solution {
+public:
+    int largestSumAfterKNegations(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end(), [](int x, int y) {
+            return abs(x) > abs(y);
+        });
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] < 0 && k > 0) {
+                nums[i] = -nums[i];
+                k--;
+            }
+        }
+        if (k % 2) nums[nums.size() - 1] = -nums[nums.size() - 1];
+        int ans = accumulate(nums.begin(), nums.end(), 0);
+        return ans;
+    }
+};
+```
