@@ -10249,3 +10249,54 @@ public:
     }
 };
 ```
+# 376. 摆动序列
+### 方法1：DP
+```
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n + 1, vector<int>(2));
+        dp[0][0] = dp[0][1] = 1;
+        int res = 1;
+
+        for (int i = 1; i < n; i++) {
+            if (nums[i] - nums[i - 1] > 0) {
+                dp[i][1] = dp[i - 1][0] + 1;
+                dp[i][0] = dp[i - 1][0];
+            } else if (nums[i] - nums[i - 1] < 0) {
+                dp[i][0] = dp[i - 1][1] + 1;
+                dp[i][1] = dp[i - 1][1];
+            } else {
+                dp[i][1] = dp[i - 1][1];
+                dp[i][0] = dp[i - 1][0];
+            }
+            res = max(res, dp[i][0]);
+            res = max(res, dp[i][1]);
+        }
+
+        return res; 
+    }
+};
+```
+
+### 方法2：贪心
+```
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        int res = 1;
+        int pre = 0, cur = 0;
+        for (int i = 1; i < nums.size(); i++) {
+            cur = nums[i] - nums[i - 1];
+            if ((cur > 0 && pre <= 0) || (cur < 0 && pre >= 0)) {
+                res++;
+                pre = cur;
+            }
+            // pre = cur;
+        } 
+
+        return res;
+    }
+};
+```
