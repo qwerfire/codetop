@@ -10594,3 +10594,31 @@ public:
     }
 };
 ```
+# 968. 监控二叉树
+### 方法1：树形DP
+```
+class Solution {
+public:
+    int minCameraCover(TreeNode* root) {
+        auto dp = dfs(root);
+
+        return min(dp[1], dp[2]);
+    }
+
+    // f[0]:当前节点被父节点看
+    // f[1]:当前节点被子节点看
+    // f[2]:当前节点被自身看
+    vector<int> dfs(TreeNode* root) {
+        if (!root) return {0, 0, (int)1e8};
+
+        auto l = dfs(root->left), r = dfs(root->right);
+
+        return {
+            min(l[1], l[2]) + min(r[1], r[2]),
+            min(l[2] + min(r[1],r[2]), r[2] + min(l[1], l[2])),
+            min(l[0], min(l[1], l[2])) + min(r[0], min(r[1], r[2])) + 1
+        };
+
+    }
+};
+```
