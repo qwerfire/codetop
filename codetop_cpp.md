@@ -10503,3 +10503,49 @@ public:
     }
 };
 ```
+# 763. 划分字母区间
+### 方法1：贪心 + 哈希表
+```
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int n = s.size();
+        vector<int> ans;
+        unordered_map<char, int> h;
+        for (int i = 0; i < n; i++) h[s[i]] = i;
+        int l = 0, r = 0;
+        for (int i = 0; i < n; i++) {
+            r = max(r, h[s[i]]);
+            if (r == i) {
+                ans.push_back(r - l + 1);
+                l = r = i + 1;
+            }
+        }
+
+        return ans;
+    }
+};
+```
+# 738. 单调递增的数字
+### 方法1：贪心
+```
+class Solution {
+public:
+    int monotoneIncreasingDigits(int n) {
+        string s = to_string(n);
+        int start = s.size();
+        for (int i = s.size() - 1; i; i--) {
+            if (s[i - 1] > s[i]) {
+                s[i - 1]--;
+                
+                start = i;
+            }
+        }
+        
+        for (int i = start; i < s.size(); i++) {
+            s[i] = '9';
+        }
+        return stoi(s);
+    }
+};
+```
