@@ -10404,3 +10404,53 @@ public:
     }
 };
 ```
+# 452. 用最少数量的箭引爆气球
+### 方法1：贪心，按右端点排序
+```
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        sort(points.begin(), points.end(),
+        [](vector<int>& a, vector<int>& b) {
+            return a[1] < b[1];
+        });
+
+        int cnt = 1;
+        int py = points[0][1];
+        for (int i = 0; i < points.size(); i++) {
+            int a = points[i][0], b = points[i][1];
+            if (py >= a && py <= b) {
+                // cnt++;
+            } else {
+                py = b;
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+};
+```
+### 方法1：贪心，按左端点排序
+```
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        if (points.size() == 1) return 1;
+        sort(points.begin(), points.end());
+        int l = points[0][0], r = points[0][1];
+
+        int cnt = 1;
+
+        for (int i = 1; i < points.size(); i++) {
+            if (points[i][0] <= r) {
+                r = min(r, points[i][1]);
+            }
+            else {
+                cnt++;
+                l = points[i][0], r = points[i][1];
+            }
+        }
+        return cnt;
+    }
+};
+```
