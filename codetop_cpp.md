@@ -10549,3 +10549,48 @@ public:
     }
 };
 ```
+# 714. 买卖股票的最佳时机含手续费
+### 方法1：DP
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& p, int fee) {
+        int n = p.size();
+        // dp[i][0] 不持有股票
+        // dp[i][1] 持有股票
+        vector<vector<int>> dp(n + 1, vector<int>(2, -1E8));
+        dp[0][0] = 0;
+        // dp[0][1] = 0; 这里不能初始化为0
+        int res = 0;
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + p[i - 1] - fee);
+            dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - p[i - 1]);
+            res = max(res, dp[i][0]);
+        }
+
+        return res;
+    }
+};
+```
+### 方法2：贪心
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices, int fee) {
+        int res = 0;
+        int minPrice = prices[0];
+        for (int i = 1; i < prices.size(); i++) {
+            if (prices[i] < minPrice) {
+                minPrice = prices[i];
+            }
+
+            if (prices[i] > minPrice + fee) {
+                res += prices[i] - minPrice - fee;
+                minPrice = prices[i] - fee;
+            }
+        }
+
+        return res;
+    }
+};
+```
