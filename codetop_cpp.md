@@ -10642,3 +10642,40 @@ public:
     }
 };
 ```
+# 343. 整数拆分
+### 方法1：DP
+```
+class Solution {
+public:
+    int integerBreak(int n) {
+        vector<int> dp(n + 1);
+        dp[1] = 1;
+        dp[2] = 1;
+        for (int i = 3; i <= n; i++) {
+            for (int j = 1; j < i; j++) {
+                // dp[i] = max(dp[i], max(dp[j] * dp[i - j], j * (i - j)));
+                dp[i] = max(dp[i], max(j * dp[i - j], j * (i - j)));
+            }
+        }
+
+        return dp[n];
+    }
+};
+```
+
+### 方法2：数学 + 贪心
+```
+class Solution {
+public:
+    int integerBreak(int n) {
+        if (n <= 3) return 1 * (n - 1);
+        int p = 1;
+        while (n >= 5) {
+            n -= 3;
+            p *= 3;
+        }
+
+        return p * n;
+    }
+};
+```
