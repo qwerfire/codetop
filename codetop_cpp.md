@@ -10729,3 +10729,161 @@ public:
     }
 };
 ```
+
+# 1049. 最后一块石头的重量 II
+### 方法1：01背包
+```
+class Solution {
+public:
+    int lastStoneWeightII(vector<int>& stones) {
+        int s = accumulate(stones.begin(), stones.end(), 0);
+        int t = s / 2, n = stones.size();
+        vector<vector<int>> dp(n + 1, vector<int>(t + 1));
+        dp[0][0] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= t; j++) {
+                dp[i][j] = max(dp[i][j], dp[i - 1][j]);
+                if (j >= stones[i - 1]) {
+                    dp[i][j] = max(dp[i][j], dp[i - 1][j - stones[i - 1]] + stones[i - 1]);
+                }
+            }
+        }
+
+        return s - 2 * dp[n][t];
+    }
+};
+```
+### 方法2：01背包优化
+```
+class Solution {
+public:
+    int lastStoneWeightII(vector<int>& stones) {
+        int s = accumulate(stones.begin(), stones.end(), 0);
+        int t = s / 2, n = stones.size();
+
+        vector<int> dp(t + 1);
+        dp[0] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = t; j >= 0; j--) {
+                if (j >= stones[i - 1]) {
+                    dp[j] = max(dp[j], dp[j - stones[i - 1]] + stones[i - 1]);
+                }
+            }
+        }
+
+        return s - 2 * dp[t];
+    }
+};
+```
+# 494. 目标和
+### 方法1:DFS
+```
+class Solution {
+public:
+    int ans;
+    int findTargetSumWays(vector<int>& nums, int target) {
+        ans = 0;
+        dfs(nums, 0, 0, target);
+
+        return ans;
+    }
+
+    void dfs(vector<int>& nums, int u, int s, int t) {
+        if (u == nums.size()) {
+            if (s == t) {
+                ans++;
+            }
+            return;
+        }
+
+        for (int i = 0; i < 2; i++) {
+            if (i == 0) {
+                dfs(nums, u + 1, s + nums[u], t);
+            } else if (i == 1) {
+                dfs(nums, u + 1, s - nums[u], t);
+            }
+        }
+    }
+};
+```
+
+### 方法2:DFS
+```
+class Solution {
+public:
+    int ans;
+    int findTargetSumWays(vector<int>& nums, int target) {
+        ans = 0;
+        dfs(nums, 0, 0, target);
+
+        return ans;
+    }
+
+    void dfs(vector<int>& nums, int u, int s, int t) {
+        if (u == nums.size()) {
+            if (s == t) {
+                ans++;
+            }
+            return;
+        }
+
+        dfs(nums, u + 1, s + nums[u], t);
+        dfs(nums, u + 1, s - nums[u], t);
+    }
+};
+```
+
+### 方法3:DP
+```
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int n = nums.size();
+        int s = accumulate(nums.begin(), nums.end(), 0);
+        if (abs(target) > s) return 0;
+        if ((target + s) % 2) return 0;
+        int x = (target + s) / 2;
+        // x - (s - x) = target x为+号之和，则减号之和为s - x
+        // 所以 x = (target + s) / 2，转换成装满容量为x的背包有几种方法
+        vector<vector<int>> f(n + 1, vector<int>(x + 1));
+        f[0][0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= x; j++) {
+                f[i][j] += f[i - 1][j];
+                if (j >= nums[i - 1]) {
+                    f[i][j] += f[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+
+
+        return f[n][x];
+    }
+};
+```
+
+### 方法4:Dp
+```
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int n = nums.size(), off = 1000;
+        vector<vector<int>> f(n + 1, vector<int>(2001, 0));
+        f[0][off] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = -1000; j <= 1000; j++) {
+                if (j - nums[i - 1] >= -1000)
+                    f[i][j + off] += f[i - 1][j - nums[i - 1] + off];
+                if (j + nums[i - 1] <= 1000)
+                    f[i][j + off] += f[i - 1][j + nums[i - 1] + off];
+            }
+        }
+
+        return f[n][off + target];
+    }
+};
+```
