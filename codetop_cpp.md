@@ -10679,3 +10679,53 @@ public:
     }
 };
 ```
+
+# 416. 分割等和子集
+### 方法1:01背包
+```
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int s = accumulate(nums.begin(), nums.end(), 0);
+        if (s % 2) return false;
+        s /= 2;
+        int n = nums.size();
+        vector<vector<bool>> dp(n + 1, vector<bool>(s + 1));
+        dp[0][0] = true;
+
+        // dp[i][j] 前i个数组组成和为j的可能性
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= s; j++) {
+                dp[i][j] = dp[i][j] || dp[i - 1][j];
+                if (j >= nums[i - 1]) {
+                    dp[i][j] = dp[i][j] || dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+
+        return dp[n][s];
+    }
+};
+```
+### 方法2:01背包空间优化版
+```
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int n = nums.size();
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        if (sum % 2) return false;
+        sum /= 2;
+        vector<bool> dp(sum + 1);
+
+       dp[0] = true;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = sum; j >= nums[i - 1]; j--) {
+                dp[j] = dp[j] || dp[j - nums[i - 1]];
+            }
+        }
+        return dp[sum];
+    }
+};
+```
