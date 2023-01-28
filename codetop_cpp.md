@@ -10952,3 +10952,65 @@ public:
     }
 };
 ```
+
+# 377. 组合总和 Ⅳ
+### 方法1:DP
+```
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        int n = nums.size();
+        vector<uint> dp(target + 1);
+        dp[0] = 1;
+
+        for (int i = 1; i <= target; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i >= nums[j]) {
+                    dp[i] += dp[i - nums[j]];
+                }
+            }
+        }
+
+        return dp[target];
+    }
+};
+```
+### 方法2：记忆化搜索
+```
+class Solution {
+public:
+    int res;
+    vector<int> cur;      // 当前组合
+    int curSum;             // 当前组合的求和
+    map<int, int> dict;   // 记忆化结构
+    void dfs(vector<int> nums, int tar) {
+        if (curSum == tar) {
+            res ++;
+            return;
+        }
+        if (curSum > tar) {
+            return;
+        }
+        if (dict.find(tar - curSum) != dict.end()) {
+            res += dict[tar - curSum] ;
+            return;
+        }
+        int a = res;
+        for (int i = 0; i < nums.size(); i ++) {
+            cur.push_back(nums[i]);
+            curSum += nums[i];
+            dfs(nums, tar);
+            curSum -= nums[i];
+            cur.pop_back();
+        }
+        dict[tar - curSum] = res - a;
+    }
+
+
+    int combinationSum4(vector<int>& nums, int target) {
+        dfs(nums, target);
+
+        return res;
+    }
+};
+```
