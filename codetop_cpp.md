@@ -10887,3 +10887,68 @@ public:
     }
 };
 ```
+# 474. 一和零
+### 方法1:01背包DP
+```
+const int N = 610, M = 110;
+class Solution {
+public:
+    int dp[N][M][M];
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        memset(dp, 0, sizeof dp);
+        // dp[i][j][k] 前i个字符串，最多含有j个0, k个1的子集长度
+        int len = strs.size();
+        for (int i = 1; i <= len; i++) {
+            int a = 0, b = 0;
+            string t = strs[i - 1];
+            for (auto& x : t) {
+                if (x == '0') a++;
+                else b++;
+            }
+            // cout << t << " " << a << " " << b << endl;
+            for (int j = 0; j <= m; j++) {
+                for (int k = 0; k <= n; k++) {
+                    // dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j][k]);
+                    dp[i][j][k] = dp[i - 1][j][k];
+                    if (j >= a && k >= b)
+                        dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j - a][k - b] + 1);
+                }
+            }
+        }
+
+        return dp[len][m][n];
+    }
+};
+```
+### 方法2:01背包DP，空间优化
+```
+const int N = 610, M = 110;
+class Solution {
+public:
+    int dp[M][M];
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        memset(dp, 0, sizeof dp);
+        // dp[j][k] 最多含有j个0, k个1的子集长度
+        int len = strs.size();
+        for (int i = 1; i <= len; i++) {
+            int a = 0, b = 0;
+            string t = strs[i - 1];
+            for (auto& x : t) {
+                if (x == '0') a++;
+                else b++;
+            }
+            // cout << t << " " << a << " " << b << endl;
+            for (int j = m; j >= 0; j--) {
+                for (int k = n; k >= 0; k--) {
+                    // dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j][k]);
+                    // dp[i][j][k] = dp[i - 1][j][k];
+                    if (j >= a && k >= b)
+                        dp[j][k] = max(dp[j][k], dp[j - a][k - b] + 1);
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+};
+```
