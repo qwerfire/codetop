@@ -11014,3 +11014,23 @@ public:
     }
 };
 ```
+#  337. 打家劫舍 III
+### 方法1：树形DP
+```
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        auto v = dfs(root);
+        return max(v[0], v[1]);
+    }
+
+    vector<int> dfs(TreeNode* root) {
+        if (!root) return {0, 0};
+        auto l = dfs(root->left);
+        auto r = dfs(root->right);
+        
+        
+        return {max(l[0], l[1]) + max(r[0], r[1]), root->val + l[0] + r[0]};
+    }
+};
+```
