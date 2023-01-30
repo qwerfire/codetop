@@ -11034,3 +11034,55 @@ public:
     }
 };
 ```
+
+# LeetCode 188. 买卖股票的最佳时机 IV
+### 方法1：soulmachine的做法，二维DP
+```
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> sell(n, vector<int>(k + 1));
+        vector<vector<int>> buy(n, vector<int>(k + 1));
+        buy[0][0] = -prices[0];
+        sell[0][0] = 0;
+        for (int i = 1; i <= k; i++) sell[0][i] = buy[0][i] = INT_MIN / 2;
+        int res = 0;
+
+        for (int i = 1; i < n; i++) {
+            buy[i][0] = max(buy[i - 1][0], sell[i - 1][0] - prices[i]);
+            res = max(res, buy[i][0]);
+            for (int j = 1; j <= k; j++) {
+                buy[i][j] = max(buy[i - 1][j], sell[i - 1][j] - prices[i]);
+                sell[i][j] = max(sell[i - 1][j], buy[i - 1][j - 1] + prices[i]);
+                res = max(res, sell[i][j]);
+            }
+            // res = max(res, sell[i][k]);
+        } 
+        // cout << res << endl;
+        // return *max_element(sell[n - 1].begin(), sell[n - 1].end());
+        return res;
+    }
+};
+```
+
+### 方法2：soulmachine的做法，优化空间一维DP
+```
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& p) {
+        int n = p.size();
+        vector<int> sell(k + 1);
+        vector<int> buy(k + 1, INT_MIN);
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j <= k; j++) {
+                buy[j] = max(buy[j], sell[j - 1] - p[i]);
+                sell[j] = max(sell[j], buy[j] + p[i]);
+            }
+        }
+
+        return sell[k];
+    }
+};
+```
