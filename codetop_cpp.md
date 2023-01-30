@@ -11086,3 +11086,80 @@ public:
     }
 };
 ```
+
+# LeetCode 309. 最佳买卖股票时机含冷冻期
+### 方法1：自己的做法
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> f(n + 1, vector<int>(3));
+        // f[i][0] 买入, 有股票
+        // f[i][1] 卖出, 无股票
+        // f[i][2] 冷冻期， 无股票
+
+        for (int i = 1; i <= n; i++) {
+            if (i > 1) {
+                f[i][0] = max(f[i - 1][0], f[i - 2][1] - prices[i - 1]);
+                f[i][1] = max(f[i - 1][0] + prices[i - 1], max(f[i - 1][1], f[i - 1][2]));
+                f[i][2] = f[i - 1][1];
+            } else {
+                f[i][0] = - prices[i - 1];
+                f[i][1] = 0;
+                f[i][2] = 0;
+            }
+        }  
+
+        return max(f[n][0], max(f[n][1], f[n][2]));   
+    }
+};
+```
+
+### 方法2：DP
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (prices.empty()) return 0;
+        int n = prices.size();
+        vector<vector<int>> f(n, vector<int>(3, -1e8));
+        f[0][0] = 0; // f[i][0] 进入冷冻期
+        f[0][1] = -prices[0]; // f[i][1] 已买入 f[i][2]今天卖出
+
+        for (int i = 1; i < n; i++) {
+            f[i][0] = max(f[i - 1][0], f[i - 1][2]);
+            f[i][1] = max(f[i - 1][1], f[i - 1][0]- prices[i]);
+            f[i][2] = f[i - 1][1] + prices[i];
+        }
+
+        return max(f[n - 1][0], max(f[n - 1][1], f[n - 1][2]));
+    }
+};
+```
+
+### 方法3：DP
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        if (n == 0)
+            return 0;
+
+        vector<int> f(n); // 当天不持有的收益
+        vector<int> g(n); // 当天持有的收益
+
+        f[0] = 0;
+        g[0] = -prices[0];
+        for (int i = 1; i < n; i++) {
+            f[i] = max(f[i - 1], g[i - 1] + prices[i]);
+            if (i >= 2)
+                g[i] = max(g[i - 1], f[i - 2] - prices[i]);
+            else
+                g[i] = max(g[i - 1], -prices[i]);
+        }
+        return f[n - 1];
+    }
+};
+```
