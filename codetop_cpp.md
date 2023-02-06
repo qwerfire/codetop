@@ -11378,3 +11378,35 @@ public:
     }
 };
 ```
+# 496. 下一个更大元素 I
+### 方法1：单调栈
+```
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> h;
+        for (int i = 0; i < nums2.size(); i++) {
+            h[nums2[i]] = i;
+        }
+        int n = nums2.size();
+        vector<int> res(n, -1);
+        stack<int> st;
+        for (int i = 0; i < n; i++) {
+            while (st.size() && nums2[st.top()] < nums2[i]) {
+                int v = st.top();
+                st.pop();
+                res[v] = nums2[i];
+            }
+            st.push(i);
+        }
+        int m = nums1.size();
+        vector<int> ans;
+        for (int i = 0; i < m; i++) {
+            int id = h[nums1[i]];
+            ans.push_back(res[id]);
+        }
+
+        return ans;
+    }
+};
+```
