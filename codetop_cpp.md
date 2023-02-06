@@ -11410,3 +11410,51 @@ public:
     }
 };
 ```
+# 503. 下一个更大元素 II
+### 方法1：单调栈
+```
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> arr(nums);
+        for (int i = 0; i < n - 1; i++) arr.push_back(nums[i]);
+        stack<int> st;
+        int m = arr.size();
+        vector<int> ans(m, -1);
+
+        for (int i = 0; i < arr.size(); i++) {
+            while (st.size() && arr[st.top()] < arr[i]) {
+                int id = st.top();
+                st.pop();
+                ans[id] = arr[i];
+            }
+            st.push(i);
+        }
+
+        ans.erase(ans.begin() + n, ans.end());
+        return ans;
+    }
+};
+```
+### 方法2：单调栈
+```
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        stack<int> st;
+        int k = nums.size();
+        vector<int> ans(k, -1);
+        nums.insert(nums.end(), nums.begin(), nums.end());
+        for (int i = k * 2 - 1; i >= 0; i--) {
+            while (st.size() && nums[i] >= st.top()) st.pop();
+            if (i < k) {
+                if (st.empty()) ans[i] = -1;
+                else ans[i] = st.top();
+            }
+            st.push(nums[i]);
+        }
+        return ans;
+    }
+};
+```
