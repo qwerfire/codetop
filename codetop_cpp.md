@@ -11497,3 +11497,49 @@ public:
     }
 };
 ```
+# 1365. 有多少小于当前数字的数字
+### 方法1：自己想的hash + 排序
+```
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        unordered_map<int, int> h;
+        vector<int> arr(nums);
+        sort(arr.begin(), arr.end());
+        vector<int> ans(arr.size(), 0);
+        // if (arr[0] == arr.back()) return ans;
+        for (int i = arr.size() - 1; i > 0; i--) {
+            int j = i;
+            while (j >= 0 && arr[i] == arr[j]) j--;
+            h[arr[i]] = j + 1;
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            ans[i] = h[nums[i]];
+        }
+
+        return ans;
+    }
+};
+```
+### 方法2：书上的hash + 排序
+```
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        unordered_map<int, int> h;
+        vector<int> arr(nums);
+        sort(arr.begin(), arr.end());
+        vector<int> ans(arr.size(), 0);
+        for (int i = arr.size() - 1; i >= 0; i--) {
+            h[arr[i]] = i;
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            ans[i] = h[nums[i]];
+        }
+
+        return ans;
+    }
+};
+```
