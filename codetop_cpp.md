@@ -11543,3 +11543,80 @@ public:
     }
 };
 ```
+# 941. 有效的山脉数组
+### 方法1：根据用例提示逐步改进
+```
+class Solution {
+public:
+    bool validMountainArray(vector<int>& arr) {
+        int n = arr.size();
+        if (n <= 2) return false;
+        int num = arr[0];
+        int f0 = 1, f1 = 0;
+        for (int i = 1; i < n; i++) {
+            if (f0 && !f1) {
+                if (arr[i] > num) {
+                    num = arr[i];
+                } else if (arr[i] < num) {
+                    if (i == 1) return false;
+                    num = arr[i];
+                    f0 = 0;
+                    f1 = 1;
+                } else {
+                    return false;
+                }
+            } else {
+                if (arr[i] >= num) {
+                    return false;
+                } else if (arr[i] < num) {
+                    num = arr[i];
+                }
+            }
+        }
+
+        return f0 == 0 && f1 == 1;
+    }
+};
+```
+### 方法2：两个变量记录上升下降
+```
+class Solution {
+public:
+    bool validMountainArray(vector<int>& arr) {
+        int n = arr.size();
+        if (n <= 2) return false;
+        int num = arr[0];
+        int f0 = 0, f1 = 0;
+        for (int i = 1; i < n; i++) {
+            if (arr[i] > num) {
+                if (f1 == 1) return false;
+                f0 = 1;
+                num = arr[i];
+            } else if (arr[i] < num) {
+                if (f0 == 0) return false;
+                num = arr[i];
+                f1 = 1;
+            } else {
+                return false;
+            }
+        }
+
+        return f0 == 1 && f1 == 1;
+    }
+};
+```
+### 方法3：双指针
+```
+class Solution {
+public:
+    bool validMountainArray(vector<int>& arr) {
+        int n = arr.size();
+        int l = 0, r = n - 1;
+        while (l < n - 1 && arr[l] < arr[l + 1]) l++;
+        while (r > 1 && arr[r] < arr[r - 1]) r--;
+        if (l == r && l != 0 && r != n - 1) return true;
+
+        return false;
+    }
+};
+```
