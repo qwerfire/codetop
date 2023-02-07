@@ -11620,3 +11620,24 @@ public:
     }
 };
 ```
+# 1207. 独一无二的出现次数
+### 方法1：哈希表
+```
+class Solution {
+public:
+    bool uniqueOccurrences(vector<int>& arr) {
+        unordered_map <int, int> h1, h2;
+        for (auto x : arr) h1[x]++;
+
+        for (auto [k, v] : h1) {
+            if (h2.count(v)) {
+                return false;
+            } else {
+                h2[v]++;
+            }
+        }
+
+        return true;
+    }
+};
+```
