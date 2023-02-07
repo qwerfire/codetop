@@ -11641,3 +11641,26 @@ public:
     }
 };
 ```
+# 724. 寻找数组的中心下标
+### 方法1：前缀和
+```
+class Solution {
+public:
+    int pivotIndex(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> s(n + 2);
+        for (int i = 1; i <= n; i++) {
+            s[i] = s[i - 1] + nums[i - 1];
+            // cout << s[i] << endl;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            int l = s[i - 1];
+            int r = s[n] - s[i];
+            if (l == r) return i - 1;
+        }
+
+        return -1;
+    }
+};
+```
