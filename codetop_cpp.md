@@ -11664,3 +11664,45 @@ public:
     }
 };
 ```
+
+# 922. 按奇偶排序数组 II
+### 方法1：双指针
+```
+class Solution {
+public:
+    vector<int> sortArrayByParityII(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(n);
+        int l = 0, r = 1;
+        for (auto x : nums) {
+            if (x % 2) {
+                ans[r] = x;
+                r += 2;
+            } else {
+                ans[l] = x;
+                l += 2;
+            }
+        }
+
+        return ans;
+    }
+};
+```
+
+### 方法2：空间优化为O(1)
+```
+class Solution {
+public:
+    vector<int> sortArrayByParityII(vector<int>& nums) {
+        int id = 1;
+        for (int i = 0; i < nums.size(); i += 2) {
+            if (nums[i] % 2) {
+                while (id < nums.size() && nums[id] % 2 != 0) id += 2;
+                swap(nums[i], nums[id]);
+            }
+        }
+
+        return nums;
+    }
+};
+```
