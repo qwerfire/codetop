@@ -11706,3 +11706,32 @@ public:
     }
 };
 ```
+# 35. 搜索插入位置
+### 方法1：库函数
+```
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int offset = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+        return offset;
+    }
+};
+```
+
+### 方法2：二分
+```
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+
+        if (nums[l] < target) l++;
+        return l;
+    }
+};
+```
