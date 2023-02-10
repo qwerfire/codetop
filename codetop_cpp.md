@@ -11887,3 +11887,40 @@ public:
     }
 };
 ```
+# 52. N皇后 II
+### 方法1：DFS 按行枚举
+```
+class Solution {
+public:
+    int ans = 0, n;
+    char g[10][10];
+    bool col[10], up[30], down[30];
+    int totalNQueens(int _n) {
+        n = _n;
+        memset(g, '.', sizeof g);
+        memset(col, 0, sizeof col);
+        memset(up, 0, sizeof up);
+        memset(down, 0, sizeof down);
+        dfs(0);
+
+        return ans;
+    }
+
+    void dfs(int u) {
+        if (u == n) {
+            ans++;
+            return;
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!col[i] && !up[u + i] && !down[u - i + 20]) {
+                g[u][i] = 'q';
+                col[i] = up[u + i] = down[u - i + 20] = true;
+                dfs(u + 1);
+                col[i] = up[u + i] = down[u - i + 20] = false;
+                g[u][i] = '.';
+            }
+        }
+    }
+};
+```
