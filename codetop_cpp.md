@@ -11833,3 +11833,27 @@ public:
     }
 };
 ```
+# 925. 长按键入
+### 方法1：双指针
+```
+class Solution {
+public:
+    bool isLongPressedName(string name, string typed) {
+        int n = name.size(),  m = typed.size();
+        int l = 0, r = 0;
+        while (l < n && r < m) {
+            if (name[l] == typed[r]) {
+                int i = l, j = r;
+                while (i + 1 < n && name[i + 1] == name[i]) i++;
+                while (j + 1 < m && typed[j + 1] == typed[j]) j++;
+                int len0 = (i - l), len1 = j - r;
+                if (len1 < len0) return false;
+                l = i + 1;
+                r = j + 1;
+            } else return false;
+        }
+        if (r < m || l < n) return false;
+        return true;
+    }
+};
+```
