@@ -7565,6 +7565,57 @@ public:
     }
 };
 ```
+### 方法3 双指针
+```
+class Solution {
+public:
+    bool backspaceCompare(string s, string t) {
+        int n = s.size(), m = t.size();
+        int l = n - 1, r = m - 1;
+        int skips = 0, skipt = 0;
+       
+        while (l >= 0 || r >= 0) {
+            while (l >= 0) {
+                if (s[l] == '#') {
+                    skips++;
+                    l--;
+                } else if (skips > 0) {
+                    skips--;
+                    l--;
+                } else {
+                    break;
+                }
+            }
+
+            while (r >= 0) {
+                if (t[r] == '#') {
+                    skipt++;
+                    r--;
+                } else if (skipt > 0) {
+                    skipt--;
+                    r--;
+                } else {
+                    break;
+                }
+            }
+
+            // printf("l = %d, r = %d\n", l, r);
+            if (l >= 0 && r >= 0) {
+                if (s[l] == t[r]) {
+                    l--;
+                    r--;
+                } else return false;
+            } else {
+                if (l == -1 && r == -1) return true;
+
+                return false;
+            }
+        }
+
+        return l == -1 && r == -1;
+    }
+};
+```
 # 977. 有序数组的平方
 ### 方法1：暴力算法
 ```
@@ -11732,6 +11783,53 @@ public:
 
         if (nums[l] < target) l++;
         return l;
+    }
+};
+```
+
+# 205. 同构字符串
+### 方法1：哈希表
+```
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        int n = s.size(), m = t.size();
+        if (n != m) return false;
+        unordered_map<char, char> h1, h2;
+        for (int i = 0; i < n; i++) {
+            char a = s[i], b = t[i];
+            if (h1.count(a)) {
+                if (h1[a] != b) return false;
+            } 
+
+            if (h2.count(b)) {
+                if (h2[b] != a) return false;
+            } 
+    
+            h1[a] = b;
+            h2[b] = a;
+        }
+
+        return true;
+    }
+};
+```
+### 方法2：数组遍历 + 计数
+```
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        vector<int> fs(128, 0), ft(128, 0);
+        int m = 0;
+        for (int i = 0; i < s.size(); i++) {
+            if (fs[s[i]] == ft[t[i]]) {
+                fs[s[i]] = ft[t[i]] = ++m;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 };
 ```
