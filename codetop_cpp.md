@@ -11924,3 +11924,61 @@ public:
     }
 };
 ```
+
+# 649. Dota2 参议院
+### 方法1 贪心
+```
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        bool r = true, d = true;
+        int cnt = 0; //cnt > 0 R多   cnt < 0 D多
+
+        while (r && d) {
+            r = d = false;
+            for (auto &x : senate) {
+                if (x == 'R') {
+                    if (cnt < 0) x = 0;
+                    else r = true;
+                    cnt++;
+                }
+
+                if (x == 'D') {
+                    if (cnt > 0) x = 0;
+                    else d = true;
+                    cnt--;
+                }
+            }
+        }
+
+        return r ? "Radiant" : "Dire";
+
+    }
+};
+```
+### 方法2 贪心
+```
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        queue<int> r, d;
+        int n = senate.size();
+
+        for (int i = 0; i < n; i++) {
+            if (senate[i] == 'R') r.push(i);
+            else d.push(i);
+        }
+
+        while (r.size() && d.size()) {
+            if (r.front() < d.front()) r.push(r.front() + n);
+            else d.push(d.front() + n);
+            r.pop();
+            d.pop();
+        }
+
+        if (r.size()) return "Radiant";
+
+        return "Dire";
+    }
+};
+```
