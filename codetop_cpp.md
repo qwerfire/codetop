@@ -12038,3 +12038,65 @@ public:
     }
 };
 ```
+
+
+# 841. 钥匙和房间
+### 方法1：BFS
+```
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        int n = rooms.size();
+        vector<bool> visited(n);
+        visited[0] = true;
+        queue<int> q;
+        q.push(0);
+        while (q.size()) {
+            int len = q.size();
+            for (int i = 0; i < len; i++) {
+                auto v = q.front();
+                q.pop();
+                for (auto x : rooms[v]) {
+                    if (!visited[x]) {
+                        visited[x] = true;
+                        q.push(x);
+                    } 
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) return false;
+        }
+
+        return true;
+    }
+};
+```
+### 方法2：DFS
+```
+class Solution {
+public:
+    int n;
+    vector<bool> visited;
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        n = rooms.size();
+        visited = vector<bool>(n, false);
+        dfs(rooms, 0);
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) return false;
+        }
+
+        return true;
+    }
+
+    void dfs(vector<vector<int>>& rooms, int id) {
+        visited[id] = true;
+        for (auto x : rooms[id]) {
+            if (!visited[x])
+                dfs(rooms, x);
+        }
+    }
+};
+```
