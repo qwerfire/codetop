@@ -12100,3 +12100,168 @@ public:
     }
 };
 ```
+# 127. 单词接龙
+### 方法1：BFS
+```
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> us(wordList.begin(), wordList.end());
+        unordered_map<string, int> d;
+        d[beginWord] = 1;
+        queue<string> q;
+        q.push(beginWord);
+        while (q.size()) {
+            string s = q.front();
+            q.pop();
+            for (int ii = 0; ii < s.size(); ii++) {
+                string t = s;
+                for (int j = 0; j < 26; j++) {
+                    if (t[ii] != 'a' + j) {
+                        t[ii] = 'a' + j;
+                        if (us.count(t)  && d[t] == 0) {
+                            d[t] = d[s] + 1;
+                            if (t == endWord) {
+                                return d[t];
+                            }
+                            q.push(t);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+};
+```
+# 684. 冗余连接
+### 方法1：并查集
+```
+class Solution {
+public:
+    vector<int> p;
+
+    int find(int x) {
+        if (x != p[x]) {
+            p[x] = find(p[x]);
+        }
+
+        return p[x];
+    }
+
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        p.resize(n + 1);
+        for (int i = 0; i <= n; i++) p[i] = i;
+
+        for (auto x : edges) {
+            int a = x[0], b = x[1];
+            int pa = find(a), pb = find(b);
+            if (pa != pb) {
+                p[pa] = pb;
+            } else {
+                return {a, b};
+            }
+        }
+
+        return {};
+    }
+};
+```
+# 685. 冗余连接 II
+### 方法1：并查集
+```
+class Solution {
+public:
+    vector<int> p;
+    int n;
+
+    int find(int x) {
+        if (x != p[x]) {
+            p[x] = find(p[x]);
+        }
+
+        return p[x];
+    }
+
+    void init() {
+        for (int i = 0; i <= n; i++) p[i] = i;
+    }
+
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+        n = edges.size();
+        p.resize(n + 1);
+        init();
+
+        vector<int> inDegree(n + 1);
+        for (auto x : edges) {
+            int a = x[0], b = x[1];
+            inDegree[b]++;
+        }
+        vector<int> vec;
+
+        for (int i = n - 1; i >= 0; i--) {
+            if (inDegree[edges[i][1]] == 2) {
+                vec.push_back(i);
+            }
+        }
+
+        if (vec.size() > 0) {
+            if (isTreeAfterDelete(edges, vec[0])) return edges[vec[0]];
+            return edges[vec[1]];
+        }
+
+        return isTreeAfterDeleteCircle(edges);
+    }
+
+    bool isTreeAfterDelete(vector<vector<int>>& edges, int id) {
+        for (int i = 0; i < n; i++) {
+            if (i == id) continue;
+            int pa = find(edges[i][0]);
+            int pb = find(edges[i][1]);
+            if (pa == pb) return false;
+            p[pa] = pb;
+        }
+
+        return true;
+    }
+
+    vector<int> isTreeAfterDeleteCircle(vector<vector<int>>& edges) {
+        for (int i = 0; i < n; i++) {
+            int pa = find(edges[i][0]);
+            int pb = find(edges[i][1]);
+            if (pa == pb) return edges[i];
+            p[pa] = pb;
+        }
+
+        return {};
+    }
+};
+```
+
+# 657. 机器人能否返回原点
+### 方法1：模拟
+```
+class Solution {
+public:
+    bool judgeCircle(string moves) {
+        int l = 0, u = 0;
+
+        for (auto& x : moves) {
+            if (x == 'L') {
+                l++;
+            } else if (x == 'R') {
+                l--;
+            } else if (x == 'U') {
+                u++;
+            } else {
+                u--;
+            }
+        }
+
+        if (l == 0 && u == 0) return true;
+
+        return false;
+    }
+};
+```
