@@ -11982,3 +11982,24 @@ public:
     }
 };
 ```
+# 1221. 分割平衡字符串
+### 贪心
+```
+class Solution {
+public:
+    int balancedStringSplit(string s) {
+        int l = 0, r = 0;
+        int cnt = 0;
+        for (auto x : s) {
+            if (x == 'L') l++;
+            else r++;
+            if (l && r && l == r) {
+                cnt++;
+                l = r = 0;
+            }
+        }
+
+        return cnt;
+    }
+};
+```
