@@ -12003,3 +12003,38 @@ public:
     }
 };
 ```
+# 132. 分割回文串 II
+### 方法1：两次DP
+```
+class Solution {
+public:
+    int minCut(string s) {
+        int n = s.size();
+        s = ' ' + s;
+        vector<vector<bool>> f(n + 1, vector<bool>(n + 1));
+        vector<int> dp(n + 1, INT_MAX);
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                if (i == j) f[j][i] = true;
+                else {
+                    if (s[i] == s[j]) {
+                        if (i - j == 1) f[j][i] = true;
+                        else if (f[j + 1][i - 1]) f[j][i] = true;
+                    }
+                }
+            }
+        }
+        
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                if (f[j][i]) {
+                    dp[i] = min(dp[i], dp[j - 1] + 1);
+                }
+            }
+        }
+
+        return dp[n] - 1;
+    }
+};
+```
