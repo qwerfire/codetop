@@ -12265,3 +12265,84 @@ public:
     }
 };
 ```
+# 1356. 根据数字二进制下 1 的数目排序
+### 方法1：排序 + 求整数的二进制表示中1的个数 + 注意比较函数必须为静态成员函数
+```
+class Solution {
+public:
+    static int getNo(int x) {
+        int ans = 0;
+        while (x) {
+            x = x & (x - 1);
+            ans++;
+        }
+        return ans;
+    }
+
+    static bool cmp(int a, int b) {
+        int x = getNo(a), y = getNo(b);
+        if (x == y) return a < b;
+        return x < y;
+    }
+
+    vector<int> sortByBits(vector<int>& arr) {
+        sort(arr.begin(), arr.end(), cmp);
+
+        return arr;
+    }
+};
+```
+# 463. 岛屿的周长
+### 方法1
+```
+class Solution {
+public:
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+    int islandPerimeter(vector<vector<int>>& grid) {
+        int n = grid.size(), m = grid[0].size();
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) continue;
+                else {
+                    for (int k = 0; k < 4; k++) {
+                        int x = i + dx[k], y = j + dy[k];
+                        if (x < 0 || x >= n) cnt++;
+                        if (y < 0 || y >= m) cnt++;
+                        if (x >= 0 && x < n && y >= 0 && y < m && grid[x][y] == 0) {
+                            cnt++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return cnt;
+    }
+};
+```
+### 方法2
+```
+class Solution {
+public:
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+    int islandPerimeter(vector<vector<int>>& grid) {
+        int n = grid.size(), m = grid[0].size();
+        int cnt = 0, cover = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) continue;
+                else {
+                    cnt++;
+                    if (i - 1 >= 0 && grid[i - 1][j]) cover++;
+                    if (j - 1 >= 0 && grid[i][j - 1]) cover++;
+                }
+            }
+        }
+
+        return cnt * 4 - cover * 2;
+    }
+};
+```
