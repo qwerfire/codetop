@@ -12346,3 +12346,26 @@ public:
     }
 };
 ```
+
+# 946. 验证栈序列
+### 栈模拟
+```
+// 2023.2/22 周三
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        int i = 0;
+        stack<int> st;
+        for (auto x : pushed) {
+            st.push(x);
+            while (st.size() && st.top() == popped[i]) {
+                st.pop();
+                i++;
+            }
+        }
+
+        // return i == popped.size();
+        return st.empty();
+    }
+};
+```
