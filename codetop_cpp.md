@@ -12369,3 +12369,62 @@ public:
     }
 };
 ```
+# 313. 超级丑数
+### 方法1
+```
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        int i = 1;
+        vector<int> dp(n);
+        int k = primes.size();
+        dp[0] = 1;
+        vector<int> id(k, 0);
+        while (i < n) {
+            long long mi = INT_MAX;
+            for (int j = 0; j < k; j++) {
+                if (1ll * primes[j] * dp[id[j]] > INT_MAX)
+                    continue;
+                mi = min(mi, 1ll * primes[j] * dp[id[j]]);
+            }
+            dp[i] = mi;
+
+            for (int j = 0; j < k; j++) {
+                if (1ll * primes[j] * dp[id[j]] > INT_MAX)
+                    continue;
+                if (mi == primes[j] * dp[id[j]]) {
+                    id[j]++;
+                }
+            }
+
+            i++;
+        }
+
+        return dp[n - 1];
+    }
+};
+```
+### 方法2：优先队列
+```
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        typedef pair<long long, long long> PII;
+        priority_queue<PII, vector<PII>, greater<PII>> h;
+
+        for (auto x : primes) h.push(make_pair(x, 0));
+        vector<int> f(n);
+        f[0] = 1;
+        for (int i = 1; i < n; ) {
+            auto t = h.top();
+            h.pop();
+            if (t.first != f[i - 1]) f[i++] = t.first;
+            int id = t.second;
+            int p = t.first / f[id];
+            h.push(make_pair(1ll * p * f[id + 1], id + 1));
+        }
+
+        return f[n - 1];
+    }
+};
+```
