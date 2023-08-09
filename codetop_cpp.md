@@ -12428,3 +12428,33 @@ public:
     }
 };
 ```
+
+#  312. 戳气球
+### 方法1：区间DP
+```
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> b;
+        b.push_back(1);
+        for (auto x : nums) {
+            b.push_back(x);
+        }
+        b.push_back(1);
+
+        vector<vector<int>> dp(n + 2, vector<int>(n + 2));
+
+        for (int len = 3; len <= n + 2; len++) {
+            for (int i = 0; i + len - 1 <= n + 1; i++) {
+                int j = i + len - 1;
+                for (int k = i + 1; k < j; k++) {
+                    dp[i][j] = max(dp[i][j], dp[i][k] + dp[k][j] + b[i] * b[j] * b[k]);
+                }
+            }
+        }
+
+        return dp[0][n + 1];
+    }
+};
+```
